@@ -7,11 +7,16 @@ enum Facing {
 }
 
 @export var fish_type: FishStudy.FishType
+
+# Determines how close the player needs to be to scan the fish
+@export var size: float = 20.0
+
+# How many of the player's raycasts are needed to scan the fish - more for larger fish
 @export var raycasts_needed: int = 1
-@export var bob_amount: float = 5.0
 @export var study_speed: float = 1.0
 @export var study_reward_factor: int = 1
-@export var size: float = 50.0
+
+@export var bob_amount: float = 5.0
 @export var facing_initial: Facing = Facing.Left
 @export var behavior: FishBehaviorBase = null
 

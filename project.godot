@@ -11,14 +11,14 @@ config_version=5
 [application]
 
 config/name="Spooky Jam"
-run/main_scene="res://Scenes/Main.tscn"
+run/main_scene="res://Scene/Main.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Audio="*res://AudioManager.gd"
-Study="*res://Scenes/FishStudy.gd"
+Audio="*res://Scene/AudioManager.gd"
+Study="*res://Player/FishStudy.gd"
 
 [display]
 

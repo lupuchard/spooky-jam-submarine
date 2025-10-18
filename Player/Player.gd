@@ -19,6 +19,7 @@ const DASH_SPEED = 3.0
 
 const DESC_ACCEL = 4.0
 const DESC_TOP_SPEED = 1.2
+const DASH_POWER_CONSUMPTION = 1.0
 
 const ASC_ACCEL = 4.0
 const ASC_TOP_SPEED = 1.2
@@ -30,7 +31,11 @@ const COLLISION_DAMAGE_MOD := 1.0
 
 const NUM_RAYCASTS := 8
 const RAYCAST_ANGLE := PI / 3
-const RAYCAST_LENGTH := 240
+const RAYCAST_LENGTH := 120
+
+const CRASH_SOUND = preload("res://Assets/Sound/crash.mp3")
+const DASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
+const CLICK_SOUND = preload("res://Assets/Sound/click.ogg")
 
 var vel := Vector2.ZERO
 var dash_direction := 1.0
@@ -64,8 +69,9 @@ func _ready():
 	
 	generate_raycasts()
 
+# Raycasts are used to detect if fish are in the player's light cone
 func generate_raycasts():
-	var raycast_spacing = RAYCAST_ANGLE / (NUM_RAYCASTS + 2)
+	var raycast_spacing = RAYCAST_ANGLE / (NUM_RAYCASTS + 1)
 	for i in range(0, NUM_RAYCASTS):
 		var angle = raycast_spacing * (i + 1) - RAYCAST_ANGLE / 2
 		var raycast := RayCast2D.new()
@@ -87,22 +93,23 @@ func _process(delta: float):
 	check_raycasts()
 	
 	if studying != null:
-		$StudyIndicator.visible = true
-		$StudyIndicator.update_to(studying)
+		%StudyIndicator.visible = true
+		%StudyIndicator.update_to(studying)
 		if !studying.studied:
 			studying.study_progress += delta * studying.study_speed * study_speed
 			if studying.study_progress >= 1.0:
 				var reward = Study.add_studied(studying)
 				notify("+%s Knowledge" % reward)
+				Audio.play(CLICK_SOUND, self)
 				resources[Res.Knowledge] += reward
 	else:
-		$StudyIndicator.visible = false
+		%StudyIndicator.visible = false
 
 func notify(text: String):
 	var label := Label.new()
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.text = text
-	label.material = preload("res://Scenes/IgnoreLight.tres")
+	label.material = preload("res://Scene/IgnoreLight.tres")
 	add_child(label)
 	var tween = create_tween()
 	tween.tween_property(label, "position", Vector2(randf_range(-4, 4), -50), 4)
@@ -157,6 +164,8 @@ func _physics_process(delta: float):
 	if stats[Stat.DashPower] >= DASH_COOLDOWN and Input.is_action_just_pressed("dash"):
 		vel.x += dash_direction * DASH_SPEED
 		stats[Stat.DashPower] = 0
+		stats[Stat.Power] -= DASH_POWER_CONSUMPTION
+		Audio.play(DASH_SOUND, self, 0.0, 0.9, 1.1)
 	
 	var collision = move_and_collide(vel)
 	if collision != null:
@@ -164,6 +173,6 @@ func _physics_process(delta: float):
 		var collision_speed = abs(collision_direction.dot(prev_vel))
 		if collision_speed > COLLISION_THRESH:
 			stats[Stat.Health] -= collision_speed * COLLISION_DAMAGE_MOD
-			Audio.play(preload("res://Assets/Sound/crash.mp3"), self, linear_to_db(collision_speed), 0.4, 0.6)
+			Audio.play(CRASH_SOUND, self, linear_to_db(collision_speed), 0.4, 0.6)
 		vel = Vector2.ZERO
 		

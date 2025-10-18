@@ -1,8 +1,8 @@
 [gd_scene load_steps=5 format=3 uid="uid://wklqvbx7bd17"]
 
-[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scenes/IgnoreLight.tres" id="1_l1vwu"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="1_l1vwu"]
 [ext_resource type="FontFile" uid="uid://5mk2307ho1x8" path="res://Assets/Fonts/tinypixel.otf" id="1_pl3jk"]
-[ext_resource type="Script" uid="uid://iha4e0vthia" path="res://Scenes/StudyIndicator.gd" id="1_su2iw"]
+[ext_resource type="Script" uid="uid://iha4e0vthia" path="res://Player/StudyIndicator.gd" id="1_su2iw"]
 [ext_resource type="FontFile" uid="uid://bdlen7yarl4rf" path="res://Assets/Fonts/ThatBoy.ttf" id="2_su2iw"]
 
 [node name="StudyIndicator" type="Node2D"]

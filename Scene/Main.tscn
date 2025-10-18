@@ -1,16 +1,18 @@
-[gd_scene load_steps=18 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=23 format=3 uid="uid://p88qg8wd8xis"]
 
-[ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scenes/World.gd" id="1_50glp"]
+[ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
-[ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Scenes/Player.gd" id="1_rgh2o"]
+[ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
 [ext_resource type="Texture2D" uid="uid://ea0qrcxyxhc5" path="res://Assets/bnuy2.png" id="2_kln2b"]
 [ext_resource type="Texture2D" uid="uid://s2wi4kx46qnt" path="res://Assets/Spotlight1.png" id="4_jw32o"]
-[ext_resource type="Script" uid="uid://so1kcd7487ek" path="res://Scenes/Wall.gd" id="4_rgh2o"]
-[ext_resource type="Script" uid="uid://ds6akscj7vkvi" path="res://Scenes/StatusBar.gd" id="5_pbw6q"]
-[ext_resource type="PackedScene" uid="uid://wklqvbx7bd17" path="res://Scenes/StudyIndicator.tscn" id="6_vy5pj"]
-[ext_resource type="PackedScene" uid="uid://ca80h3xj3qa7y" path="res://Actors/Angler.tscn" id="7_jw32o"]
-[ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Scenes/StatusCount.gd" id="9_bmxlf"]
-[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Actors/ShyFishBehavior.gd" id="11_4kpch"]
+[ext_resource type="Script" uid="uid://so1kcd7487ek" path="res://Scene/Wall.gd" id="4_rgh2o"]
+[ext_resource type="Script" uid="uid://ds6akscj7vkvi" path="res://Player/StatusBar.gd" id="5_pbw6q"]
+[ext_resource type="PackedScene" uid="uid://wklqvbx7bd17" path="res://Player/StudyIndicator.tscn" id="6_vy5pj"]
+[ext_resource type="AudioStream" uid="uid://b68k1ubaflc3y" path="res://Assets/Sound/underwater_ambience.mp3" id="7_grg3l"]
+[ext_resource type="PackedScene" uid="uid://ca80h3xj3qa7y" path="res://Fish/Angler.tscn" id="7_jw32o"]
+[ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Player/StatusCount.gd" id="9_bmxlf"]
+[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/ShyFishBehavior.gd" id="11_4kpch"]
+[ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -38,6 +40,8 @@ colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_vy5pj"]
 gradient = SubResource("Gradient_50glp")
+width = 1250
+height = 750
 fill = 1
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0, 0)
@@ -45,9 +49,24 @@ fill_to = Vector2(0, 0)
 [sub_resource type="Resource" id="Resource_grg3l"]
 script = ExtResource("11_4kpch")
 patience = 2
-retreat_range = 30.0
+retreat_range = 5.0
 retreat_distance = 70.0
 metadata/_custom_type_script = "uid://wmj24v30fjei"
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_i0sg4"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_mr7am"]
+noise = SubResource("FastNoiseLite_i0sg4")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i0sg4"]
+shader = ExtResource("13_i0sg4")
+shader_parameter/waterDistortionNoise = SubResource("NoiseTexture2D_mr7am")
+shader_parameter/distortionForce = 0.01
+shader_parameter/WDSpeed = 4.0
+shader_parameter/tiling = Vector2(1, 1)
+shader_parameter/offSetSpeed = Vector2(0.1, 0.1)
+shader_parameter/backGroundDirX = 0.00500000349738
+shader_parameter/backGroundDirY = 0.00500000349738
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_50glp")
@@ -67,7 +86,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="."]
 unique_name_in_owner = true
-position = Vector2(-1290, 2024)
+position = Vector2(-1031, 2058)
 script = ExtResource("1_rgh2o")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="Player"]
@@ -87,13 +106,14 @@ shape = SubResource("CapsuleShape2D_rgh2o")
 light_mask = 2
 visibility_layer = 2
 position = Vector2(1, 1)
-scale = Vector2(0.5, 0.5)
 energy = 0.2
 shadow_enabled = true
 texture = ExtResource("4_jw32o")
-texture_scale = 2.0
 
-[node name="StudyIndicator" parent="Player" instance=ExtResource("6_vy5pj")]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player"]
+stream = ExtResource("7_grg3l")
+volume_db = -7.0
+autoplay = true
 
 [node name="LeftWall" type="Polygon2D" parent="."]
 position = Vector2(-13, -9)
@@ -108,15 +128,32 @@ polygon = PackedVector2Array(2141, 7, 979, 4, 979, 49, 941, 109, 868, 157, 808, 
 script = ExtResource("4_rgh2o")
 
 [node name="SkyLight" type="PointLight2D" parent="."]
-position = Vector2(-323.00012, 1829.5001)
-scale = Vector2(108.03125, 76.203125)
+position = Vector2(239, 1498)
+scale = Vector2(4, 4)
 texture = SubResource("GradientTexture2D_vy5pj")
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 position = Vector2(6, 6)
 color = Color(0, 0, 0.12156863, 1)
 
+[node name="Fish" type="Node2D" parent="."]
+
+[node name="Angler" parent="Fish" instance=ExtResource("7_jw32o")]
+position = Vector2(-905, 2062)
+size = 10.0
+raycasts_needed = 3
+behavior = SubResource("Resource_grg3l")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="StudyIndicator" parent="CanvasLayer" instance=ExtResource("6_vy5pj")]
+unique_name_in_owner = true
+position = Vector2(-1031, 2058)
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+material = SubResource("ShaderMaterial_i0sg4")
+offset_right = 768.0
+offset_bottom = 430.0
 
 [node name="HealthBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
@@ -155,13 +192,3 @@ offset_bottom = 417.0
 text = "0"
 script = ExtResource("9_bmxlf")
 player = NodePath("../../Player")
-
-[node name="Fish" type="Node2D" parent="."]
-
-[node name="Angler" parent="Fish" instance=ExtResource("7_jw32o")]
-position = Vector2(-905, 2062)
-fish_type = 0
-raycasts_needed = 3
-bob_amount = 5.0
-size = 100.0
-behavior = SubResource("Resource_grg3l")

@@ -4,7 +4,8 @@ func set_name_text(text: String):
 	$NameLabel.text = text
 
 func update_to(fish: Fish):
-	global_position = fish.global_position
+	#global_position = fish.global_position
+	transform = fish.get_screen_transform()
 	
 	if fish.studied or Study.get_times_studied(fish) > 0:
 		$NameLabel.text = Study.get_fish_name(fish)
