@@ -1,0 +1,167 @@
+[gd_scene load_steps=18 format=3 uid="uid://p88qg8wd8xis"]
+
+[ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scenes/World.gd" id="1_50glp"]
+[ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
+[ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Scenes/Player.gd" id="1_rgh2o"]
+[ext_resource type="Texture2D" uid="uid://ea0qrcxyxhc5" path="res://Assets/bnuy2.png" id="2_kln2b"]
+[ext_resource type="Texture2D" uid="uid://s2wi4kx46qnt" path="res://Assets/Spotlight1.png" id="4_jw32o"]
+[ext_resource type="Script" uid="uid://so1kcd7487ek" path="res://Scenes/Wall.gd" id="4_rgh2o"]
+[ext_resource type="Script" uid="uid://ds6akscj7vkvi" path="res://Scenes/StatusBar.gd" id="5_pbw6q"]
+[ext_resource type="PackedScene" uid="uid://wklqvbx7bd17" path="res://Scenes/StudyIndicator.tscn" id="6_vy5pj"]
+[ext_resource type="PackedScene" uid="uid://ca80h3xj3qa7y" path="res://Actors/Angler.tscn" id="7_jw32o"]
+[ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Scenes/StatusCount.gd" id="9_bmxlf"]
+[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Actors/ShyFishBehavior.gd" id="11_4kpch"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
+light_mode = 1
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rgh2o"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_r150o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_kln2b")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rgh2o"]
+radius = 14.0
+height = 38.0
+
+[sub_resource type="Gradient" id="Gradient_50glp"]
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vy5pj"]
+gradient = SubResource("Gradient_50glp")
+fill = 1
+fill_from = Vector2(0.5, 0)
+fill_to = Vector2(0, 0)
+
+[sub_resource type="Resource" id="Resource_grg3l"]
+script = ExtResource("11_4kpch")
+patience = 2
+retreat_range = 30.0
+retreat_distance = 70.0
+metadata/_custom_type_script = "uid://wmj24v30fjei"
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_50glp")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(2000, 2000)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -11663.0
+offset_right = 13241.0
+offset_bottom = 16573.0
+grow_horizontal = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+color = Color(0, 0.39215687, 1, 1)
+
+[node name="Player" type="CharacterBody2D" parent="."]
+unique_name_in_owner = true
+position = Vector2(-1290, 2024)
+script = ExtResource("1_rgh2o")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="Player"]
+material = SubResource("CanvasItemMaterial_jw32o")
+sprite_frames = SubResource("SpriteFrames_rgh2o")
+autoplay = "default"
+frame_progress = 0.9964846
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+position = Vector2(1, 1)
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_rgh2o")
+
+[node name="Spotlight" type="PointLight2D" parent="Player"]
+light_mask = 2
+visibility_layer = 2
+position = Vector2(1, 1)
+scale = Vector2(0.5, 0.5)
+energy = 0.2
+shadow_enabled = true
+texture = ExtResource("4_jw32o")
+texture_scale = 2.0
+
+[node name="StudyIndicator" parent="Player" instance=ExtResource("6_vy5pj")]
+
+[node name="LeftWall" type="Polygon2D" parent="."]
+position = Vector2(-13, -9)
+color = Color(0.34, 0.14733334, 0, 1)
+polygon = PackedVector2Array(-4191, 15, 13, 11, 7, 76, -9, 109, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
+script = ExtResource("4_rgh2o")
+
+[node name="RightWall" type="Polygon2D" parent="."]
+position = Vector2(-462, -6)
+color = Color(0.34, 0.14733334, 0, 1)
+polygon = PackedVector2Array(2141, 7, 979, 4, 979, 49, 941, 109, 868, 157, 808, 212, 720, 341, 494, 338, 229, 467, 21, 441, -153, 379, -381, 395, -630, 430, -903, 605, -858, 1220, -838, 1683, -592, 1925, -341, 1814, 79, 1899, 483, 2101, 1076, 2181, 1104, 2315, 953, 2366, 796, 2396, 478, 2356, 93, 2275, -286, 2280, -584, 2366, -837, 2573, -986, 3328, -1041, 5591, 2101, 5572)
+script = ExtResource("4_rgh2o")
+
+[node name="SkyLight" type="PointLight2D" parent="."]
+position = Vector2(-323.00012, 1829.5001)
+scale = Vector2(108.03125, 76.203125)
+texture = SubResource("GradientTexture2D_vy5pj")
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+position = Vector2(6, 6)
+color = Color(0, 0, 0.12156863, 1)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HealthBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 8.0
+offset_top = 403.0
+offset_right = 48.0
+offset_bottom = 409.0
+color = Color(1, 0, 0, 1)
+script = ExtResource("5_pbw6q")
+player = NodePath("../../Player")
+
+[node name="PowerBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 8.0
+offset_top = 409.0
+offset_right = 48.0
+offset_bottom = 415.0
+color = Color(1, 1, 0, 1)
+script = ExtResource("5_pbw6q")
+player = NodePath("../../Player")
+stat = 1
+
+[node name="DashBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 8.0
+offset_top = 415.0
+offset_right = 48.0
+offset_bottom = 421.0
+color = Color(0, 1, 1, 1)
+script = ExtResource("5_pbw6q")
+player = NodePath("../../Player")
+stat = 2
+
+[node name="KnowledgeLabel" type="Label" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 8.0
+offset_top = 394.0
+offset_right = 48.0
+offset_bottom = 417.0
+text = "0"
+script = ExtResource("9_bmxlf")
+player = NodePath("../../Player")
+
+[node name="Fish" type="Node2D" parent="."]
+
+[node name="Angler" parent="Fish" instance=ExtResource("7_jw32o")]
+position = Vector2(-905, 2062)
+fish_type = 0
+raycasts_needed = 3
+bob_amount = 5.0
+size = 100.0
+behavior = SubResource("Resource_grg3l")

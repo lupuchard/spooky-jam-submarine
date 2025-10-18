@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3 uid="uid://ca80h3xj3qa7y"]
+
+[ext_resource type="Texture2D" uid="uid://odrakurbublb" path="res://Assets/Fish/Angler/Body.png" id="1_eaveb"]
+[ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Actors/Fish.gd" id="1_hfkjb"]
+[ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="2_hfkjb"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dc8bw"]
+light_mode = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_eaveb"]
+radius = 20.024984
+
+[node name="Angler" type="StaticBody2D"]
+collision_layer = 3
+script = ExtResource("1_hfkjb")
+fish_type = null
+raycasts_needed = null
+bob_amount = null
+
+[node name="BodySprite" type="Sprite2D" parent="." groups=["fish_body"]]
+texture = ExtResource("1_eaveb")
+
+[node name="LightSprite" type="Sprite2D" parent="BodySprite"]
+material = SubResource("CanvasItemMaterial_dc8bw")
+texture = ExtResource("2_hfkjb")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1, 5)
+shape = SubResource("CircleShape2D_eaveb")

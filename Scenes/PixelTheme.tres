@@ -1,0 +1,7 @@
+[gd_resource type="Theme" load_steps=2 format=3 uid="uid://c6c4jrxrclewv"]
+
+[ext_resource type="FontFile" uid="uid://5mk2307ho1x8" path="res://Assets/Fonts/tinypixel.otf" id="1_fj6sc"]
+
+[resource]
+default_font = ExtResource("1_fj6sc")
+default_font_size = 7

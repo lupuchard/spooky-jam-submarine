@@ -1,0 +1,52 @@
+[gd_scene load_steps=5 format=3 uid="uid://wklqvbx7bd17"]
+
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scenes/IgnoreLight.tres" id="1_l1vwu"]
+[ext_resource type="FontFile" uid="uid://5mk2307ho1x8" path="res://Assets/Fonts/tinypixel.otf" id="1_pl3jk"]
+[ext_resource type="Script" uid="uid://iha4e0vthia" path="res://Scenes/StudyIndicator.gd" id="1_su2iw"]
+[ext_resource type="FontFile" uid="uid://bdlen7yarl4rf" path="res://Assets/Fonts/ThatBoy.ttf" id="2_su2iw"]
+
+[node name="StudyIndicator" type="Node2D"]
+z_index = 2
+material = ExtResource("1_l1vwu")
+script = ExtResource("1_su2iw")
+
+[node name="NameLabel" type="Label" parent="."]
+use_parent_material = true
+offset_left = -78.0
+offset_top = -39.0
+offset_right = -29.0
+offset_bottom = -16.0
+theme_override_fonts/font = ExtResource("1_pl3jk")
+theme_override_font_sizes/font_size = 7
+text = "Cave Angler"
+horizontal_alignment = 1
+
+[node name="ProgressLabel" type="Label" parent="."]
+use_parent_material = true
+offset_left = -70.0
+offset_top = -35.0
+offset_right = -37.0
+offset_bottom = -22.0
+theme_override_colors/font_color = Color(0.58, 0.58, 0.58, 1)
+theme_override_fonts/font = ExtResource("2_su2iw")
+theme_override_font_sizes/font_size = 16
+text = "Studied"
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+use_parent_material = true
+offset_left = -78.0
+offset_top = -28.0
+offset_right = -30.0
+offset_bottom = -26.0
+color = Color(0.58, 0.58, 0.58, 1)
+
+[node name="DiagonalLine" type="Line2D" parent="."]
+use_parent_material = true
+points = PackedVector2Array(0, 0, -30, -29)
+width = 1.4
+
+[node name="HorizontalLine" type="Line2D" parent="."]
+use_parent_material = true
+points = PackedVector2Array(-30, -30, -78, -30)
+width = 1.0
