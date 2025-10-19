@@ -33,6 +33,9 @@ func _behave(delta: float) -> void:
 		patience_cooldown = PATIENCE_COOLDOWN
 	
 	action_cooldown -= delta
+	
+	if action_cooldown < -ACTION_COOLDOWN * 10:
+		fish.global_position = fish.global_position.move_toward(fish.initial_position, delta * 10.0)
 
 func retreat(_delta: float):
 	var distance = fish.global_position.distance_to(player.global_position)

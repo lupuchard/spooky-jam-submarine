@@ -2,11 +2,16 @@ extends Node2D
 class_name World
 
 const SPLASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
+const DEACTIVATION_DISTANCE := 2000.0
+
+var fishes: Array[Node]
+var cur_fish_check_index = -1
 
 func _ready() -> void:
-	var fishies = get_tree().get_nodes_in_group("fish_body")
-	for fish in fishies:
+	var fish_bodies = get_tree().get_nodes_in_group("fish_body")
+	for fish in fish_bodies:
 		fish.material = preload("res://Fish/FishBody.tres")
+	fishes = %Fish.get_children()
 	
 	%UpgradePanel/CloseButton.pressed.connect(exit_surface)
 	
@@ -16,12 +21,24 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if %Player.global_position.y < 0:
 		return_to_surface()
+	
+	cur_fish_check_index += 1
+	if cur_fish_check_index >= fishes.size():
+		cur_fish_check_index = 0
+	var fish = fishes[cur_fish_check_index]
+	var fish_distance_sqr = fish.global_position.distance_squared_to(%Player.global_position)
+	if fish_distance_sqr > pow(DEACTIVATION_DISTANCE, 2):
+		fish.process_mode = Node.PROCESS_MODE_DISABLED
+	else:
+		fish.process_mode = Node.PROCESS_MODE_INHERIT
+		
 
 func return_to_surface() -> void:
 	for option in get_tree().get_nodes_in_group("upgrade_option"):
 		option.update()
 	
 	process_mode = Node.PROCESS_MODE_DISABLED
+	%Beastiary.update()
 	%UpgradePanel.visible = true
 	%Player.visible = false
 	Save.save_state(%Player, %Fish)

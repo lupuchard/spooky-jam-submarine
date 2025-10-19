@@ -7,8 +7,8 @@ func update_to(fish: Fish):
 	#global_position = fish.global_position
 	transform = fish.get_screen_transform()
 	
-	if fish.studied or Study.get_times_studied(fish) > 0:
-		$NameLabel.text = Study.get_fish_name(fish)
+	if fish.studied or Study.get_times_studied(fish.fish_type) > 0:
+		$NameLabel.text = Study.get_fish_name(fish.fish_type)
 	else:
 		$NameLabel.text = "???"
 	

@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=34 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://so1kcd7487ek" path="res://Scene/Wall.gd" id="4_rgh2o"]
 [ext_resource type="Script" uid="uid://ds6akscj7vkvi" path="res://Player/StatusBar.gd" id="5_pbw6q"]
 [ext_resource type="PackedScene" uid="uid://wklqvbx7bd17" path="res://Player/StudyIndicator.tscn" id="6_vy5pj"]
+[ext_resource type="AudioStream" uid="uid://bcqc2pq84op54" path="res://Assets/Sound/vehicle_ambience.mp3" id="7_bf81u"]
 [ext_resource type="AudioStream" uid="uid://b68k1ubaflc3y" path="res://Assets/Sound/underwater_ambience.mp3" id="7_grg3l"]
 [ext_resource type="PackedScene" uid="uid://ca80h3xj3qa7y" path="res://Fish/Angler.tscn" id="7_jw32o"]
 [ext_resource type="AudioStream" uid="uid://b8aij5wvts72t" path="res://Assets/Sound/hull_creak.mp3" id="7_kp1vv"]
@@ -20,6 +21,9 @@
 [ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Scene/DepthLabel.gd" id="14_gclda"]
 [ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Scene/UpgradeOption.tscn" id="14_mr7am"]
 [ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Scene/UpgradePanel.gd" id="14_sc4dx"]
+[ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
+[ext_resource type="FontFile" uid="uid://d30j8tnlnfsv4" path="res://Assets/Fonts/Abaddon Light.ttf" id="19_aa3qu"]
+[ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Scene/Beastiary.gd" id="22_bf81u"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -104,7 +108,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-3213, 323)
+position = Vector2(168, 136)
 script = ExtResource("1_rgh2o")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
@@ -131,6 +135,10 @@ texture = ExtResource("4_jw32o")
 [node name="HullCreak" type="AudioStreamPlayer" parent="World/Player"]
 stream = ExtResource("7_kp1vv")
 pitch_scale = 0.5
+
+[node name="VehicleAmbience" type="AudioStreamPlayer" parent="World/Player"]
+stream = ExtResource("7_bf81u")
+autoplay = true
 
 [node name="LeftWall" type="Polygon2D" parent="World"]
 position = Vector2(-13, -9)
@@ -200,7 +208,7 @@ position = Vector2(-1036, 2320)
 position = Vector2(-994, 2308)
 
 [node name="Viperfish3" parent="World/Fish" instance=ExtResource("12_e6irg")]
-position = Vector2(-951, 2287)
+position = Vector2(-961, 2287)
 
 [node name="Viperfish4" parent="World/Fish" instance=ExtResource("12_e6irg")]
 position = Vector2(-968, 2314)
@@ -211,8 +219,15 @@ position = Vector2(242, 19)
 
 [node name="UnderwaterAmbience" type="AudioStreamPlayer" parent="World"]
 stream = ExtResource("7_grg3l")
-volume_db = -7.0
+volume_db = -4.0
 autoplay = true
+
+[node name="SpookyAmbience" type="AudioStreamPlayer2D" parent="World"]
+position = Vector2(-138, 3624)
+stream = ExtResource("15_iab34")
+autoplay = true
+max_distance = 3000.0
+panning_strength = 0.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -278,55 +293,73 @@ offset_bottom = 417.0
 text = "0"
 script = ExtResource("14_gclda")
 
-[node name="UpgradePanel" type="PanelContainer" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+[node name="UpgradePanel" type="Control" parent="CanvasLayer"]
 unique_name_in_owner = true
 visible = false
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_i0sg4")
-script = ExtResource("14_sc4dx")
-player = NodePath("../../World/Player")
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="Container" type="VBoxContainer" parent="CanvasLayer/UpgradePanel"]
+[node name="TabContainer" type="TabContainer" parent="CanvasLayer/UpgradePanel"]
+layout_mode = 0
+offset_left = 161.5
+offset_top = 138.5
+offset_right = 606.5
+offset_bottom = 293.5
+theme_override_fonts/font = ExtResource("19_aa3qu")
+theme_override_font_sizes/font_size = 16
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0sg4")
+current_tab = 0
+
+[node name="Upgrades" type="VBoxContainer" parent="CanvasLayer/UpgradePanel/TabContainer" node_paths=PackedStringArray("player")]
 layout_mode = 2
 theme_override_constants/separation = 6
+script = ExtResource("14_sc4dx")
+player = NodePath("../../../../World/Player")
+metadata/_tab_index = 0
 
-[node name="Label" type="Label" parent="CanvasLayer/UpgradePanel/Container"]
+[node name="Label" type="Label" parent="CanvasLayer/UpgradePanel/TabContainer/Upgrades"]
 layout_mode = 2
 theme_type_variation = &"LabelBig"
 text = "Total research points: 480
 Unspent points: 120"
 
-[node name="HSeparator" type="HSeparator" parent="CanvasLayer/UpgradePanel/Container"]
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/UpgradePanel/TabContainer/Upgrades"]
 layout_mode = 2
 theme_override_constants/separation = 2
 
-[node name="HullUpgradeOption" parent="CanvasLayer/UpgradePanel/Container" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+[node name="HullUpgradeOption" parent="CanvasLayer/UpgradePanel/TabContainer/Upgrades" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
 layout_mode = 2
-player = NodePath("../../../../World/Player")
+player = NodePath("../../../../../World/Player")
 
-[node name="SpeedUpgradeOption" parent="CanvasLayer/UpgradePanel/Container" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+[node name="SpeedUpgradeOption" parent="CanvasLayer/UpgradePanel/TabContainer/Upgrades" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
 layout_mode = 2
-player = NodePath("../../../../World/Player")
+player = NodePath("../../../../../World/Player")
 upgrade_type = 2
 
-[node name="BatteryUpgradeOption" parent="CanvasLayer/UpgradePanel/Container" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+[node name="BatteryUpgradeOption" parent="CanvasLayer/UpgradePanel/TabContainer/Upgrades" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
 layout_mode = 2
-player = NodePath("../../../../World/Player")
+player = NodePath("../../../../../World/Player")
 upgrade_type = 1
+
+[node name="Beastiary" type="ScrollContainer" parent="CanvasLayer/UpgradePanel/TabContainer"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+script = ExtResource("22_bf81u")
+metadata/_tab_index = 1
+
+[node name="BeastiaryEntryList" type="VBoxContainer" parent="CanvasLayer/UpgradePanel/TabContainer/Beastiary"]
+layout_mode = 2
 
 [node name="CloseButton" type="Button" parent="CanvasLayer/UpgradePanel"]
 custom_minimum_size = Vector2(0, 20)
-layout_mode = 2
+layout_mode = 0
+offset_left = 557.0
+offset_top = 141.0
+offset_right = 604.0
+offset_bottom = 168.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Close"

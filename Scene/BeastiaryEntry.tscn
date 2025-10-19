@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=3 uid="uid://deqjtfy6v36c2"]
+
+[ext_resource type="Script" uid="uid://8dpd44civslf" path="res://Scene/BeastiaryEntry.gd" id="1_je2lf"]
+[ext_resource type="FontFile" uid="uid://c3456ef513ov" path="res://Assets/Fonts/Abaddon Bold.ttf" id="1_wedow"]
+
+[node name="BeastiaryEntry" type="HBoxContainer"]
+offset_right = 420.0
+offset_bottom = 19.0
+theme_override_constants/separation = 10
+script = ExtResource("1_je2lf")
+
+[node name="NameLabel" type="Label" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(90, 0)
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+theme_override_fonts/font = ExtResource("1_wedow")
+text = "Cave angler:"
+horizontal_alignment = 2
+
+[node name="DescriptionLabel" type="Label" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(320, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "4 specimens studied. Anglerfish are ray-finned fish that use a modified dorsal fin ray as a lure for prey. The cave angler lives in caves."
+autowrap_mode = 2

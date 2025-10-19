@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://ca80h3xj3qa7y"]
+[gd_scene load_steps=9 format=3 uid="uid://ca80h3xj3qa7y"]
 
 [ext_resource type="Texture2D" uid="uid://odrakurbublb" path="res://Assets/Fish/Angler/Body.png" id="1_eaveb"]
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_hfkjb"]
 [ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="2_hfkjb"]
 [ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/FishBehavior/ShyFishBehavior.gd" id="2_o4hq0"]
+[ext_resource type="AudioStream" uid="uid://dawdc3a4nho8" path="res://Assets/Sound/creature_breathe.mp3" id="5_q21dd"]
 
 [sub_resource type="Resource" id="Resource_q21dd"]
 script = ExtResource("2_o4hq0")
@@ -40,3 +41,9 @@ texture = ExtResource("2_hfkjb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_eaveb")
+
+[node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_q21dd")
+volume_db = -4.0
+pitch_scale = 0.8
+attenuation = 2.000001

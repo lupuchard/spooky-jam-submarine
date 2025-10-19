@@ -45,6 +45,7 @@ const RAYCAST_LENGTH := 120
 
 const DEPTH_DAMAGE := 0.5
 const DEPTH_DAMAGE_DELAY := 1.0
+const MAX_VEHICLE_AMBIENCE_DEPTH := 1200
 
 const CRASH_SOUND = preload("res://Assets/Sound/crash.mp3")
 const DASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
@@ -102,21 +103,21 @@ func _ready():
 	upgrades.resize(UpgradeType.NUM_UPGRADES)
 	upgrade_levels.resize(UpgradeType.NUM_UPGRADES)
 	
-	var hullUpgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
-	hullUpgrade.costs = [0, 20, 50, 100]
-	hullUpgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
-	hullUpgrade.values.append(PackedFloat64Array([1200.0, 2400.0, 3600.0, 5000.0])) # Max Depth
-	upgrades[UpgradeType.Hull] = hullUpgrade
+	var hull_upgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
+	hull_upgrade.costs = [0, 20, 50, 100]
+	hull_upgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
+	hull_upgrade.values.append(PackedFloat64Array([5000.0, 2400.0, 3600.0, 5000.0])) # Max Depth
+	upgrades[UpgradeType.Hull] = hull_upgrade
 	
-	var speedUpgrade := Upgrade.new("Speed", [Stat.Speed])
-	speedUpgrade.costs = [0, 20, 50, 100]
-	speedUpgrade.values = [[1.0, 1.2, 1.5, 2.0]]
-	upgrades[UpgradeType.Speed] = speedUpgrade
+	var speed_upgrade := Upgrade.new("Speed", [Stat.Speed])
+	speed_upgrade.costs = [0, 20, 50, 100]
+	speed_upgrade.values = [[1.0, 1.2, 1.5, 2.0]]
+	upgrades[UpgradeType.Speed] = speed_upgrade
 	
-	var batteryUpgrade := Upgrade.new("Battery", [Stat.Battery])
-	batteryUpgrade.costs = [0, 20, 50, 100]
-	batteryUpgrade.values = [[100.0, 150.0, 200.0, 300.0]]
-	upgrades[UpgradeType.Battery] = batteryUpgrade
+	var battery_upgrade := Upgrade.new("Battery", [Stat.Battery])
+	battery_upgrade.costs = [0, 20, 50, 100]
+	battery_upgrade.values = [[100.0, 150.0, 200.0, 300.0]]
+	upgrades[UpgradeType.Battery] = battery_upgrade
 	
 	for i in range(0, UpgradeType.NUM_UPGRADES):
 		set_upgrade_level(i, 0)
@@ -187,6 +188,8 @@ func _process(delta: float):
 	
 	if stats[Stat.Battery] < 0:
 		die("You ran out of battery. And died.")
+	
+	$VehicleAmbience.volume_db = min(global_position.y / MAX_VEHICLE_AMBIENCE_DEPTH, 1.0) * 80.0 - 80.0
 
 func notify(text: String):
 	var label := Label.new()
@@ -265,7 +268,7 @@ func _physics_process(delta: float):
 		var collision_speed = abs(collision_direction.dot(prev_vel))
 		if collision_speed > COLLISION_THRESH:
 			stats[Stat.Health] -= collision_speed * COLLISION_DAMAGE_MOD
-			Audio.play(CRASH_SOUND, null, linear_to_db(collision_speed), 0.4, 0.6)
+			Audio.play(CRASH_SOUND, null, linear_to_db(collision_speed / 4), 0.4, 0.6)
 		vel = Vector2.ZERO
 	
 	$Camera2D.global_position.y = max(global_position.y, get_viewport().size.y / 4)

@@ -14,18 +14,30 @@ class_name Fish
 @export var is_sprite_facing_left: bool = true
 @export var flip: bool = false
 @export var contact_damage: float = 0.0
+
+@export var idle_sound_period := 10.0
+
 @export var behavior: FishBehaviorBase = null
 
 var studied = false
 var study_progress: float = 0.0
 var facing_left: bool
+var initial_position: Vector2
+var idle_sound_cooldown := 0.0
 
 var body: Node2D
+var movement_sound: AudioStreamPlayer2D
+var idle_sound: AudioStreamPlayer2D
 
 func _ready():
 	body = $Body
+	movement_sound = find_child("MovementSound", false)
+	idle_sound = find_child("IdleSound", false)
+	idle_sound_cooldown = idle_sound_period
+	
 	facing_left = is_sprite_facing_left
 	if flip: set_facing(!facing_left)
+	initial_position = global_position
 	
 	collision_layer = 2
 	
@@ -59,6 +71,11 @@ func _process(delta: float):
 	
 	if behavior != null:
 		behavior._behave(delta)
+	
+	idle_sound_cooldown -= delta
+	if idle_sound_cooldown <= 0 and idle_sound != null:
+		idle_sound.play()
+		idle_sound_cooldown = randf_range(idle_sound_period, idle_sound_period * 3)
 
 func set_facing(left: bool) -> void:
 	if left != facing_left:

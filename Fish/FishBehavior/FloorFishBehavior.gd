@@ -19,9 +19,13 @@ func _behave(delta: float) -> void:
 			is_idle = false
 			dir = [Vector2.RIGHT, Vector2.LEFT].pick_random()
 			state_time_remaining = (1.0 - idle_proportion) * randf_range(0.0, state_length * 2.0)
+			if fish.movement_sound != null:
+				fish.movement_sound.play()
 		else:
 			is_idle = true
 			state_time_remaining = idle_proportion * state_length * randf_range(0.0, state_length * 2.0)
+			if fish.movement_sound != null:
+				fish.movement_sound.stop()
 	
 	if !is_idle:
 		fish.move_and_collide(dir * delta * walk_speed)

@@ -15,3 +15,5 @@ Button/styles/normal = ExtResource("3_h48jq")
 LabelBig/base_type = &"Label"
 LabelBig/font_sizes/font_size = 16
 LabelBig/fonts/font = ExtResource("1_a02aw")
+TabBar/font_sizes/font_size = 16
+TabBar/fonts/font = ExtResource("1_a02aw")
