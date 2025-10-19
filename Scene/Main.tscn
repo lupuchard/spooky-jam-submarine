@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=27 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
@@ -13,6 +13,9 @@
 [ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Player/StatusCount.gd" id="9_bmxlf"]
 [ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/ShyFishBehavior.gd" id="11_4kpch"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
+[ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Scene/DepthLabel.gd" id="14_gclda"]
+[ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Scene/UpgradeOption.tscn" id="14_mr7am"]
+[ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Scene/UpgradePanel.gd" id="14_sc4dx"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -68,10 +71,28 @@ shader_parameter/offSetSpeed = Vector2(0.1, 0.1)
 shader_parameter/backGroundDirX = 0.00500000349738
 shader_parameter/backGroundDirY = 0.00500000349738
 
-[node name="World" type="Node2D"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0sg4"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.21960784, 0.25882354, 0.3019608, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+anti_aliasing = false
+
+[node name="Game" type="Node2D"]
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+position = Vector2(6, 6)
+color = Color(0, 0, 0.12156863, 1)
+
+[node name="World" type="Node2D" parent="."]
 script = ExtResource("1_50glp")
 
-[node name="ColorRect" type="ColorRect" parent="."]
+[node name="BlueBackground" type="ColorRect" parent="World"]
 custom_minimum_size = Vector2(2000, 2000)
 anchors_preset = 5
 anchor_left = 0.5
@@ -84,25 +105,25 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 color = Color(0, 0.39215687, 1, 1)
 
-[node name="Player" type="CharacterBody2D" parent="."]
+[node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-1031, 2058)
+position = Vector2(-88, 311)
 script = ExtResource("1_rgh2o")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="Player"]
+[node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
 material = SubResource("CanvasItemMaterial_jw32o")
 sprite_frames = SubResource("SpriteFrames_rgh2o")
 autoplay = "default"
 frame_progress = 0.9964846
 
-[node name="Camera2D" type="Camera2D" parent="Player"]
+[node name="Camera2D" type="Camera2D" parent="World/Player"]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Player"]
 position = Vector2(1, 1)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_rgh2o")
 
-[node name="Spotlight" type="PointLight2D" parent="Player"]
+[node name="Spotlight" type="PointLight2D" parent="World/Player"]
 light_mask = 2
 visibility_layer = 2
 position = Vector2(1, 1)
@@ -110,35 +131,31 @@ energy = 0.2
 shadow_enabled = true
 texture = ExtResource("4_jw32o")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="World/Player"]
 stream = ExtResource("7_grg3l")
 volume_db = -7.0
 autoplay = true
 
-[node name="LeftWall" type="Polygon2D" parent="."]
+[node name="LeftWall" type="Polygon2D" parent="World"]
 position = Vector2(-13, -9)
 color = Color(0.34, 0.14733334, 0, 1)
-polygon = PackedVector2Array(-4191, 15, 13, 11, 7, 76, -9, 109, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
+polygon = PackedVector2Array(-4193, 3, 14, 6, 7, 76, -9, 109, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
 script = ExtResource("4_rgh2o")
 
-[node name="RightWall" type="Polygon2D" parent="."]
+[node name="RightWall" type="Polygon2D" parent="World"]
 position = Vector2(-462, -6)
 color = Color(0.34, 0.14733334, 0, 1)
 polygon = PackedVector2Array(2141, 7, 979, 4, 979, 49, 941, 109, 868, 157, 808, 212, 720, 341, 494, 338, 229, 467, 21, 441, -153, 379, -381, 395, -630, 430, -903, 605, -858, 1220, -838, 1683, -592, 1925, -341, 1814, 79, 1899, 483, 2101, 1076, 2181, 1104, 2315, 953, 2366, 796, 2396, 478, 2356, 93, 2275, -286, 2280, -584, 2366, -837, 2573, -986, 3328, -1041, 5591, 2101, 5572)
 script = ExtResource("4_rgh2o")
 
-[node name="SkyLight" type="PointLight2D" parent="."]
+[node name="SkyLight" type="PointLight2D" parent="World"]
 position = Vector2(239, 1498)
 scale = Vector2(4, 4)
 texture = SubResource("GradientTexture2D_vy5pj")
 
-[node name="CanvasModulate" type="CanvasModulate" parent="."]
-position = Vector2(6, 6)
-color = Color(0, 0, 0.12156863, 1)
+[node name="Fish" type="Node2D" parent="World"]
 
-[node name="Fish" type="Node2D" parent="."]
-
-[node name="Angler" parent="Fish" instance=ExtResource("7_jw32o")]
+[node name="Angler" parent="World/Fish" instance=ExtResource("7_jw32o")]
 position = Vector2(-905, 2062)
 size = 10.0
 raycasts_needed = 3
@@ -148,12 +165,18 @@ behavior = SubResource("Resource_grg3l")
 
 [node name="StudyIndicator" parent="CanvasLayer" instance=ExtResource("6_vy5pj")]
 unique_name_in_owner = true
-position = Vector2(-1031, 2058)
 
-[node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
+[node name="WaterEffect" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_i0sg4")
-offset_right = 768.0
-offset_bottom = 430.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -4.0
+offset_top = -4.0
+offset_right = 4.0
+offset_bottom = 4.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HealthBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
@@ -162,7 +185,7 @@ offset_right = 48.0
 offset_bottom = 409.0
 color = Color(1, 0, 0, 1)
 script = ExtResource("5_pbw6q")
-player = NodePath("../../Player")
+player = NodePath("../../World/Player")
 
 [node name="PowerBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
@@ -171,8 +194,8 @@ offset_right = 48.0
 offset_bottom = 415.0
 color = Color(1, 1, 0, 1)
 script = ExtResource("5_pbw6q")
-player = NodePath("../../Player")
-stat = 1
+player = NodePath("../../World/Player")
+stat = 2
 
 [node name="DashBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
@@ -181,14 +204,76 @@ offset_right = 48.0
 offset_bottom = 421.0
 color = Color(0, 1, 1, 1)
 script = ExtResource("5_pbw6q")
-player = NodePath("../../Player")
-stat = 2
+player = NodePath("../../World/Player")
+stat = 4
 
 [node name="KnowledgeLabel" type="Label" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+offset_left = 722.0
+offset_top = 405.0
+offset_right = 762.0
+offset_bottom = 428.0
+theme_type_variation = &"LabelBig"
+text = "0"
+script = ExtResource("9_bmxlf")
+player = NodePath("../../World/Player")
+
+[node name="DepthLabel" type="Label" parent="CanvasLayer"]
 offset_left = 8.0
 offset_top = 394.0
 offset_right = 48.0
 offset_bottom = 417.0
 text = "0"
-script = ExtResource("9_bmxlf")
-player = NodePath("../../Player")
+script = ExtResource("14_gclda")
+
+[node name="UpgradePanel" type="PanelContainer" parent="CanvasLayer" node_paths=PackedStringArray("player")]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0sg4")
+script = ExtResource("14_sc4dx")
+player = NodePath("../../World/Player")
+
+[node name="Container" type="VBoxContainer" parent="CanvasLayer/UpgradePanel"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Label" type="Label" parent="CanvasLayer/UpgradePanel/Container"]
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "Total research points: 480
+Unspent points: 120"
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/UpgradePanel/Container"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="HullUpgradeOption" parent="CanvasLayer/UpgradePanel/Container" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+layout_mode = 2
+player = NodePath("../../../../World/Player")
+
+[node name="SpeedUpgradeOption" parent="CanvasLayer/UpgradePanel/Container" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+layout_mode = 2
+player = NodePath("../../../../World/Player")
+upgrade_type = 2
+
+[node name="BatteryUpgradeOption" parent="CanvasLayer/UpgradePanel/Container" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+layout_mode = 2
+player = NodePath("../../../../World/Player")
+upgrade_type = 1
+
+[node name="CloseButton" type="Button" parent="CanvasLayer/UpgradePanel"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "Close"

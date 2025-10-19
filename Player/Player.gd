@@ -3,14 +3,23 @@ class_name Player
 
 enum Stat {
 	Health,
-	Power,
+	MaxDepth,
+	Battery,
+	Speed,
 	DashPower,
 	NUM_STATS
 }
 
 enum Res {
-	Knowledge,
+	Research,
 	NUM_RESOURCES
+}
+
+enum UpgradeType {
+	Hull,
+	Battery,
+	Speed,
+	NUM_UPGRADES
 }
 
 const HORZ_ACCEL = 6.0
@@ -43,6 +52,19 @@ var dash_direction := 1.0
 var stats: Array[float] = []
 var maxStats: Array[float] = []
 var resources: Array[int] = []
+var total_research: int = 0
+
+class Upgrade:
+	func _init(init_name: String, init_stats: Array[Stat]) -> void:
+		self.name = init_name
+		self.stats = init_stats
+	var name: String
+	var stats: Array[Stat]
+	var costs: PackedInt32Array = []
+	var values: Array[PackedFloat64Array] = []
+var upgrades: Array[Upgrade]
+var upgrade_levels: Array[int]
+
 
 var engines_on := false
 var pumps_on := false
@@ -54,9 +76,9 @@ var studying: Fish = null
 var study_speed: float = 0.2
 
 func _ready():
+	generate_raycasts()
+	
 	maxStats.resize(Stat.NUM_STATS)
-	maxStats[Stat.Health] = 10.0
-	maxStats[Stat.Power] = 100.0
 	maxStats[Stat.DashPower] = DASH_COOLDOWN
 	
 	stats.resize(Stat.NUM_STATS)
@@ -67,10 +89,42 @@ func _ready():
 	for i in range(0, Res.NUM_RESOURCES):
 		resources[i] = 0
 	
-	generate_raycasts()
+	upgrades.resize(UpgradeType.NUM_UPGRADES)
+	upgrade_levels.resize(UpgradeType.NUM_UPGRADES)
+	
+	var hullUpgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
+	hullUpgrade.costs = [0, 20, 50, 100]
+	hullUpgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
+	hullUpgrade.values.append(PackedFloat64Array([2000.0, 4000.0, 6000.0, 8000.0])) # Max Depth
+	upgrades[UpgradeType.Hull] = hullUpgrade
+	
+	var speedUpgrade := Upgrade.new("Speed", [Stat.Speed])
+	speedUpgrade.costs = [0, 20, 50, 100]
+	speedUpgrade.values = [[1.0, 1.2, 1.5, 2.0]]
+	upgrades[UpgradeType.Speed] = speedUpgrade
+	
+	var batteryUpgrade := Upgrade.new("Battery", [Stat.Battery])
+	batteryUpgrade.costs = [0, 20, 50, 100]
+	batteryUpgrade.values = [[100.0, 150.0, 200.0, 300.0]]
+	upgrades[UpgradeType.Battery] = batteryUpgrade
+	
+	for i in range(0, UpgradeType.NUM_UPGRADES):
+		set_upgrade_level(i, 0)
+	
+	total_research = 300
+	resources[Res.Research] = 300
+
+func set_upgrade_level(upgrade_type: UpgradeType, level: int) -> void:
+	var upgrade := upgrades[upgrade_type]
+	for i in range(0, upgrade.stats.size()):
+		var stat = upgrade.stats[i]
+		var value_arr := upgrade.values[i]
+		maxStats[stat] = value_arr[min(level, value_arr.size() - 1)]
+		stats[stat] = maxStats[stat]
+	upgrade_levels[upgrade_type] = level
 
 # Raycasts are used to detect if fish are in the player's light cone
-func generate_raycasts():
+func generate_raycasts() -> void:
 	var raycast_spacing = RAYCAST_ANGLE / (NUM_RAYCASTS + 1)
 	for i in range(0, NUM_RAYCASTS):
 		var angle = raycast_spacing * (i + 1) - RAYCAST_ANGLE / 2
@@ -80,11 +134,11 @@ func generate_raycasts():
 		$Spotlight.add_child(raycast)
 
 func _process(delta: float):
-	stats[Stat.Power] -= idle_power_drain * delta
+	stats[Stat.Battery] -= idle_power_drain * delta
 	if engines_on:
-		stats[Stat.Power] -= engine_power_drain * delta
+		stats[Stat.Battery] -= engine_power_drain * delta
 	if pumps_on:
-		stats[Stat.Power] -= pump_power_drain * delta
+		stats[Stat.Battery] -= pump_power_drain * delta
 	
 	stats[Stat.DashPower] += delta
 	
@@ -99,9 +153,10 @@ func _process(delta: float):
 			studying.study_progress += delta * studying.study_speed * study_speed
 			if studying.study_progress >= 1.0:
 				var reward = Study.add_studied(studying)
-				notify("+%s Knowledge" % reward)
+				notify("+%s Research Points" % reward)
 				Audio.play(CLICK_SOUND, self)
-				resources[Res.Knowledge] += reward
+				resources[Res.Research] += reward
+				total_research += reward
 	else:
 		%StudyIndicator.visible = false
 
@@ -140,13 +195,14 @@ func is_fish_in_range(fish: Fish, raycasts: int) -> bool:
 	return distance_sqr < pow(RAYCAST_LENGTH - fish.size, 2)
 
 func _physics_process(delta: float):
+	var speed = stats[Player.Stat.Speed]
 	var prev_vel = vel
 	engines_on = true
 	if Input.is_action_pressed("right"):
-		vel.x = move_toward(vel.x, HORZ_TOP_SPEED, delta * HORZ_ACCEL)
+		vel.x = move_toward(vel.x, HORZ_TOP_SPEED * speed, delta * HORZ_ACCEL * speed)
 		dash_direction = 1.0
 	elif Input.is_action_pressed("left"):
-		vel.x = move_toward(vel.x, -HORZ_TOP_SPEED, delta * HORZ_ACCEL)
+		vel.x = move_toward(vel.x, -HORZ_TOP_SPEED * speed, delta * HORZ_ACCEL * speed)
 		dash_direction = -1.0
 	else:
 		engines_on = false
@@ -154,17 +210,17 @@ func _physics_process(delta: float):
 	
 	pumps_on = true
 	if Input.is_action_pressed("ascend"):
-		vel.y = move_toward(vel.y, -ASC_TOP_SPEED, delta * ASC_ACCEL)
+		vel.y = move_toward(vel.y, -ASC_TOP_SPEED * speed, delta * ASC_ACCEL * speed)
 	elif Input.is_action_pressed("descend"):
-		vel.y = move_toward(vel.y, DESC_TOP_SPEED, delta * DESC_ACCEL)
+		vel.y = move_toward(vel.y, DESC_TOP_SPEED * speed, delta * DESC_ACCEL * speed)
 	else:
 		pumps_on = false
 		vel.y = move_toward(vel.y, 0, delta * max(ASC_ACCEL, DESC_ACCEL))
 	
 	if stats[Stat.DashPower] >= DASH_COOLDOWN and Input.is_action_just_pressed("dash"):
-		vel.x += dash_direction * DASH_SPEED
+		vel.x += dash_direction * DASH_SPEED * speed
 		stats[Stat.DashPower] = 0
-		stats[Stat.Power] -= DASH_POWER_CONSUMPTION
+		stats[Stat.Battery] -= DASH_POWER_CONSUMPTION
 		Audio.play(DASH_SOUND, self, 0.0, 0.9, 1.1)
 	
 	var collision = move_and_collide(vel)
@@ -175,4 +231,5 @@ func _physics_process(delta: float):
 			stats[Stat.Health] -= collision_speed * COLLISION_DAMAGE_MOD
 			Audio.play(CRASH_SOUND, self, linear_to_db(collision_speed), 0.4, 0.6)
 		vel = Vector2.ZERO
-		
+	
+	$Camera2D.global_position.y = max(global_position.y, get_viewport().size.y / 4)

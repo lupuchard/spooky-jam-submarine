@@ -18,9 +18,7 @@ var action_cooldown := 0.0
 
 func _behave(delta: float, fish: Fish) -> void:
 	if action_cooldown <= 0:
-		print("%s vs %s" % [fish.global_position,  player.global_position])
 		var dist_sqr = fish.global_position.distance_squared_to(player.global_position)
-		print("%s vs %s" % [sqrt(dist_sqr), max_distance(fish)])
 		if dist_sqr < pow(max_distance(fish), 2):
 			if retreats < patience:
 				retreat(delta, fish)

@@ -32,6 +32,7 @@ window/stretch/mode="viewport"
 [global_group]
 
 fish_body=""
+upgrade_option=""
 
 [gui]
 

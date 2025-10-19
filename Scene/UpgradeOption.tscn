@@ -1,0 +1,38 @@
+[gd_scene load_steps=2 format=3 uid="uid://cimhux024qh56"]
+
+[ext_resource type="Script" uid="uid://cy6iyfnegxbi3" path="res://Scene/UpgradeOption.gd" id="1_lfc7a"]
+
+[node name="UpgradeOption" type="HBoxContainer"]
+script = ExtResource("1_lfc7a")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_top = 3
+theme_override_constants/margin_right = 4
+
+[node name="CostLabel" type="Label" parent="MarginContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 0)
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "10 Points:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(325, 0)
+layout_mode = 2
+text = "Upgrade Health 10→12, Max Depth 100m→200m"
+
+[node name="MarginContainer2" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 3
+
+[node name="ProgressLabel" type="Label" parent="MarginContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "0/5"
+vertical_alignment = 1
