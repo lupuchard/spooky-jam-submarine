@@ -1,11 +1,6 @@
 extends StaticBody2D
 class_name Fish
 
-enum Facing {
-	Left,
-	Right
-}
-
 @export var fish_type: FishStudy.FishType
 
 # Determines how close the player needs to be to scan the fish
@@ -17,24 +12,40 @@ enum Facing {
 @export var study_reward_factor: int = 1
 
 @export var bob_amount: float = 5.0
-@export var facing_initial: Facing = Facing.Left
+@export var is_sprite_facing_left: bool = true
 @export var behavior: FishBehaviorBase = null
 
 var studied = false
 var study_progress: float = 0.0
-var facing: Facing
+var facing_left: bool
+
+var body: Node2D
 
 func _ready():
-	facing = facing_initial
+	body = $Body
+	facing_left = is_sprite_facing_left
 	collision_layer = 1 | 2
 	
 	if behavior != null:
+		behavior = behavior.duplicate()
+		behavior.fish = self
 		behavior.player = %Player
 
 var time_passed = 0
 func _process(delta: float):
 	time_passed += delta
-	$BodySprite.position.y = sin(time_passed) * bob_amount
+	body.position.y = sin(time_passed) * bob_amount
 	
 	if behavior != null:
-		behavior._behave(delta, self)
+		behavior._behave(delta)
+
+func set_facing(left: bool) -> void:
+	if left != facing_left:
+		facing_left = !facing_left
+		body.scale.x = -body.scale.x
+
+func update_facing(dir: Vector2, flipped: bool = false):
+	if dir.x < -1.0:
+		set_facing(!flipped)
+	elif dir.x > 1.0:
+		set_facing(flipped)

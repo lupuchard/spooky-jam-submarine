@@ -65,7 +65,6 @@ class Upgrade:
 var upgrades: Array[Upgrade]
 var upgrade_levels: Array[int]
 
-
 var engines_on := false
 var pumps_on := false
 var idle_power_drain := 0.1
@@ -110,9 +109,6 @@ func _ready():
 	
 	for i in range(0, UpgradeType.NUM_UPGRADES):
 		set_upgrade_level(i, 0)
-	
-	total_research = 300
-	resources[Res.Research] = 300
 
 func set_upgrade_level(upgrade_type: UpgradeType, level: int) -> void:
 	var upgrade := upgrades[upgrade_type]

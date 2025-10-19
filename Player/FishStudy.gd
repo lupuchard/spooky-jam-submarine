@@ -2,7 +2,9 @@ extends Node
 class_name FishStudy
 
 enum FishType {
-	CaveAngler
+	CaveAngler,
+	Guppo,
+	Crab
 }
 
 var names: Dictionary[FishType, String] = {}
@@ -10,6 +12,8 @@ var times_studied: Dictionary[FishType, int] = {}
 
 func _ready():
 	names[FishType.CaveAngler] = "Cave Angler"
+	names[FishType.Guppo] = "Guppo"
+	names[FishType.Crab] = "Crab"
 
 func add_studied(fish: Fish) -> int:
 	if !fish.studied:

@@ -1,8 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://ca80h3xj3qa7y"]
+[gd_scene load_steps=8 format=3 uid="uid://ca80h3xj3qa7y"]
 
 [ext_resource type="Texture2D" uid="uid://odrakurbublb" path="res://Assets/Fish/Angler/Body.png" id="1_eaveb"]
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_hfkjb"]
 [ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="2_hfkjb"]
+[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/ShyFishBehavior.gd" id="2_o4hq0"]
+
+[sub_resource type="Resource" id="Resource_q21dd"]
+script = ExtResource("2_o4hq0")
+patience = 2
+retreat_range = 5.0
+retreat_distance = 70.0
+metadata/_custom_type_script = "uid://wmj24v30fjei"
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dc8bw"]
 light_mode = 1
@@ -13,14 +21,20 @@ radius = 20.024984
 [node name="Angler" type="StaticBody2D"]
 collision_layer = 3
 script = ExtResource("1_hfkjb")
+size = 10.0
+raycasts_needed = 3
+behavior = SubResource("Resource_q21dd")
 
-[node name="BodySprite" type="Sprite2D" parent="." groups=["fish_body"]]
+[node name="Body" type="Node2D" parent="."]
+
+[node name="BodySprite" type="Sprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(-3, -6)
 texture = ExtResource("1_eaveb")
 
-[node name="LightSprite" type="Sprite2D" parent="BodySprite"]
+[node name="LightSprite" type="Sprite2D" parent="Body"]
 material = SubResource("CanvasItemMaterial_dc8bw")
+position = Vector2(-3, -6)
 texture = ExtResource("2_hfkjb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(1, 5)
 shape = SubResource("CircleShape2D_eaveb")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=26 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
@@ -11,7 +11,7 @@
 [ext_resource type="AudioStream" uid="uid://b68k1ubaflc3y" path="res://Assets/Sound/underwater_ambience.mp3" id="7_grg3l"]
 [ext_resource type="PackedScene" uid="uid://ca80h3xj3qa7y" path="res://Fish/Angler.tscn" id="7_jw32o"]
 [ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Player/StatusCount.gd" id="9_bmxlf"]
-[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/ShyFishBehavior.gd" id="11_4kpch"]
+[ext_resource type="PackedScene" uid="uid://dwhpbo8g4x0xx" path="res://Fish/Guppo.tscn" id="9_gclda"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
 [ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Scene/DepthLabel.gd" id="14_gclda"]
 [ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Scene/UpgradeOption.tscn" id="14_mr7am"]
@@ -48,13 +48,6 @@ height = 750
 fill = 1
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0, 0)
-
-[sub_resource type="Resource" id="Resource_grg3l"]
-script = ExtResource("11_4kpch")
-patience = 2
-retreat_range = 5.0
-retreat_distance = 70.0
-metadata/_custom_type_script = "uid://wmj24v30fjei"
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_i0sg4"]
 
@@ -139,13 +132,13 @@ autoplay = true
 [node name="LeftWall" type="Polygon2D" parent="World"]
 position = Vector2(-13, -9)
 color = Color(0.34, 0.14733334, 0, 1)
-polygon = PackedVector2Array(-4193, 3, 14, 6, 7, 76, -9, 109, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
+polygon = PackedVector2Array(-4210, -54, 276, -51, 11, -23, -17, 81, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
 script = ExtResource("4_rgh2o")
 
 [node name="RightWall" type="Polygon2D" parent="World"]
 position = Vector2(-462, -6)
 color = Color(0.34, 0.14733334, 0, 1)
-polygon = PackedVector2Array(2141, 7, 979, 4, 979, 49, 941, 109, 868, 157, 808, 212, 720, 341, 494, 338, 229, 467, 21, 441, -153, 379, -381, 395, -630, 430, -903, 605, -858, 1220, -838, 1683, -592, 1925, -341, 1814, 79, 1899, 483, 2101, 1076, 2181, 1104, 2315, 953, 2366, 796, 2396, 478, 2356, 93, 2275, -286, 2280, -584, 2366, -837, 2573, -986, 3328, -1041, 5591, 2101, 5572)
+polygon = PackedVector2Array(2141, 7, 737, -55, 983, -32, 998, 22, 961, 91, 887, 150, 815, 218, 720, 341, 494, 338, 229, 467, 21, 441, -153, 379, -381, 395, -630, 430, -903, 605, -858, 1220, -838, 1683, -592, 1925, -341, 1814, 79, 1899, 483, 2101, 1076, 2181, 1104, 2315, 953, 2366, 796, 2396, 478, 2356, 93, 2275, -286, 2280, -584, 2366, -837, 2573, -986, 3328, -1041, 5591, 2101, 5572)
 script = ExtResource("4_rgh2o")
 
 [node name="SkyLight" type="PointLight2D" parent="World"]
@@ -156,10 +149,16 @@ texture = SubResource("GradientTexture2D_vy5pj")
 [node name="Fish" type="Node2D" parent="World"]
 
 [node name="Angler" parent="World/Fish" instance=ExtResource("7_jw32o")]
-position = Vector2(-905, 2062)
-size = 10.0
-raycasts_needed = 3
-behavior = SubResource("Resource_grg3l")
+position = Vector2(-1462, 964)
+
+[node name="Guppo" parent="World/Fish" instance=ExtResource("9_gclda")]
+position = Vector2(-724, 257)
+
+[node name="Guppo2" parent="World/Fish" instance=ExtResource("9_gclda")]
+position = Vector2(-444, 224)
+
+[node name="Guppo3" parent="World/Fish" instance=ExtResource("9_gclda")]
+position = Vector2(-1001, 255)
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
