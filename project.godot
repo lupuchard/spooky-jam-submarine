@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Audio="*res://Scene/AudioManager.gd"
 Study="*res://Player/FishStudy.gd"
+Save="*res://SaveManager.gd"
 
 [display]
 

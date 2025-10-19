@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=27 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://wklqvbx7bd17" path="res://Player/StudyIndicator.tscn" id="6_vy5pj"]
 [ext_resource type="AudioStream" uid="uid://b68k1ubaflc3y" path="res://Assets/Sound/underwater_ambience.mp3" id="7_grg3l"]
 [ext_resource type="PackedScene" uid="uid://ca80h3xj3qa7y" path="res://Fish/Angler.tscn" id="7_jw32o"]
+[ext_resource type="AudioStream" uid="uid://b8aij5wvts72t" path="res://Assets/Sound/hull_creak.mp3" id="7_kp1vv"]
 [ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Player/StatusCount.gd" id="9_bmxlf"]
 [ext_resource type="PackedScene" uid="uid://dwhpbo8g4x0xx" path="res://Fish/Guppo.tscn" id="9_gclda"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
@@ -100,7 +101,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-88, 311)
+position = Vector2(167, 166)
 script = ExtResource("1_rgh2o")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
@@ -124,15 +125,14 @@ energy = 0.2
 shadow_enabled = true
 texture = ExtResource("4_jw32o")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="World/Player"]
-stream = ExtResource("7_grg3l")
-volume_db = -7.0
-autoplay = true
+[node name="HullCreak" type="AudioStreamPlayer" parent="World/Player"]
+stream = ExtResource("7_kp1vv")
+pitch_scale = 0.5
 
 [node name="LeftWall" type="Polygon2D" parent="World"]
 position = Vector2(-13, -9)
 color = Color(0.34, 0.14733334, 0, 1)
-polygon = PackedVector2Array(-4210, -54, 276, -51, 11, -23, -17, 81, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
+polygon = PackedVector2Array(-4210, -54, 276, -51, 11, -23, -17, 81, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1861, 293, -2350, 251, -2770, 310, -3145, 251, -3488, 149, -3613, 211, -3662, 408, -3619, 522, -3478, 528, -3100, 383, -2640, 449, -2185, 457, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
 script = ExtResource("4_rgh2o")
 
 [node name="RightWall" type="Polygon2D" parent="World"]
@@ -147,9 +147,11 @@ scale = Vector2(4, 4)
 texture = SubResource("GradientTexture2D_vy5pj")
 
 [node name="Fish" type="Node2D" parent="World"]
+unique_name_in_owner = true
 
 [node name="Angler" parent="World/Fish" instance=ExtResource("7_jw32o")]
-position = Vector2(-1462, 964)
+position = Vector2(-3353, 325)
+flip = true
 
 [node name="Guppo" parent="World/Fish" instance=ExtResource("9_gclda")]
 position = Vector2(-724, 257)
@@ -159,6 +161,18 @@ position = Vector2(-444, 224)
 
 [node name="Guppo3" parent="World/Fish" instance=ExtResource("9_gclda")]
 position = Vector2(-1001, 255)
+
+[node name="Guppo4" parent="World/Fish" instance=ExtResource("9_gclda")]
+position = Vector2(-2623, 321)
+
+[node name="StartPosition" type="Marker2D" parent="World"]
+unique_name_in_owner = true
+position = Vector2(242, 19)
+
+[node name="UnderwaterAmbience" type="AudioStreamPlayer" parent="World"]
+stream = ExtResource("7_grg3l")
+volume_db = -7.0
+autoplay = true
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -276,3 +290,42 @@ layout_mode = 2
 size_flags_horizontal = 8
 size_flags_vertical = 0
 text = "Close"
+
+[node name="DeathPanel" type="PanelContainer" parent="CanvasLayer"]
+unique_name_in_owner = true
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/DeathPanel"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/DeathPanel/MarginContainer"]
+layout_mode = 2
+
+[node name="DeathText" type="Label" parent="CanvasLayer/DeathPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "You died."
+horizontal_alignment = 1
+
+[node name="DeathRecoverButton" type="Button" parent="CanvasLayer/DeathPanel/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load autosave"

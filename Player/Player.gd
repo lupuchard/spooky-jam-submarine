@@ -42,15 +42,20 @@ const NUM_RAYCASTS := 8
 const RAYCAST_ANGLE := PI / 3
 const RAYCAST_LENGTH := 120
 
+const DEPTH_DAMAGE := 0.5
+const DEPTH_DAMAGE_DELAY := 1.0
+
 const CRASH_SOUND = preload("res://Assets/Sound/crash.mp3")
 const DASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
 const CLICK_SOUND = preload("res://Assets/Sound/click.ogg")
+const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
+const DEATH_SOUND_WATER = preload("res://Assets/Sound/watery_whoosh.mp3")
 
 var vel := Vector2.ZERO
 var dash_direction := 1.0
 
 var stats: Array[float] = []
-var maxStats: Array[float] = []
+var max_stats: Array[float] = []
 var resources: Array[int] = []
 var total_research: int = 0
 
@@ -74,15 +79,19 @@ var pump_power_drain := 0.2
 var studying: Fish = null
 var study_speed: float = 0.2
 
+var too_deep: bool = false
+var depth_damage_delay: float = 0.0
+var hull_creak_tween: Tween = null
+
 func _ready():
 	generate_raycasts()
 	
-	maxStats.resize(Stat.NUM_STATS)
-	maxStats[Stat.DashPower] = DASH_COOLDOWN
+	max_stats.resize(Stat.NUM_STATS)
+	max_stats[Stat.DashPower] = DASH_COOLDOWN
 	
 	stats.resize(Stat.NUM_STATS)
 	for i in range(0, Stat.NUM_STATS):
-		stats[i] = maxStats[i]
+		stats[i] = max_stats[i]
 	
 	resources.resize(Res.NUM_RESOURCES)
 	for i in range(0, Res.NUM_RESOURCES):
@@ -94,7 +103,7 @@ func _ready():
 	var hullUpgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
 	hullUpgrade.costs = [0, 20, 50, 100]
 	hullUpgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
-	hullUpgrade.values.append(PackedFloat64Array([2000.0, 4000.0, 6000.0, 8000.0])) # Max Depth
+	hullUpgrade.values.append(PackedFloat64Array([1200.0, 2400.0, 3600.0, 5000.0])) # Max Depth
 	upgrades[UpgradeType.Hull] = hullUpgrade
 	
 	var speedUpgrade := Upgrade.new("Speed", [Stat.Speed])
@@ -115,8 +124,8 @@ func set_upgrade_level(upgrade_type: UpgradeType, level: int) -> void:
 	for i in range(0, upgrade.stats.size()):
 		var stat = upgrade.stats[i]
 		var value_arr := upgrade.values[i]
-		maxStats[stat] = value_arr[min(level, value_arr.size() - 1)]
-		stats[stat] = maxStats[stat]
+		max_stats[stat] = value_arr[min(level, value_arr.size() - 1)]
+		stats[stat] = max_stats[stat]
 	upgrade_levels[upgrade_type] = level
 
 # Raycasts are used to detect if fish are in the player's light cone
@@ -150,18 +159,38 @@ func _process(delta: float):
 			if studying.study_progress >= 1.0:
 				var reward = Study.add_studied(studying)
 				notify("+%s Research Points" % reward)
-				Audio.play(CLICK_SOUND, self)
+				Audio.play(CLICK_SOUND)
 				resources[Res.Research] += reward
 				total_research += reward
 	else:
 		%StudyIndicator.visible = false
+	
+	if global_position.y > stats[Stat.MaxDepth] and !too_deep:
+		too_deep = true
+		depth_damage_delay = DEPTH_DAMAGE_DELAY
+		start_hull_creak()
+	elif global_position.y < stats[Stat.MaxDepth] and too_deep:
+		too_deep = false
+		end_hull_creak()
+	
+	if too_deep:
+		depth_damage_delay -= delta
+		if depth_damage_delay < 0:
+			stats[Stat.Health] -= DEPTH_DAMAGE * delta
+	
+	if stats[Stat.Health] < 0:
+		die("You died.")
+	
+	if stats[Stat.Battery] < 0:
+		die("You ran out of battery. And died.")
 
 func notify(text: String):
 	var label := Label.new()
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.text = text
 	label.material = preload("res://Scene/IgnoreLight.tres")
-	add_child(label)
+	get_parent().add_child(label)
+	label.position = position
 	var tween = create_tween()
 	tween.tween_property(label, "position", Vector2(randf_range(-4, 4), -50), 4)
 	tween.finished.connect(func():
@@ -217,7 +246,7 @@ func _physics_process(delta: float):
 		vel.x += dash_direction * DASH_SPEED * speed
 		stats[Stat.DashPower] = 0
 		stats[Stat.Battery] -= DASH_POWER_CONSUMPTION
-		Audio.play(DASH_SOUND, self, 0.0, 0.9, 1.1)
+		Audio.play(DASH_SOUND, null, 0.0, 0.9, 1.1)
 	
 	var collision = move_and_collide(vel)
 	if collision != null:
@@ -225,7 +254,41 @@ func _physics_process(delta: float):
 		var collision_speed = abs(collision_direction.dot(prev_vel))
 		if collision_speed > COLLISION_THRESH:
 			stats[Stat.Health] -= collision_speed * COLLISION_DAMAGE_MOD
-			Audio.play(CRASH_SOUND, self, linear_to_db(collision_speed), 0.4, 0.6)
+			Audio.play(CRASH_SOUND, null, linear_to_db(collision_speed), 0.4, 0.6)
 		vel = Vector2.ZERO
 	
 	$Camera2D.global_position.y = max(global_position.y, get_viewport().size.y / 4)
+
+func start_hull_creak():
+	if hull_creak_tween == null:
+		$HullCreak.play()
+	else:
+		hull_creak_tween.kill()
+		hull_creak_tween = create_tween()
+		hull_creak_tween.tween_property($HullCreak, "volume_db", 0, 3.0)
+
+func end_hull_creak():
+	if hull_creak_tween != null:
+		hull_creak_tween.kill()
+	hull_creak_tween = create_tween()
+	hull_creak_tween.tween_property($HullCreak, "volume_db", -80, 3.0)
+	hull_creak_tween.finished.connect(func():
+		$HullCreak.stop()
+		hull_creak_tween = null
+	)
+
+func die(death_text: String):
+	process_mode = Node.PROCESS_MODE_DISABLED
+	visible = false
+	%DeathPanel.visible = true
+	%DeathText.label = death_text
+	%DeathRecoverButton.pressed.connect(recover)
+	Audio.play(DEATH_SOUND_METAL, null, 0, 0.5)
+	#Audio.play(DEATH_SOUND_WATER, null, 0, 2.0)
+
+func recover():
+	visible = true
+	%DeathPanel.visible = false
+	global_position = %StartPosition.global_position
+	process_mode = Node.PROCESS_MODE_INHERIT
+	Save.load_state(%Player, %Fish)

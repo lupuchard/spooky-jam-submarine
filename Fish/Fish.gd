@@ -13,6 +13,7 @@ class_name Fish
 
 @export var bob_amount: float = 5.0
 @export var is_sprite_facing_left: bool = true
+@export var flip: bool = false
 @export var behavior: FishBehaviorBase = null
 
 var studied = false
@@ -24,6 +25,8 @@ var body: Node2D
 func _ready():
 	body = $Body
 	facing_left = is_sprite_facing_left
+	if flip: set_facing(!facing_left)
+	
 	collision_layer = 1 | 2
 	
 	if behavior != null:
