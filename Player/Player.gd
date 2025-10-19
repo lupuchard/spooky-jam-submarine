@@ -37,6 +37,7 @@ const DASH_COOLDOWN = 1.5
 
 const COLLISION_THRESH := 0.1
 const COLLISION_DAMAGE_MOD := 1.0
+const FISH_CONTACT_COOLDOWN := 0.5
 
 const NUM_RAYCASTS := 8
 const RAYCAST_ANGLE := PI / 3
@@ -49,7 +50,6 @@ const CRASH_SOUND = preload("res://Assets/Sound/crash.mp3")
 const DASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
 const CLICK_SOUND = preload("res://Assets/Sound/click.ogg")
 const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
-const DEATH_SOUND_WATER = preload("res://Assets/Sound/watery_whoosh.mp3")
 
 var vel := Vector2.ZERO
 var dash_direction := 1.0
@@ -75,6 +75,8 @@ var pumps_on := false
 var idle_power_drain := 0.1
 var engine_power_drain := 0.3
 var pump_power_drain := 0.2
+
+var fish_contact_cooldown := 0.0
 
 var studying: Fish = null
 var study_speed: float = 0.2
@@ -139,6 +141,8 @@ func generate_raycasts() -> void:
 		$Spotlight.add_child(raycast)
 
 func _process(delta: float):
+	fish_contact_cooldown -= delta
+	
 	stats[Stat.Battery] -= idle_power_drain * delta
 	if engines_on:
 		stats[Stat.Battery] -= engine_power_drain * delta
@@ -192,7 +196,7 @@ func notify(text: String):
 	get_parent().add_child(label)
 	label.position = position
 	var tween = create_tween()
-	tween.tween_property(label, "position", Vector2(randf_range(-4, 4), -50), 4)
+	tween.tween_property(label, "position", position + Vector2(randf_range(-4, 4), -50), 4)
 	tween.finished.connect(func():
 		label.queue_free()
 	)
@@ -205,14 +209,21 @@ func check_raycasts():
 			if collider is Fish:
 				casted.set(collider, casted.get(collider, 0) + 1)
 	
-	if studying != null and is_fish_in_range(studying, casted.get(studying, 0)):
+	# Prioritize currently studying
+	if studying != null and !studying.studied and is_fish_in_range(studying, casted.get(studying, 0)):
 		return
 	
+	# Then prioritize unstudied
 	studying = null
+	for fish in casted:
+		if is_fish_in_range(fish, casted[fish]) and !fish.studied:
+			studying = fish
+			return
+	
 	for fish in casted:
 		if is_fish_in_range(fish, casted[fish]):
 			studying = fish
-			break
+			return
 
 func is_fish_in_range(fish: Fish, raycasts: int) -> bool:
 	if raycasts < fish.raycasts_needed: return false
@@ -281,14 +292,19 @@ func die(death_text: String):
 	process_mode = Node.PROCESS_MODE_DISABLED
 	visible = false
 	%DeathPanel.visible = true
-	%DeathText.label = death_text
+	%DeathText.text = death_text
 	%DeathRecoverButton.pressed.connect(recover)
 	Audio.play(DEATH_SOUND_METAL, null, 0, 0.5)
-	#Audio.play(DEATH_SOUND_WATER, null, 0, 2.0)
 
 func recover():
 	visible = true
 	%DeathPanel.visible = false
 	global_position = %StartPosition.global_position
 	process_mode = Node.PROCESS_MODE_INHERIT
-	Save.load_state(%Player, %Fish)
+	Save.load_state(self, %Fish)
+
+func handle_fish_collision(fish: Fish):
+	if fish_contact_cooldown < 0.0:
+		stats[Stat.Health] -= fish.contact_damage
+		Audio.play(CRASH_SOUND, null, linear_to_db(fish.contact_damage / 10.0), 0.4, 0.6)
+		fish_contact_cooldown = FISH_CONTACT_COOLDOWN

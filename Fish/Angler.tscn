@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://odrakurbublb" path="res://Assets/Fish/Angler/Body.png" id="1_eaveb"]
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_hfkjb"]
 [ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="2_hfkjb"]
-[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/ShyFishBehavior.gd" id="2_o4hq0"]
+[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/FishBehavior/ShyFishBehavior.gd" id="2_o4hq0"]
 
 [sub_resource type="Resource" id="Resource_q21dd"]
 script = ExtResource("2_o4hq0")
@@ -23,6 +23,8 @@ collision_layer = 3
 script = ExtResource("1_hfkjb")
 size = 10.0
 raycasts_needed = 3
+study_reward_factor = 2
+contact_damage = 6.0
 behavior = SubResource("Resource_q21dd")
 
 [node name="Body" type="Node2D" parent="."]

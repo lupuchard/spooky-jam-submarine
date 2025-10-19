@@ -50,7 +50,10 @@ func try_move(force: bool = false):
 	tweener.set_trans(Tween.TRANS_CUBIC)
 	active_motion = null
 	fish.update_facing(motion, active_motion_direction == Dir.Backward)
-	Audio.play(MOVE_SOUND, fish, 0.0, 0.9, 1.1)
+	
+	var pitch = 1 / (sqrt(fish.size) / sqrt(10.0))
+	var volume = linear_to_db(fish.size * motion.length() / (10.0 * 70.0))
+	Audio.play(MOVE_SOUND, fish, volume, pitch * 0.9, pitch * 1.1)
 
 func max_distance(retreat_range: float):
 	return Player.RAYCAST_LENGTH - retreat_range - fish.size

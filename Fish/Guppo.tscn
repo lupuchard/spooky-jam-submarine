@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dwhpbo8g4x0xx"]
 
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_lsub5"]
-[ext_resource type="Script" uid="uid://qgwmbt4xadnu" path="res://Fish/ActiveFishBehavior.gd" id="2_kinoe"]
+[ext_resource type="Script" uid="uid://qgwmbt4xadnu" path="res://Fish/FishBehavior/ActiveFishBehavior.gd" id="2_kinoe"]
 [ext_resource type="Texture2D" uid="uid://bqlp25inne2uk" path="res://Assets/Fish/Guppo.png" id="2_muus3"]
 
 [sub_resource type="Resource" id="Resource_ggkxj"]
@@ -16,7 +16,7 @@ radius = 6.0
 [node name="Guppo" type="StaticBody2D"]
 script = ExtResource("1_lsub5")
 fish_type = 1
-size = 5.0
+size = 2.0
 study_speed = 2.0
 bob_amount = 1.0
 behavior = SubResource("Resource_ggkxj")

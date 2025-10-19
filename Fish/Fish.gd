@@ -1,6 +1,5 @@
 extends StaticBody2D
 class_name Fish
-
 @export var fish_type: FishStudy.FishType
 
 # Determines how close the player needs to be to scan the fish
@@ -14,6 +13,7 @@ class_name Fish
 @export var bob_amount: float = 5.0
 @export var is_sprite_facing_left: bool = true
 @export var flip: bool = false
+@export var contact_damage: float = 0.0
 @export var behavior: FishBehaviorBase = null
 
 var studied = false
@@ -27,12 +27,30 @@ func _ready():
 	facing_left = is_sprite_facing_left
 	if flip: set_facing(!facing_left)
 	
-	collision_layer = 1 | 2
+	collision_layer = 2
+	
+	if contact_damage > 0.0:
+		create_area_collider()
 	
 	if behavior != null:
 		behavior = behavior.duplicate()
 		behavior.fish = self
 		behavior.player = %Player
+
+func create_area_collider():
+	print("collider for %s" % name)
+	var area = Area2D.new()
+	var shapes = find_children("*", "CollisionShape2D", true, false)
+	area.collision_layer = 1
+	area.collision_mask = 1
+	for shape in shapes:
+		area.add_child(shape.duplicate())
+	add_child(area)
+	area.position = Vector2.ZERO
+	area.body_entered.connect(func(player):
+		if player is Player:
+			player.handle_fish_collision(self)
+	)
 
 var time_passed = 0
 func _process(delta: float):

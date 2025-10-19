@@ -1,0 +1,41 @@
+[gd_scene load_steps=8 format=3 uid="uid://h0al0k7i7wee"]
+
+[ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_tmlc6"]
+[ext_resource type="Texture2D" uid="uid://ea0qrcxyxhc5" path="res://Assets/bnuy2.png" id="2_5ihpb"]
+[ext_resource type="Script" uid="uid://qgwmbt4xadnu" path="res://Fish/FishBehavior/ActiveFishBehavior.gd" id="2_8f2tk"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_5ihpb"]
+[ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="3_8f2tk"]
+
+[sub_resource type="Resource" id="Resource_kj8bq"]
+script = ExtResource("2_8f2tk")
+wander_cooldown_min = 5.0
+wander_cooldown_max = 10.0
+wander_distance = 2.0
+retreat_range = 120.0
+metadata/_custom_type_script = "uid://qgwmbt4xadnu"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5ihpb"]
+radius = 16.0
+
+[node name="Jelly" type="StaticBody2D"]
+script = ExtResource("1_tmlc6")
+fish_type = 3
+size = 12.0
+contact_damage = 2.0
+behavior = SubResource("Resource_kj8bq")
+metadata/_custom_type_script = "uid://cvn0cn84nf1em"
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="BodySprite" type="Sprite2D" parent="Body" groups=["fish_body"]]
+self_modulate = Color(0, 1, 1, 1)
+position = Vector2(-1, -1)
+texture = ExtResource("2_5ihpb")
+
+[node name="Light" type="Sprite2D" parent="Body"]
+material = ExtResource("3_5ihpb")
+position = Vector2(24, 6)
+texture = ExtResource("3_8f2tk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_5ihpb")

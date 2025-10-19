@@ -4,7 +4,9 @@ class_name FishStudy
 enum FishType {
 	CaveAngler,
 	Guppo,
-	Crab
+	PaleCrab,
+	CrystalJelly,
+	Viperfish
 }
 
 var names: Dictionary[FishType, String] = {}
@@ -13,7 +15,9 @@ var times_studied: Dictionary[FishType, int] = {}
 func _ready():
 	names[FishType.CaveAngler] = "Cave Angler"
 	names[FishType.Guppo] = "Guppo"
-	names[FishType.Crab] = "Crab"
+	names[FishType.PaleCrab] = "Pale Crab"
+	names[FishType.CrystalJelly] = "Crystal Jelly"
+	names[FishType.Viperfish] = "Viperfish"
 
 func add_studied(fish: Fish) -> int:
 	if !fish.studied:
