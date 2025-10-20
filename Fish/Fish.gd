@@ -18,6 +18,7 @@ class_name Fish
 @export var idle_sound_period := 10.0
 
 @export var behavior: FishBehaviorBase = null
+@export var path: Path2D = null
 
 var studied = false
 var study_progress: float = 0.0
