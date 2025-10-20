@@ -1,0 +1,12 @@
+[gd_resource type="ParticleProcessMaterial" format=3 uid="uid://dd5x7vrkc4giy"]
+
+[resource]
+particle_flag_disable_z = true
+particle_flag_damping_as_friction = true
+spread = 180.0
+initial_velocity_min = 15.0
+initial_velocity_max = 20.0
+gravity = Vector3(0, -50, 0)
+damping_min = 0.3
+damping_max = 0.3
+turbulence_noise_strength = 0.1

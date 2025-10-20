@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=40 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
@@ -18,12 +18,18 @@
 [ext_resource type="PackedScene" uid="uid://h0al0k7i7wee" path="res://Fish/Jelly.tscn" id="11_hmjy8"]
 [ext_resource type="PackedScene" uid="uid://bsswh2ott33di" path="res://Fish/Viperfish.tscn" id="12_e6irg"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
-[ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Scene/DepthLabel.gd" id="14_gclda"]
+[ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Player/DepthLabel.gd" id="14_gclda"]
 [ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Scene/UpgradeOption.tscn" id="14_mr7am"]
 [ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Scene/UpgradePanel.gd" id="14_sc4dx"]
 [ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
+[ext_resource type="Material" uid="uid://dd5x7vrkc4giy" path="res://Scene/BubbleParticles.tres" id="16_u2c8l"]
 [ext_resource type="FontFile" uid="uid://d30j8tnlnfsv4" path="res://Assets/Fonts/Abaddon Light.ttf" id="19_aa3qu"]
 [ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Scene/Beastiary.gd" id="22_bf81u"]
+[ext_resource type="Texture2D" uid="uid://xj2olay107bj" path="res://Assets/Bubbles/bubble12x12.png" id="25_sssj8"]
+[ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Scene/SaveSlotRow.tscn" id="26_g6i1l"]
+[ext_resource type="Texture2D" uid="uid://xnjjraut2wp4" path="res://Assets/Bubbles/bubble8x8.png" id="26_u2c8l"]
+[ext_resource type="Texture2D" uid="uid://uowrb4vhy0s4" path="res://Assets/Bubbles/bubble4x4.png" id="27_g6i1l"]
+[ext_resource type="Texture2D" uid="uid://b50uimvdk2wg0" path="res://Assets/Bubbles/bubble2x2.png" id="28_reyx0"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -94,6 +100,7 @@ color = Color(0, 0, 0.12156863, 1)
 script = ExtResource("1_50glp")
 
 [node name="BlueBackground" type="ColorRect" parent="World"]
+z_index = -3
 custom_minimum_size = Vector2(2000, 2000)
 anchors_preset = 5
 anchor_left = 0.5
@@ -141,12 +148,14 @@ stream = ExtResource("7_bf81u")
 autoplay = true
 
 [node name="LeftWall" type="Polygon2D" parent="World"]
+z_index = -1
 position = Vector2(-13, -9)
 color = Color(0.34, 0.14733334, 0, 1)
 polygon = PackedVector2Array(-4211, -718, 236, -679, 255, -54, 11, -23, -17, 81, -58, 117, -106, 134, -156, 154, -238, 154, -462, 154, -852, 188, -1303, 238, -1606, 318, -1861, 293, -2350, 251, -2770, 310, -3145, 251, -3488, 149, -3613, 211, -3662, 408, -3619, 522, -3478, 528, -3100, 383, -2640, 449, -2185, 457, -1818, 656, -1823, 860, -1843, 991, -1874, 1106, -1872, 1269, -1937, 1469, -1925, 1773, -1897, 2162, -1936, 5196, -4264, 5331)
 script = ExtResource("4_rgh2o")
 
 [node name="RightWall" type="Polygon2D" parent="World"]
+z_index = -1
 position = Vector2(-462, -6)
 color = Color(0.34, 0.14733334, 0, 1)
 polygon = PackedVector2Array(2148, -416, 838, -677, 766, -54, 983, -32, 961, 91, 815, 218, 720, 341, 494, 338, 229, 467, 21, 441, -153, 379, -381, 395, -630, 430, -903, 605, -858, 1220, -838, 1683, -592, 1925, -341, 1814, 79, 1899, 483, 2101, 1076, 2181, 1104, 2315, 953, 2366, 796, 2396, 478, 2356, 93, 2275, -286, 2280, -584, 2366, -837, 2573, -986, 3328, -1041, 5591, 2101, 5572)
@@ -228,6 +237,13 @@ stream = ExtResource("15_iab34")
 autoplay = true
 max_distance = 3000.0
 panning_strength = 0.0
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="World"]
+visible = false
+position = Vector2(166, 256)
+amount = 16
+lifetime = 10.0
+process_material = ExtResource("16_u2c8l")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -402,3 +418,75 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 text = "Load autosave"
+
+[node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
+layout_mode = 2
+
+[node name="SaveSlotRow1" parent="CanvasLayer/MainMenu/VBoxContainer" instance=ExtResource("26_g6i1l")]
+layout_mode = 2
+
+[node name="SaveSlotRow2" parent="CanvasLayer/MainMenu/VBoxContainer" instance=ExtResource("26_g6i1l")]
+layout_mode = 2
+
+[node name="SaveSlotRow3" parent="CanvasLayer/MainMenu/VBoxContainer" instance=ExtResource("26_g6i1l")]
+layout_mode = 2
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="CreditsButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Credits"
+
+[node name="OptionsButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+disabled = true
+text = "Options"
+
+[node name="Exitbutton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Exit"
+
+[node name="Bubble12x12" type="Sprite2D" parent="."]
+visible = false
+modulate = Color(0.75, 0.7541667, 1, 1)
+position = Vector2(134, 216)
+texture = ExtResource("25_sssj8")
+
+[node name="Bubble8x8" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(110, 212)
+texture = ExtResource("26_u2c8l")
+
+[node name="Bubble4x4" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(122, 199)
+texture = ExtResource("27_g6i1l")
+
+[node name="Bubble2x2" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(103, 195)
+texture = ExtResource("28_reyx0")

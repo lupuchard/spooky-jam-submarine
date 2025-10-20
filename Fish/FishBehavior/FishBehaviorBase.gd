@@ -54,6 +54,9 @@ func try_move(force: bool = false):
 	var pitch = 1 / (sqrt(fish.size) / sqrt(10.0))
 	var volume = linear_to_db(fish.size * motion.length() / (10.0 * 70.0))
 	Audio.play(MOVE_SOUND, fish, volume, pitch * 0.9, pitch * 1.1)
+	
+	if randi_range(0, 1) == 1:
+		Bubbler.spawn_bubbles(fish.global_position, 1, 2)
 
 func max_distance(retreat_range: float):
 	return Player.RAYCAST_LENGTH - retreat_range - fish.size

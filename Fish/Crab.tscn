@@ -19,6 +19,7 @@ height = 18.0
 script = ExtResource("1_vrrgs")
 fish_type = 2
 size = 5.0
+study_speed = 2.0
 bob_amount = 0.0
 contact_damage = 1.0
 behavior = SubResource("Resource_t43tn")

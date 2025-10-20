@@ -4,10 +4,14 @@ class_name World
 const SPLASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
 const DEACTIVATION_DISTANCE := 2000.0
 
+var player: Player
 var fishes: Array[Node]
 var cur_fish_check_index = -1
 
 func _ready() -> void:
+	player = %Player
+	Bubbler.world = self
+	
 	var fish_bodies = get_tree().get_nodes_in_group("fish_body")
 	for fish in fish_bodies:
 		fish.material = preload("res://Fish/FishBody.tres")
@@ -16,17 +20,17 @@ func _ready() -> void:
 	%UpgradePanel/CloseButton.pressed.connect(exit_surface)
 	
 	await get_tree().process_frame
-	Save.save_state(%Player, %Fish)
+	Save.save_state(player, %Fish)
 
 func _process(_delta: float) -> void:
-	if %Player.global_position.y < 0:
+	if player.global_position.y < 0:
 		return_to_surface()
 	
 	cur_fish_check_index += 1
 	if cur_fish_check_index >= fishes.size():
 		cur_fish_check_index = 0
 	var fish = fishes[cur_fish_check_index]
-	var fish_distance_sqr = fish.global_position.distance_squared_to(%Player.global_position)
+	var fish_distance_sqr = fish.global_position.distance_squared_to(player.global_position)
 	if fish_distance_sqr > pow(DEACTIVATION_DISTANCE, 2):
 		fish.process_mode = Node.PROCESS_MODE_DISABLED
 	else:
@@ -40,20 +44,20 @@ func return_to_surface() -> void:
 	process_mode = Node.PROCESS_MODE_DISABLED
 	%Beastiary.update()
 	%UpgradePanel.visible = true
-	%Player.visible = false
-	Save.save_state(%Player, %Fish)
+	player.visible = false
+	Save.save_state(player, %Fish)
 
 func exit_surface() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
 	%UpgradePanel.visible = false
 	
-	%Player.visible = true
-	%Player.vel.y = 3
-	%Player.global_position.y = 1
-	%Player.stats[Player.Stat.Health] = %Player.max_stats[Player.Stat.Health]
-	%Player.stats[Player.Stat.Battery] = %Player.max_stats[Player.Stat.Battery]
-	Audio.play(SPLASH_SOUND, %Player)
-	Save.save_state(%Player, %Fish)
+	player.visible = true
+	player.vel.y = 3
+	player.global_position.y = 1
+	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
+	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
+	Audio.play(SPLASH_SOUND, player)
+	Save.save_state(player, %Fish)
 
 static func format_depth(depth: float, decimals: int = 1) -> String:
 	return str(depth / 20.0).pad_decimals(decimals) + "m"

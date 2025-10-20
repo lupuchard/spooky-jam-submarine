@@ -54,6 +54,7 @@ const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
 
 var vel := Vector2.ZERO
 var dash_direction := 1.0
+var camera: Camera2D
 
 var stats: Array[float] = []
 var max_stats: Array[float] = []
@@ -87,6 +88,7 @@ var depth_damage_delay: float = 0.0
 var hull_creak_tween: Tween = null
 
 func _ready():
+	camera = $Camera2D
 	generate_raycasts()
 	
 	max_stats.resize(Stat.NUM_STATS)
@@ -261,6 +263,7 @@ func _physics_process(delta: float):
 		stats[Stat.DashPower] = 0
 		stats[Stat.Battery] -= DASH_POWER_CONSUMPTION
 		Audio.play(DASH_SOUND, null, 0.0, 0.9, 1.1)
+		Bubbler.spawn_bubbles(self.global_position, 3)
 	
 	var collision = move_and_collide(vel)
 	if collision != null:
@@ -271,7 +274,7 @@ func _physics_process(delta: float):
 			Audio.play(CRASH_SOUND, null, linear_to_db(collision_speed / 4), 0.4, 0.6)
 		vel = Vector2.ZERO
 	
-	$Camera2D.global_position.y = max(global_position.y, get_viewport().size.y / 4)
+	camera.global_position.y = max(global_position.y, get_viewport().size.y / 4)
 
 func start_hull_creak():
 	if hull_creak_tween == null:
