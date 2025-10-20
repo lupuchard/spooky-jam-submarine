@@ -1,12 +1,15 @@
-[gd_scene format=3 uid="uid://lfaytddnu6xl"]
+[gd_scene load_steps=2 format=3 uid="uid://lfaytddnu6xl"]
+
+[ext_resource type="Script" uid="uid://d1xf31wjsqhr8" path="res://Scene/SaveSlotRow.gd" id="1_up04w"]
 
 [node name="SaveSlotRow" type="HBoxContainer"]
+script = ExtResource("1_up04w")
 
-[node name="Button" type="Button" parent="."]
+[node name="SlotButton" type="Button" parent="."]
 custom_minimum_size = Vector2(170, 0)
 layout_mode = 2
 text = "Play Save Slot 1 (10%)"
 
-[node name="Button2" type="Button" parent="."]
+[node name="DeleteButton" type="Button" parent="."]
 layout_mode = 2
 text = "Delete"

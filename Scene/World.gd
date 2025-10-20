@@ -41,23 +41,30 @@ func return_to_surface() -> void:
 	for option in get_tree().get_nodes_in_group("upgrade_option"):
 		option.update()
 	
-	process_mode = Node.PROCESS_MODE_DISABLED
+	pause_world()
 	%Beastiary.update()
 	%UpgradePanel.visible = true
 	player.visible = false
 	Save.save_state(player, %Fish)
+	Save.save_to_file()
 
 func exit_surface() -> void:
-	process_mode = Node.PROCESS_MODE_INHERIT
 	%UpgradePanel.visible = false
-	
-	player.visible = true
+	resume_world()
 	player.vel.y = 3
 	player.global_position.y = 1
 	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
 	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
 	Audio.play(SPLASH_SOUND, player)
 	Save.save_state(player, %Fish)
+	Save.save_to_file()
+
+func pause_world():
+	process_mode = Node.PROCESS_MODE_DISABLED
+
+func resume_world():
+	process_mode = Node.PROCESS_MODE_INHERIT
+	player.visible = true
 
 static func format_depth(depth: float, decimals: int = 1) -> String:
 	return str(depth / 20.0).pad_decimals(decimals) + "m"

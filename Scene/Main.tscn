@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=39 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Texture2D" uid="uid://bp3jh6yh16jw8" path="res://Assets/bnuy.png" id="1_r150o"]
@@ -26,11 +26,8 @@
 [ext_resource type="Material" uid="uid://dd5x7vrkc4giy" path="res://Scene/BubbleParticles.tres" id="16_u2c8l"]
 [ext_resource type="FontFile" uid="uid://d30j8tnlnfsv4" path="res://Assets/Fonts/Abaddon Light.ttf" id="19_aa3qu"]
 [ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Scene/Beastiary.gd" id="22_bf81u"]
-[ext_resource type="Texture2D" uid="uid://xj2olay107bj" path="res://Assets/Bubbles/bubble12x12.png" id="25_sssj8"]
 [ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Scene/SaveSlotRow.tscn" id="26_g6i1l"]
-[ext_resource type="Texture2D" uid="uid://xnjjraut2wp4" path="res://Assets/Bubbles/bubble8x8.png" id="26_u2c8l"]
-[ext_resource type="Texture2D" uid="uid://uowrb4vhy0s4" path="res://Assets/Bubbles/bubble4x4.png" id="27_g6i1l"]
-[ext_resource type="Texture2D" uid="uid://b50uimvdk2wg0" path="res://Assets/Bubbles/bubble2x2.png" id="28_reyx0"]
+[ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Scene/MainMenu.gd" id="27_sssj8"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -104,6 +101,8 @@ position = Vector2(6, 6)
 color = Color(0, 0, 0.12156863, 1)
 
 [node name="World" type="Node2D" parent="."]
+unique_name_in_owner = true
+process_mode = 4
 script = ExtResource("1_50glp")
 
 [node name="BlueBackground" type="ColorRect" parent="World"]
@@ -122,7 +121,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-1499, 2158)
+position = Vector2(70, 225)
 script = ExtResource("1_rgh2o")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
@@ -438,7 +437,6 @@ layout_mode = 2
 text = "Load autosave"
 
 [node name="MainMenu" type="PanelContainer" parent="CanvasLayer"]
-visible = false
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -450,61 +448,77 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("27_sssj8")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
+[node name="SaveSlotsMenu" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
 layout_mode = 2
 
-[node name="SaveSlotRow1" parent="CanvasLayer/MainMenu/VBoxContainer" instance=ExtResource("26_g6i1l")]
+[node name="SaveSlotRow1" parent="CanvasLayer/MainMenu/SaveSlotsMenu" instance=ExtResource("26_g6i1l")]
+unique_name_in_owner = true
 layout_mode = 2
 
-[node name="SaveSlotRow2" parent="CanvasLayer/MainMenu/VBoxContainer" instance=ExtResource("26_g6i1l")]
+[node name="SaveSlotRow2" parent="CanvasLayer/MainMenu/SaveSlotsMenu" instance=ExtResource("26_g6i1l")]
+unique_name_in_owner = true
+layout_mode = 2
+slot = 1
+
+[node name="SaveSlotRow3" parent="CanvasLayer/MainMenu/SaveSlotsMenu" instance=ExtResource("26_g6i1l")]
+unique_name_in_owner = true
+layout_mode = 2
+slot = 2
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MainMenu/SaveSlotsMenu"]
 layout_mode = 2
 
-[node name="SaveSlotRow3" parent="CanvasLayer/MainMenu/VBoxContainer" instance=ExtResource("26_g6i1l")]
-layout_mode = 2
-
-[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MainMenu/VBoxContainer"]
-layout_mode = 2
-
-[node name="HBoxContainer2" type="HBoxContainer" parent="CanvasLayer/MainMenu/VBoxContainer"]
+[node name="Buttons" type="HBoxContainer" parent="CanvasLayer/MainMenu/SaveSlotsMenu"]
 layout_mode = 2
 theme_override_constants/separation = 16
 alignment = 1
 
-[node name="CreditsButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/HBoxContainer2"]
+[node name="CreditsButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Credits"
 
-[node name="OptionsButton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/HBoxContainer2"]
+[node name="OptionsButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
 disabled = true
 text = "Options"
 
-[node name="Exitbutton" type="Button" parent="CanvasLayer/MainMenu/VBoxContainer/HBoxContainer2"]
+[node name="ExitButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Exit"
 
-[node name="Bubble12x12" type="Sprite2D" parent="."]
+[node name="DeleteConfirmMenu" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
 visible = false
-modulate = Color(0.75, 0.7541667, 1, 1)
-position = Vector2(134, 216)
-texture = ExtResource("25_sssj8")
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+alignment = 1
 
-[node name="Bubble8x8" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(110, 212)
-texture = ExtResource("26_u2c8l")
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/DeleteConfirmMenu"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "Are you sure you want to delete Save Slot 1 (10%)?"
+horizontal_alignment = 1
+autowrap_mode = 2
 
-[node name="Bubble4x4" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(122, 199)
-texture = ExtResource("27_g6i1l")
+[node name="Buttons" type="HBoxContainer" parent="CanvasLayer/MainMenu/DeleteConfirmMenu"]
+layout_mode = 2
+theme_override_constants/separation = 25
+alignment = 1
 
-[node name="Bubble2x2" type="Sprite2D" parent="."]
-visible = false
-position = Vector2(103, 195)
-texture = ExtResource("28_reyx0")
+[node name="ConfirmDeleteButton" type="Button" parent="CanvasLayer/MainMenu/DeleteConfirmMenu/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Yes, Delete"
+
+[node name="CancelDeleteButton" type="Button" parent="CanvasLayer/MainMenu/DeleteConfirmMenu/Buttons"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No"
