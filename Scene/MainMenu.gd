@@ -1,6 +1,7 @@
 extends PanelContainer
 
 var slot_deleting: int
+@onready var slot_rows := [%SaveSlotRow1, %SaveSlotRow2, %SaveSlotRow3]
 
 func _ready() -> void:
 	%ExitButton.pressed.connect(func():
@@ -8,7 +9,7 @@ func _ready() -> void:
 	)
 	
 	for i in range(0, 3):
-		var slot_row = [%SaveSlotRow1, %SaveSlotRow2, %SaveSlotRow3][i]
+		var slot_row = slot_rows[i]
 		slot_row.slot_pressed.connect(on_slot_pressed)
 		slot_row.delete_pressed.connect(on_slot_delete_pressed)
 	
@@ -29,6 +30,8 @@ func _input(_input_event: InputEvent) -> void:
 			%World.pause_world()
 			visible = true
 			%UpgradePanel.process_mode = PROCESS_MODE_DISABLED
+			for slot_row in slot_rows:
+				slot_row.update()
 		elif Save.current_slot != -1:
 			%World.resume_world()
 			visible = false

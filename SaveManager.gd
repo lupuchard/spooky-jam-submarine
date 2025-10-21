@@ -3,20 +3,47 @@ extends Node
 var new_slot_saved_state = null
 var saved_state: Dictionary
 var current_slot: int = -1
+var slot_progress: Array[float] = []
+var max_total_research_points := -1
 
-func get_filename() -> String:
-	return "user://slot%s.save" % current_slot
+func _ready() -> void:
+	if FileAccess.file_exists("user://misc.save"):
+		load_slot_progress_from_file()
+	else:
+		slot_progress.resize(3)
+
+func get_slot_progress(slot: int) -> float:
+	return slot_progress[slot]
+
+func get_filename(slot: int) -> String:
+	return "user://slot%s.save" % slot
 
 func save_to_file() -> void:
-	var save_file = FileAccess.open(get_filename(), FileAccess.WRITE)
+	var save_file = FileAccess.open(get_filename(current_slot), FileAccess.WRITE)
 	var json_string = JSON.stringify(saved_state)
 	save_file.store_line(json_string)
+	
+	var player_research = saved_state["player"]["total_research"]
+	slot_progress[current_slot] = float(player_research) / max_total_research_points
+	save_slot_progress_to_file()
+
+func save_slot_progress_to_file() -> void:
+	var save_file = FileAccess.open("user://misc.save", FileAccess.WRITE)
+	var json_string = JSON.stringify({ "progress": slot_progress })
+	save_file.store_line(json_string)
+
+func load_slot_progress_from_file() -> void:
+	var save_file = FileAccess.open("user://misc.save", FileAccess.READ)
+	var json_string = save_file.get_line()
+	var json = JSON.new()
+	json.parse(json_string)
+	slot_progress.assign(json.data["progress"])
 
 func load_from_file() -> void:
-	if not FileAccess.file_exists(get_filename()):
+	if not FileAccess.file_exists(get_filename(current_slot)):
 		saved_state = new_slot_saved_state
 		return
-	var save_file = FileAccess.open(get_filename(), FileAccess.READ)
+	var save_file = FileAccess.open(get_filename(current_slot), FileAccess.READ)
 	var json_string = save_file.get_line()
 	var json = JSON.new()
 	var parse_result = json.parse(json_string)
@@ -27,7 +54,9 @@ func load_from_file() -> void:
 		saved_state = json.data
 
 func delete_slot(slot: int):
-	DirAccess.remove_absolute("user://slot%s.save" % slot)
+	DirAccess.remove_absolute(get_filename(slot))
+	slot_progress[slot] = 0.0
+	save_slot_progress_to_file()
 
 func save_state(player: Player, fish: Node2D):
 	saved_state = {
@@ -38,6 +67,9 @@ func save_state(player: Player, fish: Node2D):
 	
 	if new_slot_saved_state == null:
 		new_slot_saved_state = saved_state
+	
+	if max_total_research_points == -1:
+		calc_total_research_points(fish)
 
 func load_state(player: Player, fish: Node2D) -> void:
 	load_player(saved_state["player"], player)
@@ -86,4 +118,13 @@ func save_fish_study() -> Dictionary:
 	}
 
 func load_fish_study(data: Dictionary):
-	Study.times_studied.assign(data["times_studied"].duplicate())
+	Study.times_studied = {}
+	for key in data["times_studied"]:
+		Study.times_studied[int(key)] = int(data["times_studied"][key])
+
+func calc_total_research_points(fish_node: Node2D):
+	max_total_research_points = 0
+	var times_studied: Dictionary[FishStudy.FishType, int] = {}
+	for fish: Fish in fish_node.get_children():
+		times_studied.set(fish.fish_type, times_studied.get(fish.fish_type, 0) + 1)
+		max_total_research_points += FishStudy.get_study_reward(fish, times_studied[fish.fish_type])

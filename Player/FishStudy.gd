@@ -47,14 +47,17 @@ func add_studied(fish: Fish) -> int:
 		fish.studied = true
 		var new_times_studied = times_studied.get(fish.fish_type, 0) + 1
 		times_studied.set(fish.fish_type, new_times_studied)
-		match new_times_studied:
-			1: return fish.study_reward_factor * 10
-			2: return fish.study_reward_factor * 5
-			3: return fish.study_reward_factor * 4
-			4: return fish.study_reward_factor * 3
-			5: return fish.study_reward_factor * 2
-			_: return fish.study_reward_factor * 1
+		return get_study_reward(fish, new_times_studied)
 	return 0
+
+static func get_study_reward(fish: Fish, num_times_studied: int):
+	match num_times_studied:
+		1: return fish.study_reward_factor * 10
+		2: return fish.study_reward_factor * 5
+		3: return fish.study_reward_factor * 4
+		4: return fish.study_reward_factor * 3
+		5: return fish.study_reward_factor * 2
+		_: return fish.study_reward_factor * 1
 
 func get_times_studied(fish_type: FishType) -> int:
 	return times_studied.get(fish_type, 0)

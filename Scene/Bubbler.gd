@@ -17,6 +17,7 @@ func _ready():
 		new_particles.texture = get_bubble_texture(i)
 		new_particles.process_material = BUBBLE_PARTICLES
 		new_particles.z_index = -2
+		new_particles.process_mode = Node.PROCESS_MODE_ALWAYS
 		particles.append(new_particles)
 		world.player.add_child(new_particles)
 

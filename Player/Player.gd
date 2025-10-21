@@ -263,7 +263,7 @@ func _physics_process(delta: float):
 		stats[Stat.DashPower] = 0
 		stats[Stat.Battery] -= DASH_POWER_CONSUMPTION
 		Audio.play(DASH_SOUND, null, 0.0, 0.9, 1.1)
-		Bubbler.spawn_bubbles(self.global_position, 3)
+		Bubbler.spawn_bubbles(global_position, 3)
 	
 	var collision = move_and_collide(vel)
 	if collision != null:
@@ -295,15 +295,18 @@ func end_hull_creak():
 	)
 
 func die(death_text: String):
+	Bubbler.spawn_bubbles(global_position, 16)
 	process_mode = Node.PROCESS_MODE_DISABLED
-	visible = false
+	$Sprite.visible = false
+	$Spotlight.visible = false
 	%DeathPanel.visible = true
 	%DeathText.text = death_text
 	%DeathRecoverButton.pressed.connect(recover)
 	Audio.play(DEATH_SOUND_METAL, null, 0, 0.5)
 
 func recover():
-	visible = true
+	$Sprite.visible = true
+	$Spotlight.visible = true
 	%DeathPanel.visible = false
 	global_position = %StartPosition.global_position
 	process_mode = Node.PROCESS_MODE_INHERIT
