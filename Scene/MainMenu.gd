@@ -20,6 +20,7 @@ func _ready() -> void:
 	
 	%ConfirmDeleteButton.pressed.connect(func():
 		Save.delete_slot(slot_deleting)
+		slot_rows[slot_deleting].update()
 		$SaveSlotsMenu.visible = true
 		$DeleteConfirmMenu.visible = false
 	)

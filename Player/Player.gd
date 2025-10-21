@@ -25,6 +25,7 @@ enum UpgradeType {
 const HORZ_ACCEL = 6.0
 const HORZ_TOP_SPEED = 1.5
 const DASH_SPEED = 3.0
+const BACKWARD_SPEED_FACTOR = 0.75
 
 const DESC_ACCEL = 4.0
 const DESC_TOP_SPEED = 1.2
@@ -156,7 +157,9 @@ func _process(delta: float):
 	
 	stats[Stat.DashPower] += delta
 	
-	$Spotlight.rotation = Vector2.LEFT.angle_to(position - get_parent().get_local_mouse_position())
+	var mouse_vector = position - get_parent().get_local_mouse_position()
+	$Spotlight.rotation = Vector2.LEFT.angle_to(mouse_vector)
+	$Sprite.flip_h = mouse_vector.x < 0
 	
 	check_raycasts()
 	
@@ -242,10 +245,12 @@ func _physics_process(delta: float):
 	var prev_vel = vel
 	engines_on = true
 	if Input.is_action_pressed("right"):
-		vel.x = move_toward(vel.x, HORZ_TOP_SPEED * speed, delta * HORZ_ACCEL * speed)
+		var mod_speed = speed * (BACKWARD_SPEED_FACTOR if !$Sprite.flip_h else 1.0)
+		vel.x = move_toward(vel.x, HORZ_TOP_SPEED * mod_speed, delta * HORZ_ACCEL * mod_speed)
 		dash_direction = 1.0
 	elif Input.is_action_pressed("left"):
-		vel.x = move_toward(vel.x, -HORZ_TOP_SPEED * speed, delta * HORZ_ACCEL * speed)
+		var mod_speed = speed * (BACKWARD_SPEED_FACTOR if $Sprite.flip_h else 1.0)
+		vel.x = move_toward(vel.x, -HORZ_TOP_SPEED * mod_speed, delta * HORZ_ACCEL * mod_speed)
 		dash_direction = -1.0
 	else:
 		engines_on = false

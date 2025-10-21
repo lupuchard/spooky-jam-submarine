@@ -12,7 +12,7 @@ enum Dir {
 
 var tween: Tween
 var player: Player
-var fish: StaticBody2D
+var fish: Fish
 
 var active_motion = null
 var active_motion_direction: Dir

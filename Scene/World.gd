@@ -9,6 +9,7 @@ var fishes: Array[Node]
 var cur_fish_check_index = -1
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_DISABLED
 	player = %Player
 	Bubbler.world = self
 	
