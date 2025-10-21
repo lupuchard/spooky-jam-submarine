@@ -37,7 +37,9 @@ const DASH_COOLDOWN = 1.5
 
 const COLLISION_THRESH := 0.1
 const COLLISION_DAMAGE_MOD := 1.0
-const FISH_CONTACT_COOLDOWN := 0.5
+const KNOCKBACK_STRENGTH := 0.5
+const MAX_KNOCKBACK := 6.0
+const FISH_CONTACT_COOLDOWN := 1.0
 
 const NUM_RAYCASTS := 8
 const RAYCAST_ANGLE := PI / 3
@@ -108,7 +110,7 @@ func _ready():
 	var hull_upgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
 	hull_upgrade.costs = [0, 20, 50, 100]
 	hull_upgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
-	hull_upgrade.values.append(PackedFloat64Array([5000.0, 2400.0, 3600.0, 5000.0])) # Max Depth
+	hull_upgrade.values.append(PackedFloat64Array([1200.0, 2400.0, 3600.0, 5000.0])) # Max Depth
 	upgrades[UpgradeType.Hull] = hull_upgrade
 	
 	var speed_upgrade := Upgrade.new("Speed", [Stat.Speed])
@@ -312,8 +314,14 @@ func recover():
 	process_mode = Node.PROCESS_MODE_INHERIT
 	Save.load_state(self, %Fish)
 
-func handle_fish_collision(fish: Fish):
+func handle_fish_collision(fish: Fish, angle: float, speed: float):
 	if fish_contact_cooldown < 0.0:
 		stats[Stat.Health] -= fish.contact_damage
 		Audio.play(CRASH_SOUND, null, linear_to_db(fish.contact_damage / 10.0), 0.4, 0.6)
+		
+		var hit_direction = global_position - fish.global_position
+		var knockback_angle = lerp_angle(angle, hit_direction.angle(), 0.5)
+		var knockback_speed = fish.size * speed * KNOCKBACK_STRENGTH
+		vel += Vector2.from_angle(knockback_angle) * min(knockback_speed, MAX_KNOCKBACK)
+		
 		fish_contact_cooldown = FISH_CONTACT_COOLDOWN

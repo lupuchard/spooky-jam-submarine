@@ -30,6 +30,8 @@ var body: Node2D
 var movement_sound: AudioStreamPlayer2D
 var idle_sound: AudioStreamPlayer2D
 
+var prev_position: Vector2
+
 func _ready():
 	body = $Body
 	movement_sound = find_child("MovementSound", false)
@@ -51,7 +53,6 @@ func _ready():
 		behavior.player = %Player
 
 func create_area_collider():
-	print("collider for %s" % name)
 	var area = Area2D.new()
 	var shapes = find_children("*", "CollisionShape2D", true, false)
 	area.collision_layer = 1
@@ -62,7 +63,9 @@ func create_area_collider():
 	area.position = Vector2.ZERO
 	area.body_entered.connect(func(player):
 		if player is Player:
-			player.handle_fish_collision(self)
+			var angle = (global_position - prev_position).angle()
+			var speed = (global_position - prev_position).length()
+			player.handle_fish_collision(self, angle, speed)
 	)
 
 var time_passed = 0
@@ -70,6 +73,7 @@ func _process(delta: float):
 	time_passed += delta
 	body.position.y = sin(time_passed) * bob_amount
 	
+	prev_position = global_position
 	if behavior != null:
 		behavior._behave(delta)
 	
