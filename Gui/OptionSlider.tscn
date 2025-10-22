@@ -1,0 +1,24 @@
+[gd_scene load_steps=2 format=3 uid="uid://tmj70t7q4vss"]
+
+[ext_resource type="Script" uid="uid://ijp7s7snlbs6" path="res://Gui/OptionSlider.gd" id="1_4ebk8"]
+
+[node name="OptionSlider" type="HBoxContainer"]
+alignment = 2
+script = ExtResource("1_4ebk8")
+
+[node name="OptionLabel" type="Label" parent="."]
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "Sounds:"
+
+[node name="Slider" type="HSlider" parent="."]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+
+[node name="Percentage" type="Label" parent="."]
+custom_minimum_size = Vector2(35, 0)
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "100%"

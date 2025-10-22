@@ -4,11 +4,12 @@ var new_slot_saved_state = null
 var saved_state: Dictionary
 var current_slot: int = -1
 var slot_progress: Array[float] = []
+var options: Dictionary[String, float] = {}
 var max_total_research_points := -1
 
 func _ready() -> void:
 	if FileAccess.file_exists("user://misc.save"):
-		load_slot_progress_from_file()
+		load_meta_from_file()
 	else:
 		slot_progress.resize(3)
 
@@ -25,19 +26,23 @@ func save_to_file() -> void:
 	
 	var player_research = saved_state["player"]["total_research"]
 	slot_progress[current_slot] = float(player_research) / max_total_research_points
-	save_slot_progress_to_file()
+	save_meta_to_file()
 
-func save_slot_progress_to_file() -> void:
+func save_meta_to_file() -> void:
 	var save_file = FileAccess.open("user://misc.save", FileAccess.WRITE)
-	var json_string = JSON.stringify({ "progress": slot_progress })
+	var json_string = JSON.stringify({
+		"progress": slot_progress,
+		"options": options
+	})
 	save_file.store_line(json_string)
 
-func load_slot_progress_from_file() -> void:
+func load_meta_from_file() -> void:
 	var save_file = FileAccess.open("user://misc.save", FileAccess.READ)
 	var json_string = save_file.get_line()
 	var json = JSON.new()
 	json.parse(json_string)
 	slot_progress.assign(json.data["progress"])
+	options.assign(json.data.get("options", {}))
 
 func load_from_file() -> void:
 	if not FileAccess.file_exists(get_filename(current_slot)):
@@ -56,7 +61,7 @@ func load_from_file() -> void:
 func delete_slot(slot: int):
 	DirAccess.remove_absolute(get_filename(slot))
 	slot_progress[slot] = 0.0
-	save_slot_progress_to_file()
+	save_meta_to_file()
 
 func save_state(player: Player, fish: Node2D):
 	saved_state = {

@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=45 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -29,6 +29,10 @@
 [ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Gui/Beastiary.gd" id="22_bf81u"]
 [ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Gui/SaveSlotRow.tscn" id="26_g6i1l"]
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
+[ext_resource type="PackedScene" uid="uid://tmj70t7q4vss" path="res://Gui/OptionSlider.tscn" id="30_g6i1l"]
+
+[sub_resource type="Environment" id="Environment_g6i1l"]
+background_mode = 3
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -103,11 +107,32 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 anti_aliasing = false
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u2c8l"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.25800666, 0.20019999, 0.26, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="Game" type="Node2D"]
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 position = Vector2(6, 6)
 color = Color(0, 0, 0.12156863, 1)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+unique_name_in_owner = true
+environment = SubResource("Environment_g6i1l")
+
+[node name="UnderwaterAmbience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_grg3l")
+volume_db = -4.0
+autoplay = true
+bus = &"Ambience"
 
 [node name="World" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -164,6 +189,7 @@ pitch_scale = 0.5
 [node name="VehicleAmbience" type="AudioStreamPlayer" parent="World/Player"]
 stream = ExtResource("7_bf81u")
 autoplay = true
+bus = &"Ambience"
 
 [node name="LeftWall" type="Polygon2D" parent="World"]
 z_index = -1
@@ -258,17 +284,13 @@ curve = SubResource("Curve2D_reyx0")
 unique_name_in_owner = true
 position = Vector2(242, 19)
 
-[node name="UnderwaterAmbience" type="AudioStreamPlayer" parent="World"]
-stream = ExtResource("7_grg3l")
-volume_db = -4.0
-autoplay = true
-
 [node name="SpookyAmbience" type="AudioStreamPlayer2D" parent="World"]
 position = Vector2(-138, 3624)
 stream = ExtResource("15_iab34")
 autoplay = true
 max_distance = 3000.0
 panning_strength = 0.0
+bus = &"Ambience"
 
 [node name="GPUParticles2D" type="GPUParticles2D" parent="World"]
 visible = false
@@ -483,6 +505,7 @@ offset_right = 20.0
 offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_u2c8l")
 script = ExtResource("27_sssj8")
 
 [node name="SaveSlotsMenu" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
@@ -519,7 +542,6 @@ text = "Credits"
 [node name="OptionsButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
-disabled = true
 text = "Options"
 
 [node name="ExitButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
@@ -557,3 +579,34 @@ text = "Yes, Delete"
 unique_name_in_owner = true
 layout_mode = 2
 text = "No"
+
+[node name="OptionsMenu" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
+visible = false
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/MainMenu/OptionsMenu"]
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "Options"
+horizontal_alignment = 1
+
+[node name="SoundSlider" parent="CanvasLayer/MainMenu/OptionsMenu" instance=ExtResource("30_g6i1l")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Sound"
+
+[node name="AmbienceSlider" parent="CanvasLayer/MainMenu/OptionsMenu" instance=ExtResource("30_g6i1l")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Ambience"
+
+[node name="GammaSlider" parent="CanvasLayer/MainMenu/OptionsMenu" instance=ExtResource("30_g6i1l")]
+unique_name_in_owner = true
+layout_mode = 2
+title = "Gamma"
+
+[node name="OptionsExitButton" type="Button" parent="CanvasLayer/MainMenu/OptionsMenu"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Return"
