@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://ea0qrcxyxhc5" path="res://Assets/bnuy2.png" id="2_5ihpb"]
 [ext_resource type="Script" uid="uid://qgwmbt4xadnu" path="res://Fish/FishBehavior/ActiveFishBehavior.gd" id="2_8f2tk"]
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_5ihpb"]
-[ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="3_8f2tk"]
+[ext_resource type="Texture2D" uid="uid://bhevge7ee2jmq" path="res://Assets/Fish/Light.png" id="5_8f2tk"]
 
 [sub_resource type="Resource" id="Resource_kj8bq"]
 script = ExtResource("2_8f2tk")
@@ -35,7 +35,7 @@ texture = ExtResource("2_5ihpb")
 [node name="Light" type="Sprite2D" parent="Body"]
 material = ExtResource("3_5ihpb")
 position = Vector2(24, 6)
-texture = ExtResource("3_8f2tk")
+texture = ExtResource("5_8f2tk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_5ihpb")

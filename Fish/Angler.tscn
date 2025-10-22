@@ -1,9 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://ca80h3xj3qa7y"]
+[gd_scene load_steps=21 format=3 uid="uid://ca80h3xj3qa7y"]
 
 [ext_resource type="Texture2D" uid="uid://odrakurbublb" path="res://Assets/Fish/Angler/Body.png" id="1_eaveb"]
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_hfkjb"]
 [ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="2_hfkjb"]
 [ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/FishBehavior/ShyFishBehavior.gd" id="2_o4hq0"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="4_bw4jn"]
 [ext_resource type="AudioStream" uid="uid://dawdc3a4nho8" path="res://Assets/Sound/creature_breathe.mp3" id="5_q21dd"]
 
 [sub_resource type="Resource" id="Resource_q21dd"]
@@ -13,11 +14,92 @@ retreat_range = 5.0
 retreat_distance = 70.0
 metadata/_custom_type_script = "uid://wmj24v30fjei"
 
-[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_dc8bw"]
-light_mode = 1
+[sub_resource type="AtlasTexture" id="AtlasTexture_q21dd"]
+atlas = ExtResource("1_eaveb")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bw4jn"]
+atlas = ExtResource("1_eaveb")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ic4k1"]
+atlas = ExtResource("1_eaveb")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b3bnt"]
+atlas = ExtResource("1_eaveb")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ydw3h"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q21dd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bw4jn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ic4k1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b3bnt")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u7xnd"]
+atlas = ExtResource("2_hfkjb")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tvdhk"]
+atlas = ExtResource("2_hfkjb")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a1jmn"]
+atlas = ExtResource("2_hfkjb")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5w8n7"]
+atlas = ExtResource("2_hfkjb")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_hgb1j"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u7xnd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tvdhk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a1jmn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5w8n7")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_bw4jn"]
+interpolation_mode = 2
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_ic4k1"]
+gradient = SubResource("Gradient_bw4jn")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_eaveb"]
-radius = 20.024984
+radius = 23.0
 
 [node name="Angler" type="StaticBody2D"]
 collision_layer = 3
@@ -30,14 +112,23 @@ behavior = SubResource("Resource_q21dd")
 
 [node name="Body" type="Node2D" parent="."]
 
-[node name="BodySprite" type="Sprite2D" parent="Body" groups=["fish_body"]]
-position = Vector2(-3, -6)
-texture = ExtResource("1_eaveb")
+[node name="BodySprite" type="AnimatedSprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(7, -8)
+sprite_frames = SubResource("SpriteFrames_ydw3h")
+autoplay = "default"
+speed_scale = 0.5
 
-[node name="LightSprite" type="Sprite2D" parent="Body"]
-material = SubResource("CanvasItemMaterial_dc8bw")
-position = Vector2(-3, -6)
-texture = ExtResource("2_hfkjb")
+[node name="LightSprite" type="AnimatedSprite2D" parent="Body"]
+material = ExtResource("4_bw4jn")
+position = Vector2(7, -8)
+sprite_frames = SubResource("SpriteFrames_hgb1j")
+autoplay = "default"
+speed_scale = 0.5
+
+[node name="PointLight2D" type="PointLight2D" parent="Body"]
+position = Vector2(-21, -30)
+color = Color(1, 0.68235296, 0.16470589, 1)
+texture = SubResource("GradientTexture2D_ic4k1")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_eaveb")

@@ -25,7 +25,7 @@ enum UpgradeType {
 const HORZ_ACCEL = 6.0
 const HORZ_TOP_SPEED = 1.5
 const DASH_SPEED = 3.0
-const BACKWARD_SPEED_FACTOR = 0.75
+const BACKWARD_SPEED_FACTOR = 0.5
 
 const DESC_ACCEL = 4.0
 const DESC_TOP_SPEED = 1.2
