@@ -157,24 +157,28 @@ unique_name_in_owner = true
 position = Vector2(115, 232)
 script = ExtResource("1_rgh2o")
 
-[node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
+[node name="Body" type="Node2D" parent="World/Player"]
+
+[node name="Sprite" type="AnimatedSprite2D" parent="World/Player/Body"]
 material = SubResource("CanvasItemMaterial_jw32o")
-position = Vector2(1, -1)
+position = Vector2(0, -2)
 sprite_frames = SubResource("SpriteFrames_rgh2o")
 autoplay = "default"
 frame_progress = 0.9964846
 
+[node name="PropellerLocation" type="Marker2D" parent="World/Player/Body"]
+unique_name_in_owner = true
+position = Vector2(14, 1)
+
 [node name="Camera2D" type="Camera2D" parent="World/Player"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="World/Player"]
-position = Vector2(1, 1)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_rgh2o")
 
 [node name="Spotlight" type="PointLight2D" parent="World/Player"]
 light_mask = 2
 visibility_layer = 2
-position = Vector2(1, 1)
 energy = 0.2
 shadow_enabled = true
 texture = ExtResource("4_jw32o")

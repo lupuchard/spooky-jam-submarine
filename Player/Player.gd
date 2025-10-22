@@ -29,7 +29,8 @@ const BACKWARD_SPEED_FACTOR = 0.5
 
 const DESC_ACCEL = 4.0
 const DESC_TOP_SPEED = 1.2
-const DASH_POWER_CONSUMPTION = 3.0
+const POWER_CONSUMPTION = 0.5
+const PROPELLER_BUBBLE_COOLDOWN = 0.5
 
 const ASC_ACCEL = 4.0
 const ASC_TOP_SPEED = 1.2
@@ -57,7 +58,6 @@ const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
 const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 
 var vel := Vector2.ZERO
-var dash_direction := 1.0
 var camera: Camera2D
 var spotlight: PointLight2D
 
@@ -79,9 +79,8 @@ var upgrade_levels: Array[int]
 
 var engines_on := false
 var pumps_on := false
-var light_power_drain := 0.5
-var engine_power_drain := 0.5
-var pump_power_drain := 0.5
+var base_power_drain := 0.5
+var propeller_bubble_cooldown := PROPELLER_BUBBLE_COOLDOWN
 
 var fish_contact_cooldown := 0.0
 
@@ -159,19 +158,12 @@ func get_current_power_drain() -> int:
 
 func _process(delta: float):
 	fish_contact_cooldown -= delta
-	
-	if is_light_on():
-		stats[Stat.Battery] -= light_power_drain * delta
-	if engines_on:
-		stats[Stat.Battery] -= engine_power_drain * delta
-	if pumps_on:
-		stats[Stat.Battery] -= pump_power_drain * delta
-	
+	stats[Stat.Battery] -= get_current_power_drain() * base_power_drain * delta
 	stats[Stat.DashPower] += delta
 	
 	var mouse_vector = position - get_parent().get_local_mouse_position()
 	spotlight.rotation = Vector2.LEFT.angle_to(mouse_vector)
-	$Sprite.flip_h = mouse_vector.x < 0
+	$Body.scale.x = -1 if mouse_vector.x < 0 else 1
 	
 	if Input.is_action_just_pressed("toggle_light"):
 		if spotlight.visible:
@@ -224,6 +216,9 @@ func _process(delta: float):
 func is_light_on() -> bool:
 	return spotlight.visible
 
+func is_facing_left() -> bool:
+	return $Body.scale.x > 0
+
 func notify(text: String):
 	var label := Label.new()
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -268,16 +263,17 @@ func is_fish_in_range(fish: Fish, raycasts: int) -> bool:
 
 func _physics_process(delta: float):
 	var speed = stats[Player.Stat.Speed]
+	var is_moving_forward: bool = false
 	var prev_vel = vel
 	engines_on = true
 	if Input.is_action_pressed("right"):
-		var mod_speed = speed * (BACKWARD_SPEED_FACTOR if !$Sprite.flip_h else 1.0)
+		is_moving_forward = !is_facing_left()
+		var mod_speed = speed * (BACKWARD_SPEED_FACTOR if !is_moving_forward else 1.0)
 		vel.x = move_toward(vel.x, HORZ_TOP_SPEED * mod_speed, delta * HORZ_ACCEL * mod_speed)
-		dash_direction = 1.0
 	elif Input.is_action_pressed("left"):
-		var mod_speed = speed * (BACKWARD_SPEED_FACTOR if $Sprite.flip_h else 1.0)
+		is_moving_forward = is_facing_left()
+		var mod_speed = speed * (BACKWARD_SPEED_FACTOR if !is_moving_forward else 1.0)
 		vel.x = move_toward(vel.x, -HORZ_TOP_SPEED * mod_speed, delta * HORZ_ACCEL * mod_speed)
-		dash_direction = -1.0
 	else:
 		engines_on = false
 		vel.x = move_toward(vel.x, 0, delta * HORZ_ACCEL)
@@ -291,10 +287,15 @@ func _physics_process(delta: float):
 		pumps_on = false
 		vel.y = move_toward(vel.y, 0, delta * max(ASC_ACCEL, DESC_ACCEL))
 	
+	if is_moving_forward:
+		propeller_bubble_cooldown -= delta
+		if propeller_bubble_cooldown <= 0.0:
+			propeller_bubble_cooldown += PROPELLER_BUBBLE_COOLDOWN
+			Bubbler.spawn_bubbles(%PropellerLocation.global_position, 1, 2)
+	
 	if stats[Stat.DashPower] >= DASH_COOLDOWN and Input.is_action_just_pressed("dash"):
-		vel.x += dash_direction * DASH_SPEED * speed
+		vel.x += (-1 if is_facing_left() else 1) * DASH_SPEED * speed
 		stats[Stat.DashPower] = 0
-		stats[Stat.Battery] -= DASH_POWER_CONSUMPTION
 		Audio.play(DASH_SOUND, null, 0.0, 0.9, 1.1)
 		Bubbler.spawn_bubbles(global_position, 3)
 	
@@ -330,7 +331,7 @@ func end_hull_creak():
 func die(death_text: String):
 	Bubbler.spawn_bubbles(global_position, 16)
 	process_mode = Node.PROCESS_MODE_DISABLED
-	$Sprite.visible = false
+	$Body.visible = false
 	$Spotlight.visible = false
 	%DeathPanel.visible = true
 	%DeathText.text = death_text
@@ -338,7 +339,7 @@ func die(death_text: String):
 	Audio.play(DEATH_SOUND_METAL, null, 0, 0.5)
 
 func recover():
-	$Sprite.visible = true
+	$Body.visible = true
 	$Spotlight.visible = true
 	%DeathPanel.visible = false
 	global_position = %StartPosition.global_position
