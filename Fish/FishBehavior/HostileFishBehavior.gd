@@ -47,7 +47,11 @@ func move_toward_last_seen(delta: float):
 	fish.update_facing(last_seen - fish.global_position)
 
 func can_see_player() -> bool:
-	return player.global_position.distance_squared_to(fish.global_position) < pow(sight_radius, 2)
+	var displacement = player.global_position - fish.global_position
+	if (displacement.x > 0.0) == fish.facing_left:
+		return false
+	var radius = sight_radius if player.is_light_on() else sight_radius / 4
+	return displacement.length_squared() < pow(radius, 2)
 
 func is_too_far() -> bool:
 	return fish.global_position.distance_squared_to(fish.initial_position) > pow(max_range, 2)

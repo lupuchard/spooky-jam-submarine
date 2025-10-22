@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cimhux024qh56"]
 
-[ext_resource type="Script" uid="uid://cy6iyfnegxbi3" path="res://Scene/UpgradeOption.gd" id="1_lfc7a"]
+[ext_resource type="Script" uid="uid://cy6iyfnegxbi3" path="res://Gui/UpgradeOption.gd" id="1_lfc7a"]
 
 [node name="UpgradeOption" type="HBoxContainer"]
 script = ExtResource("1_lfc7a")

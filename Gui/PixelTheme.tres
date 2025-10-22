@@ -1,9 +1,9 @@
 [gd_resource type="Theme" load_steps=5 format=3 uid="uid://c6c4jrxrclewv"]
 
 [ext_resource type="FontFile" uid="uid://d30j8tnlnfsv4" path="res://Assets/Fonts/Abaddon Light.ttf" id="1_a02aw"]
-[ext_resource type="StyleBox" uid="uid://b78tlpntimlgr" path="res://Scene/ButtonHoverStyleBox.tres" id="2_1fyrv"]
+[ext_resource type="StyleBox" uid="uid://b78tlpntimlgr" path="res://Gui/ButtonHoverStyleBox.tres" id="2_1fyrv"]
 [ext_resource type="FontFile" uid="uid://5mk2307ho1x8" path="res://Assets/Fonts/tinypixel.otf" id="2_1uu7p"]
-[ext_resource type="StyleBox" uid="uid://b2dvxkoe8c356" path="res://Scene/ButtonStyleBox.tres" id="3_h48jq"]
+[ext_resource type="StyleBox" uid="uid://b2dvxkoe8c356" path="res://Gui/ButtonStyleBox.tres" id="3_h48jq"]
 
 [resource]
 default_font = ExtResource("2_1uu7p")

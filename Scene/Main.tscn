@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=42 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -18,15 +18,17 @@
 [ext_resource type="PackedScene" uid="uid://bsswh2ott33di" path="res://Fish/Viperfish.tscn" id="12_e6irg"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
 [ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Player/DepthLabel.gd" id="14_gclda"]
-[ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Scene/UpgradeOption.tscn" id="14_mr7am"]
+[ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Gui/UpgradeOption.tscn" id="14_mr7am"]
 [ext_resource type="PackedScene" uid="uid://m4dq2a5epgx5" path="res://Fish/BigFish.tscn" id="14_reyx0"]
-[ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Scene/UpgradePanel.gd" id="14_sc4dx"]
+[ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Gui/UpgradePanel.gd" id="14_sc4dx"]
 [ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
 [ext_resource type="Material" uid="uid://dd5x7vrkc4giy" path="res://Scene/BubbleParticles.tres" id="16_u2c8l"]
 [ext_resource type="FontFile" uid="uid://d30j8tnlnfsv4" path="res://Assets/Fonts/Abaddon Light.ttf" id="19_aa3qu"]
-[ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Scene/Beastiary.gd" id="22_bf81u"]
-[ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Scene/SaveSlotRow.tscn" id="26_g6i1l"]
-[ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Scene/MainMenu.gd" id="27_sssj8"]
+[ext_resource type="FontFile" uid="uid://bdlen7yarl4rf" path="res://Assets/Fonts/ThatBoy.ttf" id="20_u2c8l"]
+[ext_resource type="Script" uid="uid://c8q7pqmsrphp3" path="res://Gui/PowerConsumptionIndicator.gd" id="21_g6i1l"]
+[ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Gui/Beastiary.gd" id="22_bf81u"]
+[ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Gui/SaveSlotRow.tscn" id="26_g6i1l"]
+[ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -127,7 +129,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-3147, 328)
+position = Vector2(115, 232)
 script = ExtResource("1_rgh2o")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="World/Player"]
@@ -244,6 +246,9 @@ is_sprite_facing_left = false
 contact_damage = 9.0
 path = NodePath("../../FishPaths/BigFishPath")
 
+[node name="Angler2" parent="World/Fish" instance=ExtResource("7_jw32o")]
+position = Vector2(280, 2252)
+
 [node name="FishPaths" type="Node2D" parent="World"]
 
 [node name="BigFishPath" type="Path2D" parent="World/FishPaths"]
@@ -291,32 +296,52 @@ grow_vertical = 2
 
 [node name="HealthBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
-offset_top = 403.0
-offset_right = 48.0
-offset_bottom = 409.0
-color = Color(1, 0, 0, 1)
+offset_top = 398.0
+offset_right = 56.0
+offset_bottom = 405.0
+color = Color(0.9, 0, 0, 1)
 script = ExtResource("5_pbw6q")
 player = NodePath("../../World/Player")
 
 [node name="PowerBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
-offset_top = 409.0
-offset_right = 48.0
-offset_bottom = 415.0
-color = Color(1, 1, 0, 1)
+offset_top = 406.0
+offset_right = 56.0
+offset_bottom = 413.0
+color = Color(0.81, 0.81, 0, 1)
 script = ExtResource("5_pbw6q")
 player = NodePath("../../World/Player")
 stat = 2
 
+[node name="PowerConsumptionIndicator" type="Label" parent="CanvasLayer/PowerBar" node_paths=PackedStringArray("player")]
+layout_mode = 0
+offset_top = -6.0
+offset_right = 48.0
+offset_bottom = 7.0
+theme_override_colors/font_color = Color(0.9, 0, 0, 1)
+theme_override_fonts/font = ExtResource("20_u2c8l")
+theme_override_font_sizes/font_size = 16
+text = "<<<"
+horizontal_alignment = 1
+script = ExtResource("21_g6i1l")
+player = NodePath("../../../World/Player")
+
 [node name="DashBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
-offset_top = 415.0
-offset_right = 48.0
+offset_top = 414.0
+offset_right = 56.0
 offset_bottom = 421.0
-color = Color(0, 1, 1, 1)
+color = Color(0, 0.7, 0.7, 1)
 script = ExtResource("5_pbw6q")
 player = NodePath("../../World/Player")
 stat = 4
+
+[node name="Label" type="Label" parent="CanvasLayer/DashBar"]
+layout_mode = 0
+offset_right = 48.0
+offset_bottom = 8.0
+text = "[Space]"
+horizontal_alignment = 1
 
 [node name="KnowledgeLabel" type="Label" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 722.0
@@ -330,9 +355,9 @@ player = NodePath("../../World/Player")
 
 [node name="DepthLabel" type="Label" parent="CanvasLayer"]
 offset_left = 8.0
-offset_top = 394.0
+offset_top = 391.0
 offset_right = 48.0
-offset_bottom = 417.0
+offset_bottom = 414.0
 text = "0"
 script = ExtResource("14_gclda")
 

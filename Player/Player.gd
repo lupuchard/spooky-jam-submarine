@@ -29,7 +29,7 @@ const BACKWARD_SPEED_FACTOR = 0.5
 
 const DESC_ACCEL = 4.0
 const DESC_TOP_SPEED = 1.2
-const DASH_POWER_CONSUMPTION = 1.0
+const DASH_POWER_CONSUMPTION = 3.0
 
 const ASC_ACCEL = 4.0
 const ASC_TOP_SPEED = 1.2
@@ -54,10 +54,12 @@ const CRASH_SOUND = preload("res://Assets/Sound/crash.mp3")
 const DASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
 const CLICK_SOUND = preload("res://Assets/Sound/click.ogg")
 const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
+const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 
 var vel := Vector2.ZERO
 var dash_direction := 1.0
 var camera: Camera2D
+var spotlight: PointLight2D
 
 var stats: Array[float] = []
 var max_stats: Array[float] = []
@@ -77,9 +79,9 @@ var upgrade_levels: Array[int]
 
 var engines_on := false
 var pumps_on := false
-var idle_power_drain := 0.1
-var engine_power_drain := 0.3
-var pump_power_drain := 0.2
+var light_power_drain := 0.5
+var engine_power_drain := 0.5
+var pump_power_drain := 0.5
 
 var fish_contact_cooldown := 0.0
 
@@ -92,6 +94,7 @@ var hull_creak_tween: Tween = null
 
 func _ready():
 	camera = $Camera2D
+	spotlight = $Spotlight
 	generate_raycasts()
 	
 	max_stats.resize(Stat.NUM_STATS)
@@ -144,12 +147,21 @@ func generate_raycasts() -> void:
 		var raycast := RayCast2D.new()
 		raycast.target_position = Vector2.from_angle(angle) * RAYCAST_LENGTH
 		raycast.collision_mask = 2
-		$Spotlight.add_child(raycast)
+		spotlight.add_child(raycast)
+
+func get_current_power_drain() -> int:
+	var total = 0
+	if is_light_on(): total += 1
+	if engines_on: total += 1
+	if pumps_on: total += 1
+	if stats[Stat.DashPower] < max_stats[Stat.DashPower]: total += 2
+	return total
 
 func _process(delta: float):
 	fish_contact_cooldown -= delta
 	
-	stats[Stat.Battery] -= idle_power_drain * delta
+	if is_light_on():
+		stats[Stat.Battery] -= light_power_drain * delta
 	if engines_on:
 		stats[Stat.Battery] -= engine_power_drain * delta
 	if pumps_on:
@@ -158,10 +170,21 @@ func _process(delta: float):
 	stats[Stat.DashPower] += delta
 	
 	var mouse_vector = position - get_parent().get_local_mouse_position()
-	$Spotlight.rotation = Vector2.LEFT.angle_to(mouse_vector)
+	spotlight.rotation = Vector2.LEFT.angle_to(mouse_vector)
 	$Sprite.flip_h = mouse_vector.x < 0
 	
-	check_raycasts()
+	if Input.is_action_just_pressed("toggle_light"):
+		if spotlight.visible:
+			Audio.play(TOGGLE_LIGHT_SOUND, null, -5.0, 0.85)
+			spotlight.visible = false
+		else:
+			Audio.play(TOGGLE_LIGHT_SOUND, null, -5.0)
+			spotlight.visible = true
+	
+	if spotlight.visible:
+		check_raycasts()
+	else:
+		studying = null
 	
 	if studying != null:
 		%StudyIndicator.visible = true
@@ -197,6 +220,9 @@ func _process(delta: float):
 		die("You ran out of battery. And died.")
 	
 	$VehicleAmbience.volume_db = min(global_position.y / MAX_VEHICLE_AMBIENCE_DEPTH, 1.0) * 80.0 - 80.0
+
+func is_light_on() -> bool:
+	return spotlight.visible
 
 func notify(text: String):
 	var label := Label.new()

@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://deqjtfy6v36c2"]
 
-[ext_resource type="Script" uid="uid://8dpd44civslf" path="res://Scene/BeastiaryEntry.gd" id="1_je2lf"]
+[ext_resource type="Script" uid="uid://8dpd44civslf" path="res://Gui/BeastiaryEntry.gd" id="1_je2lf"]
 [ext_resource type="FontFile" uid="uid://c3456ef513ov" path="res://Assets/Fonts/Abaddon Bold.ttf" id="1_wedow"]
 
 [node name="BeastiaryEntry" type="HBoxContainer"]

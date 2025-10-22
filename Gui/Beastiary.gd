@@ -1,6 +1,6 @@
 extends ScrollContainer
 
-const BEASTIARY_ENTRY := preload("res://Scene/BeastiaryEntry.tscn")
+const BEASTIARY_ENTRY := preload("res://Gui/BeastiaryEntry.tscn")
 
 func _ready():
 	for i in range(0, FishStudy.FishType.NUM_FISH_TYPES):

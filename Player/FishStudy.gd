@@ -19,7 +19,7 @@ var times_studied: Dictionary[FishType, int] = {}
 func _ready():
 	names[FishType.CaveAngler] = "Cave Angler"
 	description_one[FishType.CaveAngler] = "Anglerfish use a modified dorsal fin ray as a lure for prey."
-	description_two[FishType.CaveAngler] = "The cave angler lives in caves."
+	description_two[FishType.CaveAngler] = "The cave angler will initially retreat if you get too close, but may attack if provoked."
 	
 	names[FishType.Guppo] = "Guppo"
 	description_one[FishType.Guppo] = "Bigger than a guppy."
