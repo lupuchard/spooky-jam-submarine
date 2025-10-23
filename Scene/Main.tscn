@@ -1,4 +1,4 @@
-[gd_scene load_steps=45 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=83 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://2iaafywlhcmm" path="res://Player/StatusCount.gd" id="9_bmxlf"]
 [ext_resource type="PackedScene" uid="uid://dwhpbo8g4x0xx" path="res://Fish/Guppo.tscn" id="9_gclda"]
 [ext_resource type="PackedScene" uid="uid://cj510s8ffvovy" path="res://Fish/Crab.tscn" id="11_4w0o7"]
+[ext_resource type="Script" uid="uid://b7gd62bfuku1w" path="res://Scene/Seaweed.gd" id="11_6ngyt"]
 [ext_resource type="PackedScene" uid="uid://h0al0k7i7wee" path="res://Fish/Jelly.tscn" id="11_hmjy8"]
 [ext_resource type="PackedScene" uid="uid://bsswh2ott33di" path="res://Fish/Viperfish.tscn" id="12_e6irg"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
@@ -23,10 +24,17 @@
 [ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Gui/UpgradePanel.gd" id="14_sc4dx"]
 [ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
 [ext_resource type="Material" uid="uid://dd5x7vrkc4giy" path="res://Scene/BubbleParticles.tres" id="16_u2c8l"]
+[ext_resource type="Shader" uid="uid://v4ifcvwa7we5" path="res://Scene/Seaweed.gdshader" id="17_5xnk5"]
+[ext_resource type="Texture2D" uid="uid://dprnw3jwwrkdx" path="res://Assets/seaweed.png" id="17_reyx0"]
+[ext_resource type="Shader" uid="uid://ij8gko3ajipc" path="res://Scene/Anomoly.gdshader" id="18_bficn"]
+[ext_resource type="AudioStream" uid="uid://tdy6he6nymtg" path="res://Assets/Sound/anomaly.mp3" id="19_0c33q"]
 [ext_resource type="FontFile" uid="uid://d30j8tnlnfsv4" path="res://Assets/Fonts/Abaddon Light.ttf" id="19_aa3qu"]
+[ext_resource type="Shader" uid="uid://6748pfuwgqdo" path="res://Scene/Ripple.gdshader" id="19_m0bfr"]
+[ext_resource type="Script" uid="uid://uxrbrayqm884" path="res://Scene/Anomaly.gd" id="19_og1lj"]
 [ext_resource type="FontFile" uid="uid://bdlen7yarl4rf" path="res://Assets/Fonts/ThatBoy.ttf" id="20_u2c8l"]
 [ext_resource type="Script" uid="uid://c8q7pqmsrphp3" path="res://Gui/PowerConsumptionIndicator.gd" id="21_g6i1l"]
 [ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Gui/Beastiary.gd" id="22_bf81u"]
+[ext_resource type="Script" uid="uid://osbbycaixnfu" path="res://Scene/Ripple.gd" id="24_45d3w"]
 [ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Gui/SaveSlotRow.tscn" id="26_g6i1l"]
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
 [ext_resource type="PackedScene" uid="uid://tmj70t7q4vss" path="res://Gui/OptionSlider.tscn" id="30_g6i1l"]
@@ -74,11 +82,135 @@ fill = 1
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0, 0)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uuoxe"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_rqxs6"]
+size = Vector2(16, 64)
+subdivide_depth = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_i6ddj"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_cjptb"]
+size = Vector2(16, 64)
+subdivide_depth = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_n044j"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_xwk4e"]
+size = Vector2(16, 64)
+subdivide_depth = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jupvq"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 2.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_cd6bo"]
+size = Vector2(16, 64)
+subdivide_depth = 8
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_clf5q"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 4.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_r8yv8"]
+size = Vector2(16, 128)
+subdivide_depth = 16
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_wd3ae"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 4.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_lllnr"]
+size = Vector2(16, 128)
+subdivide_depth = 16
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_86elt"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 4.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_6b3h5"]
+size = Vector2(16, 128)
+subdivide_depth = 16
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qtu3h"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_ps337"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_5u6qd"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_goe3w"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_vppcx"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_vs8fc"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_e8kx7"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_qke6d"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
 [sub_resource type="Curve2D" id="Curve2D_reyx0"]
 _data = {
 "points": PackedVector2Array(0, 0, 0, 0, -1341, 2462, -44.08541, 166.40689, 44.08541, -166.40689, -1138, 2287, 36.634354, 68.92226, -36.634354, -68.92226, -1165, 2017, 52.157387, 13.660268, -52.157387, -13.660268, -1354, 1910, 139.70728, -54.64107, -139.70728, 54.64107, -1682, 1917, -0.62092125, -126.66794, 0.62092125, 126.66794, -1844, 2173, -81.34068, -34.15067, 81.34068, 34.15067, -1663, 2447, 0, 0, 0, 0, -1341, 2462)
 }
 point_count = 8
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_og1lj"]
+radius = 23.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0c33q"]
+shader = ExtResource("18_bficn")
+shader_parameter/radius = 1.0
+shader_parameter/speed = 1.0
+shader_parameter/effect_color = Color(0.251, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_m0bfr"]
+size = Vector2(160, 160)
+
+[sub_resource type="Gradient" id="Gradient_45d3w"]
+offsets = PackedFloat32Array(0, 0.10945274, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.5, 0.5, 0.5, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_og1lj"]
+gradient = SubResource("Gradient_45d3w")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_m0bfr"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_0c33q"]
+noise = SubResource("FastNoiseLite_m0bfr")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_og1lj"]
+shader = ExtResource("19_m0bfr")
+shader_parameter/frequency = 5.999999865888
+shader_parameter/amplitude = 2.0
+shader_parameter/ripple_rate = 6.0
+shader_parameter/wave_amplitude = 0.05
+shader_parameter/wave_frequency = 4.0
+shader_parameter/noise = SubResource("NoiseTexture2D_0c33q")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_i0sg4"]
 
@@ -154,7 +286,9 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(115, 232)
+position = Vector2(90, 233)
+collision_layer = 9
+collision_mask = 9
 script = ExtResource("1_rgh2o")
 
 [node name="Body" type="Node2D" parent="World/Player"]
@@ -214,13 +348,121 @@ position = Vector2(239, 1498)
 scale = Vector2(4, 4)
 texture = SubResource("GradientTexture2D_vy5pj")
 
+[node name="Decor" type="Node2D" parent="World"]
+
+[node name="Seaweed" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_uuoxe")
+position = Vector2(54, 304)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_rqxs6")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+
+[node name="Seaweed9" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_i6ddj")
+position = Vector2(-1037, 398)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_cjptb")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+
+[node name="Seaweed10" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_n044j")
+position = Vector2(-2303, 422)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_xwk4e")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+
+[node name="Seaweed11" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_jupvq")
+position = Vector2(-2870, 389)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_cd6bo")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+
+[node name="Seaweed2" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_clf5q")
+position = Vector2(122, 284)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_r8yv8")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 128.0
+
+[node name="Seaweed4" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_wd3ae")
+position = Vector2(-392, 396)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_lllnr")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 128.0
+
+[node name="Seaweed5" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_86elt")
+position = Vector2(-2333, 401)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_6b3h5")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 128.0
+
+[node name="Seaweed3" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_qtu3h")
+position = Vector2(79, 325)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_ps337")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 32.0
+
+[node name="Seaweed6" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_5u6qd")
+position = Vector2(-438, 424)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_goe3w")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 32.0
+
+[node name="Seaweed7" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_vppcx")
+position = Vector2(-888, 389)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_vs8fc")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 32.0
+
+[node name="Seaweed8" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_e8kx7")
+position = Vector2(-2379, 433)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_qke6d")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 32.0
+
 [node name="Fish" type="Node2D" parent="World"]
 unique_name_in_owner = true
 
 [node name="Angler" parent="World/Fish" instance=ExtResource("7_jw32o")]
 position = Vector2(-3353, 325)
-study_reward_factor = 1
 flip = true
+study_reward_factor = 1
 
 [node name="Guppo" parent="World/Fish" instance=ExtResource("9_gclda")]
 position = Vector2(-724, 257)
@@ -284,6 +526,34 @@ position = Vector2(280, 2252)
 [node name="BigFishPath" type="Path2D" parent="World/FishPaths"]
 curve = SubResource("Curve2D_reyx0")
 
+[node name="Anomalies" type="Node2D" parent="World"]
+
+[node name="Anomaly" type="StaticBody2D" parent="World/Anomalies" groups=["anomaly"]]
+position = Vector2(-247, 2273)
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("19_og1lj")
+size = 5.0
+raycasts_needed = 4
+study_speed = 0.5
+study_reward = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Anomalies/Anomaly"]
+shape = SubResource("CircleShape2D_og1lj")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="World/Anomalies/Anomaly"]
+stream = ExtResource("19_0c33q")
+volume_db = 20.0
+pitch_scale = 0.9
+autoplay = true
+max_distance = 512.0
+attenuation = 2.0
+
+[node name="Mesh" type="MeshInstance2D" parent="World/Anomalies/Anomaly"]
+material = SubResource("ShaderMaterial_0c33q")
+mesh = SubResource("QuadMesh_m0bfr")
+texture = SubResource("GradientTexture2D_og1lj")
+
 [node name="StartPosition" type="Marker2D" parent="World"]
 unique_name_in_owner = true
 position = Vector2(242, 19)
@@ -307,6 +577,25 @@ process_material = ExtResource("16_u2c8l")
 
 [node name="StudyIndicator" parent="CanvasLayer" instance=ExtResource("6_vy5pj")]
 unique_name_in_owner = true
+
+[node name="AnomalyRipple" type="Node2D" parent="CanvasLayer"]
+position = Vector2(-247, 2273)
+script = ExtResource("24_45d3w")
+
+[node name="RippleEffect" type="ColorRect" parent="CanvasLayer/AnomalyRipple"]
+z_index = 2
+material = SubResource("ShaderMaterial_og1lj")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -256.0
+offset_top = -256.0
+offset_right = 256.0
+offset_bottom = 256.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="WaterEffect" type="ColorRect" parent="CanvasLayer"]
 material = SubResource("ShaderMaterial_i0sg4")

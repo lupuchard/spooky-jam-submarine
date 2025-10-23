@@ -3,11 +3,13 @@ extends Node2D
 func set_name_text(text: String):
 	$NameLabel.text = text
 
-func update_to(fish: Fish):
+func update_to(fish: Studyable):
 	#global_position = fish.global_position
 	transform = fish.get_screen_transform()
 	
-	if fish.studied or Study.get_times_studied(fish.fish_type) > 0:
+	if fish is Anomaly:
+		$NameLabel.text = AnomalyText.TEXT
+	elif fish.studied or Study.get_times_studied(fish.fish_type) > 0:
 		$NameLabel.text = Study.get_fish_name(fish.fish_type)
 	else:
 		$NameLabel.text = "???"

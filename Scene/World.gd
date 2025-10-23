@@ -46,6 +46,8 @@ func return_to_surface() -> void:
 	%Beastiary.update()
 	%UpgradePanel.visible = true
 	player.visible = false
+	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
+	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
 	Save.save_state(player, %Fish)
 	Save.save_to_file()
 
@@ -54,8 +56,6 @@ func exit_surface() -> void:
 	resume_world()
 	player.vel.y = 3
 	player.global_position.y = 1
-	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
-	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
 	Audio.play(SPLASH_SOUND, player)
 	Save.save_state(player, %Fish)
 	Save.save_to_file()

@@ -35,6 +35,7 @@ window/stretch/mode="viewport"
 
 fish_body=""
 upgrade_option=""
+anomaly=""
 
 [gui]
 
@@ -88,6 +89,7 @@ toggle_light={
 [layer_names]
 
 2d_physics/layer_2="Fish"
+2d_physics/layer_4="Anomaly"
 
 [rendering]
 

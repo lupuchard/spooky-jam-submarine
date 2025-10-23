@@ -12,6 +12,7 @@ enum Stat {
 
 enum Res {
 	Research,
+	Anomalies,
 	NUM_RESOURCES
 }
 
@@ -54,6 +55,7 @@ const MAX_VEHICLE_AMBIENCE_DEPTH := 1200
 const CRASH_SOUND = preload("res://Assets/Sound/crash.mp3")
 const DASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
 const CLICK_SOUND = preload("res://Assets/Sound/click.ogg")
+const ANOMALY_COLLECT_SOUND = preload("res://Assets/Sound/anomaly_collect.mp3")
 const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
 const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 
@@ -79,12 +81,13 @@ var upgrade_levels: Array[int]
 
 var engines_on := false
 var pumps_on := false
+var anomaly_drain_on := false
 var base_power_drain := 0.5
 var propeller_bubble_cooldown := PROPELLER_BUBBLE_COOLDOWN
 
 var fish_contact_cooldown := 0.0
 
-var studying: Fish = null
+var studying: Studyable = null
 var study_speed: float = 0.2
 
 var too_deep: bool = false
@@ -153,6 +156,7 @@ func get_current_power_drain() -> int:
 	if is_light_on(): total += 1
 	if engines_on: total += 1
 	if pumps_on: total += 1
+	if anomaly_drain_on: total += 3
 	if stats[Stat.DashPower] < max_stats[Stat.DashPower]: total += 2
 	return total
 
@@ -184,11 +188,19 @@ func _process(delta: float):
 		if !studying.studied:
 			studying.study_progress += delta * studying.study_speed * study_speed
 			if studying.study_progress >= 1.0:
-				var reward = Study.add_studied(studying)
-				notify("+%s Research Points" % reward)
-				Audio.play(CLICK_SOUND)
-				resources[Res.Research] += reward
-				total_research += reward
+				if studying.study_reward == Player.Res.Research:
+					var reward = Study.add_studied(studying)
+					notify("+%s Research Points" % reward)
+					Audio.play(CLICK_SOUND)
+					resources[Res.Research] += reward
+					total_research += reward
+				elif studying.study_reward == Player.Res.Anomalies:
+					studying.studied = true
+					resources[Res.Anomalies] += 1
+					notify("+1 Anomaly")
+					Audio.play(ANOMALY_COLLECT_SOUND)
+					anomaly_drain_on = false
+					spotlight.visible = false
 	else:
 		%StudyIndicator.visible = false
 	
@@ -233,11 +245,11 @@ func notify(text: String):
 	)
 
 func check_raycasts():
-	var casted: Dictionary[Fish, int] = {}
+	var casted: Dictionary[Studyable, int] = {}
 	for child in $Spotlight.get_children():
 		if child is RayCast2D and child.is_colliding():
 			var collider = child.get_collider()
-			if collider is Fish:
+			if collider is Studyable:
 				casted.set(collider, casted.get(collider, 0) + 1)
 	
 	# Prioritize currently studying
@@ -256,7 +268,7 @@ func check_raycasts():
 			studying = fish
 			return
 
-func is_fish_in_range(fish: Fish, raycasts: int) -> bool:
+func is_fish_in_range(fish: Node2D, raycasts: int) -> bool:
 	if raycasts < fish.raycasts_needed: return false
 	var distance_sqr = fish.global_position.distance_squared_to(global_position)
 	return distance_sqr < pow(RAYCAST_LENGTH - fish.size, 2)
@@ -333,6 +345,7 @@ func die(death_text: String):
 	process_mode = Node.PROCESS_MODE_DISABLED
 	$Body.visible = false
 	$Spotlight.visible = false
+	%StudyIndicator.visible = false
 	%DeathPanel.visible = true
 	%DeathText.text = death_text
 	%DeathRecoverButton.pressed.connect(recover)

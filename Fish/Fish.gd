@@ -1,14 +1,6 @@
-extends StaticBody2D
+extends Studyable
 class_name Fish
 @export var fish_type: FishStudy.FishType
-
-# Determines how close the player needs to be to scan the fish
-@export var size: float = 20.0
-
-# How many of the player's raycasts are needed to scan the fish - more for larger fish
-@export var raycasts_needed: int = 1
-@export var study_speed: float = 1.0
-@export var study_reward_factor: int = 1
 
 @export var bob_amount: float = 5.0
 @export var is_sprite_facing_left: bool = true
@@ -21,7 +13,6 @@ class_name Fish
 @export var path: Path2D = null
 
 var studied = false
-var study_progress: float = 0.0
 var facing_left: bool
 var initial_position: Vector2
 var idle_sound_cooldown := 0.0
