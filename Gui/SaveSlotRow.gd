@@ -1,4 +1,5 @@
 extends HBoxContainer
+class_name SaveSlotRow
 
 signal slot_pressed(slot)
 signal delete_pressed(slot)
@@ -17,6 +18,9 @@ func _ready():
 	update()
 
 func update():
-	var slot_progress = Save.get_slot_progress(slot)
+	$SlotButton.text = get_slot_text(slot)
+
+static func get_slot_text(slott: int) -> String:
+	var slot_progress = Save.get_slot_progress(slott)
 	var progress_text = (" (%s%%)" % int(slot_progress * 100)) if slot_progress > 0.0 else ""
-	$SlotButton.text = ("Play Save Slot %s" % (slot + 1)) + progress_text
+	return ("Play Save Slot %s" % (slott + 1)) + progress_text

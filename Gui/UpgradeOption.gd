@@ -15,14 +15,20 @@ func get_stat_name(stat: Player.Stat) -> String:
 		Player.Stat.MaxDepth: return "Max Depth"
 		Player.Stat.Battery: return "Battery"
 		Player.Stat.Speed: return "Speed"
+		Player.Stat.Light: return "Light Radius"
+		Player.Stat.StudySpeed: return "Scanning Speed"
+		Player.Stat.DashSpeed: return "Dash"
 	return "Unknown"
 
 func format_stat_value(stat: Player.Stat, value: float) -> String:
 	match stat:
-		Player.Stat.Health:   return str(int(value))
-		Player.Stat.MaxDepth: return World.format_depth(value, 0)
-		Player.Stat.Battery:  return str(int(value))
-		Player.Stat.Speed:    return str(int(value * 100)) + "%"
+		Player.Stat.Health:     return str(int(value))
+		Player.Stat.MaxDepth:   return World.format_depth(value, 0)
+		Player.Stat.Battery:    return str(int(value))
+		Player.Stat.Speed:      return str(int(value * 100)) + "%"
+		Player.Stat.Light:      return "+" + str(int((value - 1.0) * 100)) + "%"
+		Player.Stat.StudySpeed: return "+" + str(int((value * 5.0 - 1.0) * 100)) + "%"
+		Player.Stat.DashSpeed:  return "+" + str(int((value / 2.8 - 1.0) * 200)) + "%"
 	return "Unknown"
 
 func update() -> void:
@@ -37,7 +43,7 @@ func update() -> void:
 	else:
 		var cost = upgrade.costs[level + 1]
 		%CostLabel.text = "%s Points:" % cost
-		%Button.disabled = player.resources[Player.Res.Research] < cost
+		%Button.disabled = player.resources[upgrade.cost_resource] < cost
 		var stat_text: Array[String] = []
 		for i in range(0, upgrade.stats.size()):
 			var stat = upgrade.stats[i]
@@ -53,7 +59,7 @@ func update() -> void:
 func on_button_press():
 	var upgrade = player.upgrades[upgrade_type]
 	var level = player.upgrade_levels[upgrade_type]
-	player.resources[Player.Res.Research] -= upgrade.costs[level + 1]
+	player.resources[upgrade.cost_resource] -= upgrade.costs[level + 1]
 	player.set_upgrade_level(upgrade_type, level + 1)
 	Audio.play(UPGRADE_SOUND, null, -10.0)
 	

@@ -24,7 +24,7 @@ func save_to_file() -> void:
 	var json_string = JSON.stringify(saved_state)
 	save_file.store_line(json_string)
 	
-	var player_research = saved_state["player"]["total_research"]
+	var player_research = saved_state["player"]["resource_totals"][Player.Res.Research]
 	slot_progress[current_slot] = float(player_research) / max_total_research_points
 	save_meta_to_file()
 
@@ -86,7 +86,7 @@ func save_player(player: Player) -> Dictionary:
 		"stats": player.stats.duplicate(),
 		"max_stats": player.max_stats.duplicate(),
 		"resources": player.resources.duplicate(),
-		"total_research": player.total_research,
+		"resource_totals": player.resource_totals.duplicate(),
 		"upgrade_levels": player.upgrade_levels.duplicate()
 	}
 
@@ -94,7 +94,7 @@ func load_player(data: Dictionary, player: Player) -> void:
 	player.stats.assign(data["stats"].duplicate())
 	player.max_stats.assign(data["max_stats"].duplicate())
 	player.resources.assign(data["resources"].duplicate())
-	player.total_research = int(data["total_research"])
+	player.resource_totals.assign(data["resource_totals"].duplicate())
 	player.upgrade_levels.assign(data["upgrade_levels"].duplicate())
 
 func save_fish(fish_node: Node2D) -> Array[Dictionary]:

@@ -92,11 +92,15 @@ func on_slot_pressed(slot: int) -> void:
 	Save.load_state(%Player, %Fish)
 	visible = false
 	%World.resume_world()
+	%UpgradePanel.process_mode = PROCESS_MODE_INHERIT
 
 func on_slot_delete_pressed(slot: int) -> void:
 	slot_deleting = slot
 	$SaveSlotsMenu.visible = false
 	$DeleteConfirmMenu.visible = true
+	
+	var delete_text = "Are you sure you want to delete " + SaveSlotRow.get_slot_text(slot)
+	$DeleteConfirmMenu/Label.text = delete_text
 
 func update_setting(setting: String, value: float) -> void:
 	match setting:

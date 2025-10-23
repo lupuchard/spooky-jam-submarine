@@ -45,6 +45,8 @@ func return_to_surface() -> void:
 	pause_world()
 	%Beastiary.update()
 	%UpgradePanel.visible = true
+	%UpgradePanel/TabContainer.current_tab = 0
+	%UpgradePanel/TabContainer.set_tab_hidden(1, player.resource_totals[Player.Res.Anomalies] == 0)
 	player.visible = false
 	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
 	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]

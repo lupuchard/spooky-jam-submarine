@@ -7,6 +7,9 @@ enum Stat {
 	Battery,
 	Speed,
 	DashPower,
+	DashSpeed,
+	Light,
+	StudySpeed,
 	NUM_STATS
 }
 
@@ -20,12 +23,14 @@ enum UpgradeType {
 	Hull,
 	Battery,
 	Speed,
+	Light,
+	Dash,
+	Scanner,
 	NUM_UPGRADES
 }
 
 const HORZ_ACCEL = 6.0
 const HORZ_TOP_SPEED = 1.5
-const DASH_SPEED = 3.0
 const BACKWARD_SPEED_FACTOR = 0.5
 
 const DESC_ACCEL = 4.0
@@ -44,9 +49,9 @@ const KNOCKBACK_STRENGTH := 0.5
 const MAX_KNOCKBACK := 6.0
 const FISH_CONTACT_COOLDOWN := 1.0
 
-const NUM_RAYCASTS := 8
+const NUM_RAYCASTS := 10
 const RAYCAST_ANGLE := PI / 3
-const RAYCAST_LENGTH := 120
+const BASE_RAYCAST_LENGTH := 120
 
 const DEPTH_DAMAGE := 0.5
 const DEPTH_DAMAGE_DELAY := 1.0
@@ -61,20 +66,22 @@ const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 
 var vel := Vector2.ZERO
 var camera: Camera2D
-var spotlight: PointLight2D
+var spotlight: Node2D
 
 var stats: Array[float] = []
 var max_stats: Array[float] = []
 var resources: Array[int] = []
-var total_research: int = 0
+var resource_totals: Array[int] = []
 
 class Upgrade:
-	func _init(init_name: String, init_stats: Array[Stat]) -> void:
-		self.name = init_name
-		self.stats = init_stats
+	func _init(_name: String, _stats: Array[Stat], _cost_resource: Res = Res.Research) -> void:
+		self.name = _name
+		self.stats = _stats
+		self.cost_resource = _cost_resource
 	var name: String
 	var stats: Array[Stat]
 	var costs: PackedInt32Array = []
+	var cost_resource: Res = Res.Research
 	var values: Array[PackedFloat64Array] = []
 var upgrades: Array[Upgrade]
 var upgrade_levels: Array[int]
@@ -88,7 +95,6 @@ var propeller_bubble_cooldown := PROPELLER_BUBBLE_COOLDOWN
 var fish_contact_cooldown := 0.0
 
 var studying: Studyable = null
-var study_speed: float = 0.2
 
 var too_deep: bool = false
 var depth_damage_delay: float = 0.0
@@ -97,7 +103,6 @@ var hull_creak_tween: Tween = null
 func _ready():
 	camera = $Camera2D
 	spotlight = $Spotlight
-	generate_raycasts()
 	
 	max_stats.resize(Stat.NUM_STATS)
 	max_stats[Stat.DashPower] = DASH_COOLDOWN
@@ -107,8 +112,7 @@ func _ready():
 		stats[i] = max_stats[i]
 	
 	resources.resize(Res.NUM_RESOURCES)
-	for i in range(0, Res.NUM_RESOURCES):
-		resources[i] = 0
+	resource_totals.resize(Res.NUM_RESOURCES)
 	
 	upgrades.resize(UpgradeType.NUM_UPGRADES)
 	upgrade_levels.resize(UpgradeType.NUM_UPGRADES)
@@ -129,8 +133,25 @@ func _ready():
 	battery_upgrade.values = [[100.0, 150.0, 200.0, 300.0]]
 	upgrades[UpgradeType.Battery] = battery_upgrade
 	
+	var dash_upgrade := Upgrade.new("Dash Speed", [Stat.DashSpeed], Res.Anomalies)
+	dash_upgrade.costs = [0, 1]
+	dash_upgrade.values = [[2.8, 3.5]]
+	upgrades[UpgradeType.Dash] = dash_upgrade
+	
+	var light_upgrade := Upgrade.new("Light", [Stat.Light], Res.Anomalies)
+	light_upgrade.costs = [0, 1]
+	light_upgrade.values = [[1.0, 1.25]]
+	upgrades[UpgradeType.Light] = light_upgrade
+	
+	var scanner_upgrade := Upgrade.new("Scanner", [Stat.StudySpeed], Res.Anomalies)
+	scanner_upgrade.costs = [0, 1]
+	scanner_upgrade.values = [[0.2, 0.4]]
+	upgrades[UpgradeType.Scanner] = scanner_upgrade
+	
 	for i in range(0, UpgradeType.NUM_UPGRADES):
 		set_upgrade_level(i, 0)
+	
+	generate_raycasts()
 
 func set_upgrade_level(upgrade_type: UpgradeType, level: int) -> void:
 	var upgrade := upgrades[upgrade_type]
@@ -141,13 +162,20 @@ func set_upgrade_level(upgrade_type: UpgradeType, level: int) -> void:
 		stats[stat] = max_stats[stat]
 	upgrade_levels[upgrade_type] = level
 
+func raycast_length() -> float:
+	return BASE_RAYCAST_LENGTH * stats[Stat.Light]
+
 # Raycasts are used to detect if fish are in the player's light cone
 func generate_raycasts() -> void:
+	for child in spotlight.get_children():
+		if child is RayCast2D:
+			child.queue_free()
+	
 	var raycast_spacing = RAYCAST_ANGLE / (NUM_RAYCASTS + 1)
 	for i in range(0, NUM_RAYCASTS):
 		var angle = raycast_spacing * (i + 1) - RAYCAST_ANGLE / 2
 		var raycast := RayCast2D.new()
-		raycast.target_position = Vector2.from_angle(angle) * RAYCAST_LENGTH
+		raycast.target_position = Vector2.from_angle(angle) * raycast_length()
 		raycast.collision_mask = 2
 		spotlight.add_child(raycast)
 
@@ -160,7 +188,19 @@ func get_current_power_drain() -> int:
 	if stats[Stat.DashPower] < max_stats[Stat.DashPower]: total += 2
 	return total
 
+func check_light_upgrade() -> void:
+	if upgrade_levels[UpgradeType.Light] == 1 and $Spotlight/Spotlight1.visible:
+		$Spotlight/Spotlight1.visible = false
+		$Spotlight/Spotlight2.visible = true
+		generate_raycasts()
+	elif upgrade_levels[UpgradeType.Light] == 0 and !$Spotlight/Spotlight1.visible:
+		$Spotlight/Spotlight1.visible = true
+		$Spotlight/Spotlight2.visible = false
+		generate_raycasts()
+
 func _process(delta: float):
+	check_light_upgrade()
+	
 	fish_contact_cooldown -= delta
 	stats[Stat.Battery] -= get_current_power_drain() * base_power_drain * delta
 	stats[Stat.DashPower] += delta
@@ -186,14 +226,14 @@ func _process(delta: float):
 		%StudyIndicator.visible = true
 		%StudyIndicator.update_to(studying)
 		if !studying.studied:
-			studying.study_progress += delta * studying.study_speed * study_speed
+			studying.study_progress += delta * studying.study_speed * stats[Stat.StudySpeed]
 			if studying.study_progress >= 1.0:
 				if studying.study_reward == Player.Res.Research:
 					var reward = Study.add_studied(studying)
 					notify("+%s Research Points" % reward)
 					Audio.play(CLICK_SOUND)
 					resources[Res.Research] += reward
-					total_research += reward
+					resource_totals[Res.Research] += reward
 				elif studying.study_reward == Player.Res.Anomalies:
 					studying.studied = true
 					resources[Res.Anomalies] += 1
@@ -271,7 +311,7 @@ func check_raycasts():
 func is_fish_in_range(fish: Node2D, raycasts: int) -> bool:
 	if raycasts < fish.raycasts_needed: return false
 	var distance_sqr = fish.global_position.distance_squared_to(global_position)
-	return distance_sqr < pow(RAYCAST_LENGTH - fish.size, 2)
+	return distance_sqr < pow(raycast_length() - fish.size, 2)
 
 func _physics_process(delta: float):
 	var speed = stats[Player.Stat.Speed]
@@ -306,7 +346,7 @@ func _physics_process(delta: float):
 			Bubbler.spawn_bubbles(%PropellerLocation.global_position, 1, 2)
 	
 	if stats[Stat.DashPower] >= DASH_COOLDOWN and Input.is_action_just_pressed("dash"):
-		vel.x += (-1 if is_facing_left() else 1) * DASH_SPEED * speed
+		vel.x += (-1 if is_facing_left() else 1) * stats[Stat.DashSpeed] * speed
 		stats[Stat.DashPower] = 0
 		Audio.play(DASH_SOUND, null, 0.0, 0.9, 1.1)
 		Bubbler.spawn_bubbles(global_position, 3)

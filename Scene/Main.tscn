@@ -1,4 +1,4 @@
-[gd_scene load_steps=83 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=85 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://s2wi4kx46qnt" path="res://Assets/Spotlight1.png" id="4_jw32o"]
 [ext_resource type="Script" uid="uid://so1kcd7487ek" path="res://Scene/Wall.gd" id="4_rgh2o"]
 [ext_resource type="Script" uid="uid://ds6akscj7vkvi" path="res://Player/StatusBar.gd" id="5_pbw6q"]
+[ext_resource type="Texture2D" uid="uid://8jbl2q2yrws2" path="res://Assets/Spotlight2.png" id="6_rqxs6"]
 [ext_resource type="PackedScene" uid="uid://wklqvbx7bd17" path="res://Player/StudyIndicator.tscn" id="6_vy5pj"]
 [ext_resource type="AudioStream" uid="uid://bcqc2pq84op54" path="res://Assets/Sound/vehicle_ambience.mp3" id="7_bf81u"]
 [ext_resource type="AudioStream" uid="uid://b68k1ubaflc3y" path="res://Assets/Sound/underwater_ambience.mp3" id="7_grg3l"]
@@ -38,6 +39,7 @@
 [ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Gui/SaveSlotRow.tscn" id="26_g6i1l"]
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
 [ext_resource type="PackedScene" uid="uid://tmj70t7q4vss" path="res://Gui/OptionSlider.tscn" id="30_g6i1l"]
+[ext_resource type="Script" uid="uid://2muqviseym23" path="res://Scene/Anomalies.gd" id="35_uuoxe"]
 
 [sub_resource type="Environment" id="Environment_g6i1l"]
 background_mode = 3
@@ -286,7 +288,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(90, 233)
+position = Vector2(-123, 251)
 collision_layer = 9
 collision_mask = 9
 script = ExtResource("1_rgh2o")
@@ -310,12 +312,22 @@ position = Vector2(14, 1)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_rgh2o")
 
-[node name="Spotlight" type="PointLight2D" parent="World/Player"]
+[node name="Spotlight" type="Node2D" parent="World/Player"]
+
+[node name="Spotlight1" type="PointLight2D" parent="World/Player/Spotlight"]
 light_mask = 2
 visibility_layer = 2
 energy = 0.2
 shadow_enabled = true
 texture = ExtResource("4_jw32o")
+
+[node name="Spotlight2" type="PointLight2D" parent="World/Player/Spotlight"]
+visible = false
+light_mask = 2
+visibility_layer = 2
+energy = 0.2
+shadow_enabled = true
+texture = ExtResource("6_rqxs6")
 
 [node name="PointLight2D" type="PointLight2D" parent="World/Player"]
 texture = SubResource("GradientTexture2D_u2c8l")
@@ -519,7 +531,7 @@ contact_damage = 9.0
 path = NodePath("../../FishPaths/BigFishPath")
 
 [node name="Angler2" parent="World/Fish" instance=ExtResource("7_jw32o")]
-position = Vector2(280, 2252)
+position = Vector2(281, 2253)
 
 [node name="FishPaths" type="Node2D" parent="World"]
 
@@ -726,12 +738,43 @@ layout_mode = 2
 player = NodePath("../../../../../World/Player")
 upgrade_type = 1
 
+[node name="Anomalies" type="VBoxContainer" parent="CanvasLayer/UpgradePanel/TabContainer" node_paths=PackedStringArray("player")]
+visible = false
+layout_mode = 2
+script = ExtResource("35_uuoxe")
+player = NodePath("../../../../World/Player")
+metadata/_tab_index = 1
+
+[node name="Label" type="Label" parent="CanvasLayer/UpgradePanel/TabContainer/Anomalies"]
+layout_mode = 2
+theme_type_variation = &"LabelBig"
+text = "Anomalies: 0"
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/UpgradePanel/TabContainer/Anomalies"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="DashUpgradeOption" parent="CanvasLayer/UpgradePanel/TabContainer/Anomalies" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+layout_mode = 2
+player = NodePath("../../../../../World/Player")
+upgrade_type = 4
+
+[node name="LightUpgradeOption" parent="CanvasLayer/UpgradePanel/TabContainer/Anomalies" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+layout_mode = 2
+player = NodePath("../../../../../World/Player")
+upgrade_type = 3
+
+[node name="ScannerUpgradeOption" parent="CanvasLayer/UpgradePanel/TabContainer/Anomalies" node_paths=PackedStringArray("player") groups=["upgrade_option"] instance=ExtResource("14_mr7am")]
+layout_mode = 2
+player = NodePath("../../../../../World/Player")
+upgrade_type = 5
+
 [node name="Beastiary" type="ScrollContainer" parent="CanvasLayer/UpgradePanel/TabContainer"]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
 script = ExtResource("22_bf81u")
-metadata/_tab_index = 1
+metadata/_tab_index = 2
 
 [node name="BeastiaryEntryList" type="VBoxContainer" parent="CanvasLayer/UpgradePanel/TabContainer/Beastiary"]
 layout_mode = 2

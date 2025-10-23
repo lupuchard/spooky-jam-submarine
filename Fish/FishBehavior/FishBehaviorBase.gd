@@ -59,4 +59,4 @@ func try_move(force: bool = false):
 		Bubbler.spawn_bubbles(fish.global_position, 1, 2)
 
 func max_distance(retreat_range: float):
-	return Player.RAYCAST_LENGTH - retreat_range - fish.size
+	return player.raycast_length() - retreat_range - fish.size
