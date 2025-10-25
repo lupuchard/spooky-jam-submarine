@@ -305,7 +305,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(161, 254)
+position = Vector2(46, 236)
 collision_layer = 9
 collision_mask = 9
 script = ExtResource("1_rgh2o")
@@ -689,6 +689,16 @@ horizontal_alignment = 1
 script = ExtResource("21_g6i1l")
 player = NodePath("../../../World/Player")
 
+[node name="LowPowerWarning" type="Label" parent="CanvasLayer/PowerBar/PowerConsumptionIndicator"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 3.0
+offset_right = 90.0
+offset_bottom = 21.0
+theme_type_variation = &"LabelBig"
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "!!!"
+
 [node name="DashBar" type="ColorRect" parent="CanvasLayer" node_paths=PackedStringArray("player")]
 offset_left = 8.0
 offset_top = 414.0
@@ -989,9 +999,15 @@ size_flags_horizontal = 4
 text = "Return"
 
 [node name="TipText" type="Label" parent="CanvasLayer"]
-offset_left = 71.0
-offset_top = 402.0
-offset_right = 340.0
-offset_bottom = 420.0
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -28.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_type_variation = &"LabelBig"
+text = "Tip: Right click or press the right analog stick to toggle spotlight."
+horizontal_alignment = 1
 script = ExtResource("41_i6ddj")

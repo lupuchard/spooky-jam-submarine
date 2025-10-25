@@ -12,9 +12,9 @@ func _process(delta: float):
 	time_passed += delta
 	
 	if time_passed > WHEN_DASH_HINT and !dash_pressed:
-		text = "Tip: Press space to dash."
+		text = "Tip: Press space or RB to dash."
 	elif time_passed > WHEN_SPOTLIGHT_HINT and !toggle_spotlight_pressed:
-		text = "Tip: Right click to toggle spotlight."
+		text = "Tip: Right click or press the right analog stick to toggle spotlight."
 	else:
 		text = ""
 
