@@ -28,30 +28,13 @@ func _ready() -> void:
 		slot_row.slot_pressed.connect(on_slot_pressed)
 		slot_row.delete_pressed.connect(on_slot_delete_pressed)
 	
-	%CancelDeleteButton.pressed.connect(func():
-		$SaveSlotsMenu.visible = true
-		$DeleteConfirmMenu.visible = false
-	)
-	
+	%OptionsButton.pressed.connect(show_options_menu)
+	%OptionsExitButton.pressed.connect(show_save_slots_menu)
+	%CancelDeleteButton.pressed.connect(show_save_slots_menu)
 	%ConfirmDeleteButton.pressed.connect(func():
 		Save.delete_slot(slot_deleting)
 		slot_rows[slot_deleting].update()
-		$SaveSlotsMenu.visible = true
-		$DeleteConfirmMenu.visible = false
-	)
-	
-	%OptionsButton.pressed.connect(func():
-		for slider_key in option_sliders:
-			var value = Save.options.get(slider_key, OPTION_DEFAULTS[slider_key])
-			option_sliders[slider_key].value = value
-		
-		$OptionsMenu.visible = true
-		$SaveSlotsMenu.visible = false
-	)
-	
-	%OptionsExitButton.pressed.connect(func():
-		$OptionsMenu.visible = false
-		$SaveSlotsMenu.visible = true
+		show_save_slots_menu()
 	)
 	
 	option_save_timer = Timer.new()
@@ -69,9 +52,12 @@ func _ready() -> void:
 			update_setting(slider_key, new_value)
 		)
 	
+	show_save_slots_menu()
+	
 	await get_tree().process_frame
 	for slider_key in option_sliders:
 		update_setting(slider_key, Save.options.get(slider_key, OPTION_DEFAULTS[slider_key]))
+	
 
 func _input(_input_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("open_menu"):
@@ -81,6 +67,7 @@ func _input(_input_event: InputEvent) -> void:
 			%UpgradePanel.process_mode = PROCESS_MODE_DISABLED
 			for slot_row in slot_rows:
 				slot_row.update()
+			show_save_slots_menu()
 		elif Save.current_slot != -1:
 			%World.resume_world()
 			visible = false
@@ -96,11 +83,7 @@ func on_slot_pressed(slot: int) -> void:
 
 func on_slot_delete_pressed(slot: int) -> void:
 	slot_deleting = slot
-	$SaveSlotsMenu.visible = false
-	$DeleteConfirmMenu.visible = true
-	
-	var delete_text = "Are you sure you want to delete " + SaveSlotRow.get_slot_text(slot)
-	$DeleteConfirmMenu/Label.text = delete_text
+	show_delete_confirm_menu()
 
 func update_setting(setting: String, value: float) -> void:
 	match setting:
@@ -110,3 +93,28 @@ func update_setting(setting: String, value: float) -> void:
 			AudioServer.set_bus_volume_linear(AudioServer.get_bus_index("Ambience"), pow(value, 2))
 		"gamma":
 			%WorldEnvironment.environment.tonemap_exposure = pow((value * 2), 2)
+
+func show_save_slots_menu():
+	$SaveSlotsMenu.visible = true
+	$OptionsMenu.visible = false
+	$DeleteConfirmMenu.visible = false
+	%OptionsButton.call_deferred("grab_focus")
+
+func show_delete_confirm_menu():
+	$SaveSlotsMenu.visible = false
+	$OptionsMenu.visible = false
+	$DeleteConfirmMenu.visible = true
+	%CancelDeleteButton.call_deferred("grab_focus")
+	
+	var delete_text = "Are you sure you want to delete " + SaveSlotRow.get_slot_text(slot_deleting)
+	$DeleteConfirmMenu/Label.text = delete_text
+	
+func show_options_menu():
+	$SaveSlotsMenu.visible = false
+	$OptionsMenu.visible = true
+	$DeleteConfirmMenu.visible = false
+	%OptionsExitButton.call_deferred("grab_focus")
+	
+	for slider_key in option_sliders:
+		var value = Save.options.get(slider_key, OPTION_DEFAULTS[slider_key])
+		option_sliders[slider_key].value = value

@@ -47,7 +47,8 @@ func return_to_surface() -> void:
 	%UpgradePanel.visible = true
 	%UpgradePanel/TabContainer.current_tab = 0
 	%UpgradePanel/TabContainer.set_tab_hidden(1, player.resource_totals[Player.Res.Anomalies] == 0)
-	player.visible = false
+	%UpgradePanel/TabContainer.get_tab_bar().call_deferred("grab_focus")
+	#player.visible = false
 	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
 	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
 	Save.save_state(player, %Fish)

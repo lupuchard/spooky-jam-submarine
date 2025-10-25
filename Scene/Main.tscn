@@ -1,4 +1,4 @@
-[gd_scene load_steps=85 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=90 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -40,6 +40,7 @@
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
 [ext_resource type="PackedScene" uid="uid://tmj70t7q4vss" path="res://Gui/OptionSlider.tscn" id="30_g6i1l"]
 [ext_resource type="Script" uid="uid://2muqviseym23" path="res://Scene/Anomalies.gd" id="35_uuoxe"]
+[ext_resource type="Script" uid="uid://cv3ncutd1vlxw" path="res://Scene/TipText.gd" id="41_i6ddj"]
 
 [sub_resource type="Environment" id="Environment_g6i1l"]
 background_mode = 3
@@ -84,14 +85,6 @@ fill = 1
 fill_from = Vector2(0.5, 0)
 fill_to = Vector2(0, 0)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_uuoxe"]
-shader = ExtResource("17_5xnk5")
-shader_parameter/height = 2.0
-
-[sub_resource type="QuadMesh" id="QuadMesh_rqxs6"]
-size = Vector2(16, 64)
-subdivide_depth = 8
-
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_i6ddj"]
 shader = ExtResource("17_5xnk5")
 shader_parameter/height = 2.0
@@ -118,57 +111,81 @@ subdivide_depth = 8
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_clf5q"]
 shader = ExtResource("17_5xnk5")
-shader_parameter/height = 4.0
+shader_parameter/height = 1.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_r8yv8"]
-size = Vector2(16, 128)
-subdivide_depth = 16
+size = Vector2(16, 32)
+subdivide_depth = 4
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_wd3ae"]
 shader = ExtResource("17_5xnk5")
-shader_parameter/height = 4.0
+shader_parameter/height = 2.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_lllnr"]
-size = Vector2(16, 128)
-subdivide_depth = 16
+size = Vector2(16, 64)
+subdivide_depth = 8
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_86elt"]
 shader = ExtResource("17_5xnk5")
-shader_parameter/height = 4.0
+shader_parameter/height = 2.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_6b3h5"]
-size = Vector2(16, 128)
-subdivide_depth = 16
+size = Vector2(16, 64)
+subdivide_depth = 8
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_qtu3h"]
 shader = ExtResource("17_5xnk5")
-shader_parameter/height = 1.0
+shader_parameter/height = 4.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_ps337"]
-size = Vector2(16, 32)
-subdivide_depth = 4
+size = Vector2(16, 128)
+subdivide_depth = 16
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_5u6qd"]
 shader = ExtResource("17_5xnk5")
-shader_parameter/height = 1.0
+shader_parameter/height = 4.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_goe3w"]
-size = Vector2(16, 32)
-subdivide_depth = 4
+size = Vector2(16, 128)
+subdivide_depth = 16
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_vppcx"]
 shader = ExtResource("17_5xnk5")
-shader_parameter/height = 1.0
+shader_parameter/height = 4.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_vs8fc"]
-size = Vector2(16, 32)
-subdivide_depth = 4
+size = Vector2(16, 128)
+subdivide_depth = 16
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_e8kx7"]
 shader = ExtResource("17_5xnk5")
 shader_parameter/height = 1.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_qke6d"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3uymx"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_qr046"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_a8wfw"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_45bv1"]
+size = Vector2(16, 32)
+subdivide_depth = 4
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nqw0k"]
+shader = ExtResource("17_5xnk5")
+shader_parameter/height = 1.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_8xa3c"]
 size = Vector2(16, 32)
 subdivide_depth = 4
 
@@ -288,7 +305,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-123, 251)
+position = Vector2(161, 254)
 collision_layer = 9
 collision_mask = 9
 script = ExtResource("1_rgh2o")
@@ -364,106 +381,125 @@ texture = SubResource("GradientTexture2D_vy5pj")
 
 [node name="Seaweed" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_uuoxe")
-position = Vector2(54, 304)
-rotation = 3.1415927
-mesh = SubResource("QuadMesh_rqxs6")
-texture = ExtResource("17_reyx0")
-script = ExtResource("11_6ngyt")
-
-[node name="Seaweed9" type="MeshInstance2D" parent="World/Decor"]
-z_index = -2
 material = SubResource("ShaderMaterial_i6ddj")
-position = Vector2(-1037, 398)
+position = Vector2(54, 304)
 rotation = 3.1415927
 mesh = SubResource("QuadMesh_cjptb")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 
-[node name="Seaweed10" type="MeshInstance2D" parent="World/Decor"]
+[node name="Seaweed9" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
 material = SubResource("ShaderMaterial_n044j")
-position = Vector2(-2303, 422)
+position = Vector2(-1037, 398)
 rotation = 3.1415927
 mesh = SubResource("QuadMesh_xwk4e")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 
-[node name="Seaweed11" type="MeshInstance2D" parent="World/Decor"]
+[node name="Seaweed10" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
 material = SubResource("ShaderMaterial_jupvq")
-position = Vector2(-2870, 389)
+position = Vector2(-2303, 422)
 rotation = 3.1415927
 mesh = SubResource("QuadMesh_cd6bo")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 
-[node name="Seaweed2" type="MeshInstance2D" parent="World/Decor"]
+[node name="Seaweed13" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
 material = SubResource("ShaderMaterial_clf5q")
-position = Vector2(122, 284)
+position = Vector2(-392, 2265)
 rotation = 3.1415927
 mesh = SubResource("QuadMesh_r8yv8")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+height = 32.0
+
+[node name="Seaweed11" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_wd3ae")
+position = Vector2(-2876, 403)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_lllnr")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+
+[node name="Seaweed12" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_86elt")
+position = Vector2(-371, 2252)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_6b3h5")
+texture = ExtResource("17_reyx0")
+script = ExtResource("11_6ngyt")
+
+[node name="Seaweed2" type="MeshInstance2D" parent="World/Decor"]
+z_index = -2
+material = SubResource("ShaderMaterial_qtu3h")
+position = Vector2(122, 284)
+rotation = 3.1415927
+mesh = SubResource("QuadMesh_ps337")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 128.0
 
 [node name="Seaweed4" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_wd3ae")
+material = SubResource("ShaderMaterial_5u6qd")
 position = Vector2(-392, 396)
 rotation = 3.1415927
-mesh = SubResource("QuadMesh_lllnr")
+mesh = SubResource("QuadMesh_goe3w")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 128.0
 
 [node name="Seaweed5" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_86elt")
+material = SubResource("ShaderMaterial_vppcx")
 position = Vector2(-2333, 401)
 rotation = 3.1415927
-mesh = SubResource("QuadMesh_6b3h5")
+mesh = SubResource("QuadMesh_vs8fc")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 128.0
 
 [node name="Seaweed3" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_qtu3h")
+material = SubResource("ShaderMaterial_e8kx7")
 position = Vector2(79, 325)
 rotation = 3.1415927
-mesh = SubResource("QuadMesh_ps337")
+mesh = SubResource("QuadMesh_qke6d")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 32.0
 
 [node name="Seaweed6" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_5u6qd")
+material = SubResource("ShaderMaterial_3uymx")
 position = Vector2(-438, 424)
 rotation = 3.1415927
-mesh = SubResource("QuadMesh_goe3w")
+mesh = SubResource("QuadMesh_qr046")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 32.0
 
 [node name="Seaweed7" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_vppcx")
+material = SubResource("ShaderMaterial_a8wfw")
 position = Vector2(-888, 389)
 rotation = 3.1415927
-mesh = SubResource("QuadMesh_vs8fc")
+mesh = SubResource("QuadMesh_45bv1")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 32.0
 
 [node name="Seaweed8" type="MeshInstance2D" parent="World/Decor"]
 z_index = -2
-material = SubResource("ShaderMaterial_e8kx7")
+material = SubResource("ShaderMaterial_nqw0k")
 position = Vector2(-2379, 433)
 rotation = 3.1415927
-mesh = SubResource("QuadMesh_qke6d")
+mesh = SubResource("QuadMesh_8xa3c")
 texture = ExtResource("17_reyx0")
 script = ExtResource("11_6ngyt")
 height = 32.0
@@ -773,6 +809,7 @@ upgrade_type = 5
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
+follow_focus = true
 script = ExtResource("22_bf81u")
 metadata/_tab_index = 2
 
@@ -788,7 +825,7 @@ offset_right = 604.0
 offset_bottom = 168.0
 size_flags_horizontal = 8
 size_flags_vertical = 0
-text = "Close"
+text = "Return"
 
 [node name="DeathPanel" type="PanelContainer" parent="CanvasLayer"]
 unique_name_in_owner = true
@@ -872,17 +909,21 @@ alignment = 1
 [node name="CreditsButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_right = NodePath("../OptionsButton")
 disabled = true
 text = "Credits"
 
 [node name="OptionsButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_left = NodePath("../CreditsButton")
+focus_neighbor_right = NodePath("../ExitButton")
 text = "Options"
 
 [node name="ExitButton" type="Button" parent="CanvasLayer/MainMenu/SaveSlotsMenu/Buttons"]
 unique_name_in_owner = true
 layout_mode = 2
+focus_neighbor_left = NodePath("../OptionsButton")
 text = "Exit"
 
 [node name="DeleteConfirmMenu" type="VBoxContainer" parent="CanvasLayer/MainMenu"]
@@ -946,3 +987,11 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Return"
+
+[node name="TipText" type="Label" parent="CanvasLayer"]
+offset_left = 71.0
+offset_top = 402.0
+offset_right = 340.0
+offset_bottom = 420.0
+theme_type_variation = &"LabelBig"
+script = ExtResource("41_i6ddj")

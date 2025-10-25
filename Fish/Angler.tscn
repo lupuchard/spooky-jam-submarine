@@ -5,7 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://cvj8ehbtee65c" path="res://Assets/Fish/Angler/Light.png" id="2_hfkjb"]
 [ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/FishBehavior/ShyFishBehavior.gd" id="2_o4hq0"]
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="4_bw4jn"]
-[ext_resource type="AudioStream" uid="uid://dawdc3a4nho8" path="res://Assets/Sound/creature_breathe.mp3" id="5_q21dd"]
+[ext_resource type="AudioStream" uid="uid://d1bn55xs6ho5m" path="res://Assets/Sound/creature_breathe_2.mp3" id="6_bw4jn"]
 
 [sub_resource type="Resource" id="Resource_q21dd"]
 script = ExtResource("2_o4hq0")
@@ -104,11 +104,11 @@ radius = 23.0
 [node name="Angler" type="StaticBody2D"]
 collision_layer = 3
 script = ExtResource("1_hfkjb")
+contact_damage = 6.0
+behavior = SubResource("Resource_q21dd")
 size = 10.0
 raycasts_needed = 3
 study_reward_factor = 2
-contact_damage = 6.0
-behavior = SubResource("Resource_q21dd")
 
 [node name="Body" type="Node2D" parent="."]
 
@@ -134,7 +134,6 @@ texture = SubResource("GradientTexture2D_ic4k1")
 shape = SubResource("CircleShape2D_eaveb")
 
 [node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("5_q21dd")
-volume_db = -4.0
+stream = ExtResource("6_bw4jn")
 pitch_scale = 0.8
 attenuation = 2.000001

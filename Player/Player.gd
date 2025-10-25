@@ -198,16 +198,23 @@ func check_light_upgrade() -> void:
 		$Spotlight/Spotlight2.visible = false
 		generate_raycasts()
 
+func _input(input: InputEvent) -> void:
+	var look_vector := Vector2.ZERO
+	if input is InputEventMouseMotion:
+		look_vector = get_parent().get_local_mouse_position() - position
+	else:
+		look_vector = Input.get_vector("look_left", "look_right", "look_up", "look_down")
+	
+	if look_vector != Vector2.ZERO:
+		spotlight.rotation = Vector2.RIGHT.angle_to(look_vector)
+		$Body.scale.x = 1 if look_vector.x < 0 else -1
+
 func _process(delta: float):
 	check_light_upgrade()
 	
 	fish_contact_cooldown -= delta
 	stats[Stat.Battery] -= get_current_power_drain() * base_power_drain * delta
 	stats[Stat.DashPower] += delta
-	
-	var mouse_vector = position - get_parent().get_local_mouse_position()
-	spotlight.rotation = Vector2.LEFT.angle_to(mouse_vector)
-	$Body.scale.x = -1 if mouse_vector.x < 0 else 1
 	
 	if Input.is_action_just_pressed("toggle_light"):
 		if spotlight.visible:
@@ -232,13 +239,12 @@ func _process(delta: float):
 					var reward = Study.add_studied(studying)
 					notify("+%s Research Points" % reward)
 					Audio.play(CLICK_SOUND)
-					resources[Res.Research] += reward
-					resource_totals[Res.Research] += reward
+					gain_resource(Res.Research, reward)
 				elif studying.study_reward == Player.Res.Anomalies:
 					studying.studied = true
-					resources[Res.Anomalies] += 1
 					notify("+1 Anomaly")
 					Audio.play(ANOMALY_COLLECT_SOUND)
+					gain_resource(Res.Anomalies, 1)
 					anomaly_drain_on = false
 					spotlight.visible = false
 	else:
@@ -264,6 +270,10 @@ func _process(delta: float):
 		die("You ran out of battery. And died.")
 	
 	$VehicleAmbience.volume_db = min(global_position.y / MAX_VEHICLE_AMBIENCE_DEPTH, 1.0) * 80.0 - 80.0
+
+func gain_resource(resource: Res, amount: int) -> void:
+	resources[resource] += amount
+	resource_totals[resource] += amount
 
 func is_light_on() -> bool:
 	return spotlight.visible

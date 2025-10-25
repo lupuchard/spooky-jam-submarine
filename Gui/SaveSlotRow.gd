@@ -18,9 +18,9 @@ func _ready():
 	update()
 
 func update():
-	$SlotButton.text = get_slot_text(slot)
+	$SlotButton.text = "Play " + get_slot_text(slot)
 
 static func get_slot_text(slott: int) -> String:
 	var slot_progress = Save.get_slot_progress(slott)
 	var progress_text = (" (%s%%)" % int(slot_progress * 100)) if slot_progress > 0.0 else ""
-	return ("Play Save Slot %s" % (slott + 1)) + progress_text
+	return ("Save Slot %s" % (slott + 1)) + progress_text
