@@ -1,0 +1,72 @@
+[gd_scene load_steps=11 format=3 uid="uid://bj245sdiil54s"]
+
+[ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_fmbce"]
+[ext_resource type="Script" uid="uid://c5m8s0xb2guin" path="res://Fish/FishBehavior/FloorFishBehavior.gd" id="2_menq6"]
+[ext_resource type="Texture2D" uid="uid://hicghdi3muoq" path="res://Assets/Fish/Crab/Crab.png" id="3_menq6"]
+[ext_resource type="Texture2D" uid="uid://ci0ny7gre5o12" path="res://Assets/Fish/Crab/Light.png" id="4_4g15y"]
+[ext_resource type="AudioStream" uid="uid://cw4c8obaf5o2m" path="res://Assets/Sound/scuttle.mp3" id="4_rvccj"]
+
+[sub_resource type="Resource" id="Resource_t43tn"]
+script = ExtResource("2_menq6")
+walk_speed = 10.0
+idle_proportion = 0.3
+metadata/_custom_type_script = "uid://c5m8s0xb2guin"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_rvccj"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_menq6")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_jvjih"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_4g15y")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_vrrgs"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_t43tn"]
+size = Vector2(62, 7)
+
+[node name="RubyCrab" type="StaticBody2D"]
+script = ExtResource("1_fmbce")
+fish_type = 9
+bob_amount = 0.0
+contact_damage = 4.0
+behavior = SubResource("Resource_t43tn")
+size = 5.0
+study_speed = 2.0
+metadata/_custom_type_script = "uid://cvn0cn84nf1em"
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Crab" type="AnimatedSprite2D" parent="Body" groups=["fish_body"]]
+sprite_frames = SubResource("SpriteFrames_rvccj")
+
+[node name="CrabLight" type="AnimatedSprite2D" parent="Body/Crab"]
+sprite_frames = SubResource("SpriteFrames_jvjih")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_vrrgs")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(0, 8)
+shape = SubResource("RectangleShape2D_t43tn")
+
+[node name="MovementSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("4_rvccj")
+volume_db = -20.0
+pitch_scale = 0.7
+attenuation = 2.0

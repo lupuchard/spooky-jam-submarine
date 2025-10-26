@@ -95,6 +95,7 @@ var propeller_bubble_cooldown := PROPELLER_BUBBLE_COOLDOWN
 var fish_contact_cooldown := 0.0
 
 var studying: Studyable = null
+var studying_mod: float = 1.0
 
 var too_deep: bool = false
 var depth_damage_delay: float = 0.0
@@ -233,7 +234,8 @@ func _process(delta: float):
 		%StudyIndicator.visible = true
 		%StudyIndicator.update_to(studying)
 		if !studying.studied:
-			studying.study_progress += delta * studying.study_speed * stats[Stat.StudySpeed]
+			var study_speed = studying.study_speed * stats[Stat.StudySpeed] * studying_mod
+			studying.study_progress += delta * study_speed
 			if studying.study_progress >= 1.0:
 				if studying.study_reward == Player.Res.Research:
 					var reward = Study.add_studied(studying)
@@ -275,6 +277,11 @@ func gain_resource(resource: Res, amount: int) -> void:
 	resources[resource] += amount
 	resource_totals[resource] += amount
 
+func restore_stat(stat: Stat, amount: float) -> bool:
+	if stats[stat] == max_stats[stat]: return false
+	stats[stat] = min(stats[stat] + amount, max_stats[stat])
+	return true
+
 func is_light_on() -> bool:
 	return spotlight.visible
 
@@ -295,33 +302,41 @@ func notify(text: String):
 	)
 
 func check_raycasts():
-	var casted: Dictionary[Studyable, int] = {}
+	var casted: Dictionary[Node2D, int] = {}
 	for child in $Spotlight.get_children():
 		if child is RayCast2D and child.is_colliding():
 			var collider = child.get_collider()
-			if collider is Studyable:
+			if collider is Studyable or collider is AltStudyTarget:
 				casted.set(collider, casted.get(collider, 0) + 1)
 	
 	# Prioritize currently studying
-	if studying != null and !studying.studied and is_fish_in_range(studying, casted.get(studying, 0)):
+	if studying != null and !studying.studied and is_target_in_range(studying, casted.get(studying, 0)):
 		return
 	
 	# Then prioritize unstudied
 	studying = null
-	for fish in casted:
-		if is_fish_in_range(fish, casted[fish]) and !fish.studied:
-			studying = fish
+	for studyable in casted:
+		if studyable is AltStudyTarget:
+			continue
+		if is_target_in_range(studyable, casted[studyable]) and !studyable.studied:
+			studying = studyable
 			return
 	
-	for fish in casted:
-		if is_fish_in_range(fish, casted[fish]):
-			studying = fish
+	for studyable in casted:
+		if is_target_in_range(studyable, casted[studyable]):
+			if studyable is AltStudyTarget:
+				studying = studyable.studyable
+				studying_mod = studyable.study_speed_modifier
+			else:
+				studying = studyable
+				studying_mod = 1.0
 			return
 
-func is_fish_in_range(fish: Node2D, raycasts: int) -> bool:
-	if raycasts < fish.raycasts_needed: return false
-	var distance_sqr = fish.global_position.distance_squared_to(global_position)
-	return distance_sqr < pow(raycast_length() - fish.size, 2)
+func is_target_in_range(target: Node2D, raycasts: int) -> bool:
+	var studyable: Studyable = target.studyable if target is AltStudyTarget else target
+	if raycasts < studyable.raycasts_needed: return false
+	var distance_sqr = target.global_position.distance_squared_to(global_position)
+	return distance_sqr < pow(raycast_length() - studyable.size, 2)
 
 func _physics_process(delta: float):
 	var speed = stats[Player.Stat.Speed]

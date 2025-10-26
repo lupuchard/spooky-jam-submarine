@@ -2,35 +2,36 @@
 
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_7oxwa"]
 [ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/FishBehavior/ShyFishBehavior.gd" id="2_1qtm5"]
-[ext_resource type="Texture2D" uid="uid://bqlp25inne2uk" path="res://Assets/Fish/Guppo.png" id="3_dibiv"]
-[ext_resource type="Texture2D" uid="uid://dilp116wx2mp4" path="res://Assets/Fish/ViperLight.png" id="4_1qtm5"]
+[ext_resource type="Texture2D" uid="uid://50c813vpt5o0" path="res://Assets/Fish/SmallFish/BlueBody.png" id="3_dibiv"]
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="4_dibiv"]
+[ext_resource type="Texture2D" uid="uid://bo2ekxymciat0" path="res://Assets/Fish/SmallFish/BlueLight.png" id="5_1kduu"]
 
 [sub_resource type="Resource" id="Resource_dibiv"]
 script = ExtResource("2_1qtm5")
 patience = 2
 metadata/_custom_type_script = "uid://wmj24v30fjei"
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_muus3"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dibiv"]
 radius = 6.0
+height = 20.0
 
 [node name="Viperfish" type="StaticBody2D"]
 script = ExtResource("1_7oxwa")
 fish_type = 4
-size = 2.0
-study_speed = 2.0
 bob_amount = 1.0
 contact_damage = 1.0
 behavior = SubResource("Resource_dibiv")
+size = 2.0
+study_speed = 2.0
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
 [node name="Body" type="Sprite2D" parent="." groups=["fish_body"]]
-self_modulate = Color(0.06, 0.06, 0.06, 1)
 texture = ExtResource("3_dibiv")
 
 [node name="ViperLight" type="Sprite2D" parent="Body"]
 material = ExtResource("4_dibiv")
-texture = ExtResource("4_1qtm5")
+texture = ExtResource("5_1kduu")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_muus3")
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_dibiv")

@@ -7,8 +7,11 @@ enum FishType {
 	PaleCrab,
 	CrystalJelly,
 	Viperfish,
-	BigFish,
+	Krate,
 	EvilFish,
+	ElectricEel,
+	Goldfish,
+	RubyCrab
 	NUM_FISH_TYPES
 }
 
@@ -38,13 +41,25 @@ func _ready():
 	description_one[FishType.Viperfish] = "A bioluminescent fish with long, needle-like teeth and hinged lower jaws."
 	description_two[FishType.Viperfish] = "TODO"
 	
-	names[FishType.BigFish] = "Blargh"
-	description_one[FishType.BigFish] = "Blargh."
-	description_two[FishType.BigFish] = "TODO"
+	names[FishType.Krate] = "Krate"
+	description_one[FishType.Krate] = "Krate."
+	description_two[FishType.Krate] = "TODO"
 	
 	names[FishType.EvilFish] = "Chompler"
 	description_one[FishType.EvilFish] = "Chompler."
 	description_two[FishType.EvilFish] = "TODO"
+	
+	names[FishType.ElectricEel] = "Electric Eel"
+	description_one[FishType.ElectricEel] = "TODO."
+	description_two[FishType.ElectricEel] = "TODO"
+	
+	names[FishType.Goldfish] = "Goldfish"
+	description_one[FishType.Goldfish] = "TODO."
+	description_two[FishType.Goldfish] = "TODO"
+	
+	names[FishType.Goldfish] = "Ruby Crab"
+	description_one[FishType.Goldfish] = "TODO."
+	description_two[FishType.Goldfish] = "TODO"
 
 func add_studied(fish: Fish) -> int:
 	if !fish.studied:

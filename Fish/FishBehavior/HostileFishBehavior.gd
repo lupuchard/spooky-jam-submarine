@@ -37,7 +37,8 @@ func _behave(delta: float) -> void:
 		cur_speed = lerp(cur_speed, 0.0, (ACCELERATION / 2) * delta)
 		fish.global_position = fish.global_position.move_toward(last_seen, cur_speed * delta)
 		move_toward_last_seen(delta)
-		lurk_cooldown = LURK_COOLDOWN
+		if last_seen.distance_squared_to(fish.global_position) < 1.0:
+			lurk_cooldown = LURK_COOLDOWN
 	elif attack_cooldown < 0.0 and can_see_player():
 		if tween != null:
 			tween.kill()
@@ -53,7 +54,6 @@ func _behave(delta: float) -> void:
 	lurk_cooldown -= delta
 
 func move_toward_last_seen(delta: float):
-	print("Moving at %s from %s to %s" % [cur_speed, fish.global_position, last_seen])
 	fish.global_position = fish.global_position.move_toward(last_seen, cur_speed * delta)
 	fish.update_facing(last_seen - fish.global_position)
 
@@ -62,7 +62,6 @@ func can_see_player() -> bool:
 	if (displacement.x > 0.0) == fish.facing_left:
 		return false
 	var radius = sight_radius if player.is_light_on() else sight_radius / 2
-	print("%s vs %s" % [displacement.length(), radius])
 	return displacement.length_squared() < pow(radius, 2)
 
 func is_too_far() -> bool:

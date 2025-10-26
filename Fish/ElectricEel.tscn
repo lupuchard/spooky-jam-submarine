@@ -1,0 +1,59 @@
+[gd_scene load_steps=10 format=3 uid="uid://neil83xajm7i"]
+
+[ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_hvbiq"]
+[ext_resource type="Script" uid="uid://cdtgc5uw4krya" path="res://Fish/FishBehavior/WallFishBehavior.gd" id="2_cwfsi"]
+[ext_resource type="Texture2D" uid="uid://cq3777384iekt" path="res://Assets/Fish/ElectricEel/Body.png" id="2_g4y65"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_cwfsi"]
+[ext_resource type="Texture2D" uid="uid://ckf40gv0gxejx" path="res://Assets/Fish/ElectricEel/Light.png" id="4_xtdib"]
+
+[sub_resource type="Resource" id="Resource_xtdib"]
+script = ExtResource("2_cwfsi")
+metadata/_custom_type_script = "uid://cdtgc5uw4krya"
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_xqu7b"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_g4y65")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ilb20"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_xtdib")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_g4y65"]
+radius = 26.0
+height = 88.0
+
+[node name="ElectricEel" type="StaticBody2D"]
+script = ExtResource("1_hvbiq")
+fish_type = 7
+contact_restore = 25.0
+behavior = SubResource("Resource_xtdib")
+metadata/_custom_type_script = "uid://cvn0cn84nf1em"
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="Body" type="AnimatedSprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(27, -1)
+sprite_frames = SubResource("SpriteFrames_xqu7b")
+
+[node name="Light" type="AnimatedSprite2D" parent="Body/Body"]
+unique_name_in_owner = true
+material = ExtResource("3_cwfsi")
+sprite_frames = SubResource("SpriteFrames_ilb20")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_g4y65")
