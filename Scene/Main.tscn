@@ -1,4 +1,4 @@
-[gd_scene load_steps=90 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=91 format=4 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -24,7 +24,6 @@
 [ext_resource type="PackedScene" uid="uid://m4dq2a5epgx5" path="res://Fish/BigFish.tscn" id="14_reyx0"]
 [ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Gui/UpgradePanel.gd" id="14_sc4dx"]
 [ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
-[ext_resource type="Material" uid="uid://dd5x7vrkc4giy" path="res://Scene/BubbleParticles.tres" id="16_u2c8l"]
 [ext_resource type="Shader" uid="uid://v4ifcvwa7we5" path="res://Scene/Seaweed.gdshader" id="17_5xnk5"]
 [ext_resource type="Texture2D" uid="uid://dprnw3jwwrkdx" path="res://Assets/seaweed.png" id="17_reyx0"]
 [ext_resource type="Shader" uid="uid://ij8gko3ajipc" path="res://Scene/Anomoly.gdshader" id="18_bficn"]
@@ -35,12 +34,14 @@
 [ext_resource type="FontFile" uid="uid://bdlen7yarl4rf" path="res://Assets/Fonts/ThatBoy.ttf" id="20_u2c8l"]
 [ext_resource type="Script" uid="uid://c8q7pqmsrphp3" path="res://Gui/PowerConsumptionIndicator.gd" id="21_g6i1l"]
 [ext_resource type="Script" uid="uid://ccqnkw04b8og5" path="res://Gui/Beastiary.gd" id="22_bf81u"]
+[ext_resource type="TileSet" uid="uid://dqxeba4mdh3fb" path="res://Scene/Tiles.tres" id="23_i6ddj"]
 [ext_resource type="Script" uid="uid://osbbycaixnfu" path="res://Scene/Ripple.gd" id="24_45d3w"]
 [ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Gui/SaveSlotRow.tscn" id="26_g6i1l"]
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
 [ext_resource type="PackedScene" uid="uid://tmj70t7q4vss" path="res://Gui/OptionSlider.tscn" id="30_g6i1l"]
 [ext_resource type="Script" uid="uid://2muqviseym23" path="res://Scene/Anomalies.gd" id="35_uuoxe"]
 [ext_resource type="Script" uid="uid://cv3ncutd1vlxw" path="res://Scene/TipText.gd" id="41_i6ddj"]
+[ext_resource type="PackedScene" uid="uid://c0bkf8fksxpbj" path="res://Fish/EvilFish.tscn" id="42_cjptb"]
 
 [sub_resource type="Environment" id="Environment_g6i1l"]
 background_mode = 3
@@ -305,7 +306,7 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(46, 236)
+position = Vector2(-1404, 1824)
 collision_layer = 9
 collision_mask = 9
 script = ExtResource("1_rgh2o")
@@ -614,12 +615,9 @@ max_distance = 3000.0
 panning_strength = 0.0
 bus = &"Ambience"
 
-[node name="GPUParticles2D" type="GPUParticles2D" parent="World"]
-visible = false
-position = Vector2(166, 256)
-amount = 16
-lifetime = 10.0
-process_material = ExtResource("16_u2c8l")
+[node name="TileMapLayer" type="TileMapLayer" parent="World"]
+tile_map_data = PackedByteArray("AAD6/wMAAAABAAAAAAD7/wMAAAADAAAAAAD6/wQAAAAAAAEAAAD7/wQAAAAAAAIAAAD5/wQAAAABAAEAAAD7/wIAAAAJAAIAAAD5/wYAAAAJAAIAAAA=")
+tile_set = ExtResource("23_i6ddj")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -1011,3 +1009,7 @@ theme_type_variation = &"LabelBig"
 text = "Tip: Right click or press the right analog stick to toggle spotlight."
 horizontal_alignment = 1
 script = ExtResource("41_i6ddj")
+
+[node name="EvilFish" parent="." instance=ExtResource("42_cjptb")]
+position = Vector2(-803, 1915)
+flip = true

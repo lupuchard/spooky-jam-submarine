@@ -1,0 +1,41 @@
+[gd_scene load_steps=9 format=3 uid="uid://c0bkf8fksxpbj"]
+
+[ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_kfhey"]
+[ext_resource type="Script" uid="uid://bkqou0gwqcxlc" path="res://Fish/FishBehavior/HostileFishBehavior.gd" id="1_nh5wd"]
+[ext_resource type="Texture2D" uid="uid://cpwb84oh8ovm7" path="res://Assets/Fish/BigFish/EvilBigFish.png" id="2_ui75l"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_kfhey"]
+[ext_resource type="Texture2D" uid="uid://dfmorolor7w3" path="res://Assets/Fish/BigFish/Light.png" id="4_2cqi1"]
+[ext_resource type="AudioStream" uid="uid://8yn0d1rukudb" path="res://Assets/Sound/screech.mp3" id="6_f1sga"]
+
+[sub_resource type="Resource" id="Resource_2cqi1"]
+script = ExtResource("1_nh5wd")
+attack_sound = ExtResource("6_f1sga")
+metadata/_custom_type_script = "uid://bkqou0gwqcxlc"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1sga"]
+radius = 29.0
+height = 90.0
+
+[node name="EvilFish" type="StaticBody2D"]
+script = ExtResource("1_kfhey")
+fish_type = 6
+is_sprite_facing_left = false
+flip = true
+contact_damage = 8.0
+behavior = SubResource("Resource_2cqi1")
+metadata/_custom_type_script = "uid://cvn0cn84nf1em"
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="EvilBigFish" type="Sprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(-5, 5)
+texture = ExtResource("2_ui75l")
+
+[node name="Light" type="Sprite2D" parent="Body"]
+material = ExtResource("3_kfhey")
+position = Vector2(-3, 8)
+texture = ExtResource("4_2cqi1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_f1sga")

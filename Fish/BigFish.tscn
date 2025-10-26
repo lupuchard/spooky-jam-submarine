@@ -19,10 +19,11 @@ height = 90.0
 [node name="BigFish" type="StaticBody2D"]
 script = ExtResource("1_d77vq")
 fish_type = 5
+is_sprite_facing_left = false
+behavior = SubResource("Resource_4cuoe")
 raycasts_needed = 4
 study_speed = 0.5
 study_reward_factor = 3
-behavior = SubResource("Resource_4cuoe")
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
 [node name="Body" type="Node2D" parent="."]

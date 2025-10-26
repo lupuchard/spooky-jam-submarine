@@ -8,6 +8,7 @@ enum FishType {
 	CrystalJelly,
 	Viperfish,
 	BigFish,
+	EvilFish,
 	NUM_FISH_TYPES
 }
 
@@ -41,6 +42,9 @@ func _ready():
 	description_one[FishType.BigFish] = "Blargh."
 	description_two[FishType.BigFish] = "TODO"
 	
+	names[FishType.EvilFish] = "Chompler"
+	description_one[FishType.EvilFish] = "Chompler."
+	description_two[FishType.EvilFish] = "TODO"
 
 func add_studied(fish: Fish) -> int:
 	if !fish.studied:
