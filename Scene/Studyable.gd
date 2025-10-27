@@ -8,6 +8,6 @@ class_name Studyable
 @export var raycasts_needed: int = 1
 @export var study_speed: float = 1.0
 @export var study_reward: Player.Res = Player.Res.Research
-@export var study_reward_factor: int = 1
+@export var study_reward_factor: float = 1
 
 var study_progress: float = 0.0

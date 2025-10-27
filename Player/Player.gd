@@ -426,12 +426,16 @@ func recover():
 
 func handle_fish_collision(fish: Fish, angle: float, speed: float):
 	if fish_contact_cooldown < 0.0:
-		stats[Stat.Health] -= fish.contact_damage
-		Audio.play(CRASH_SOUND, null, linear_to_db(fish.contact_damage / 10.0), 0.4, 0.6)
-		
 		var hit_direction = global_position - fish.global_position
 		var knockback_angle = lerp_angle(angle, hit_direction.angle(), 0.5)
-		var knockback_speed = fish.size * speed * KNOCKBACK_STRENGTH
-		vel += Vector2.from_angle(knockback_angle) * min(knockback_speed, MAX_KNOCKBACK)
+		handle_damage(fish.contact_damage, knockback_angle, fish.size * speed)
+
+func handle_damage(damage: float, angle: float, speed: float):
+	if fish_contact_cooldown < 0.0:
+		stats[Stat.Health] -= damage
+		Audio.play(CRASH_SOUND, null, linear_to_db(damage / 10.0), 0.4, 0.6)
+		
+		var knockback_strength = speed * KNOCKBACK_STRENGTH
+		vel += Vector2.from_angle(angle) * min(knockback_strength, MAX_KNOCKBACK)
 		
 		fish_contact_cooldown = FISH_CONTACT_COOLDOWN

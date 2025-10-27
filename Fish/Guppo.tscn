@@ -8,8 +8,10 @@
 
 [sub_resource type="Resource" id="Resource_ggkxj"]
 script = ExtResource("2_kinoe")
-wander_cooldown_max = 5.0
-wander_distance = 50.0
+wander_cooldown_max = 7.0
+wander_distance = 30.0
+retreat_range = 30.0
+retreat_distance = 80.0
 metadata/_custom_type_script = "uid://qgwmbt4xadnu"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ggkxj"]

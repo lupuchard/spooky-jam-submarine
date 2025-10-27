@@ -1,0 +1,49 @@
+[gd_scene load_steps=11 format=3 uid="uid://cp3ypyv3hf2c4"]
+
+[ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_b5kut"]
+[ext_resource type="AudioStream" uid="uid://fjk6tmtslf1k" path="res://Assets/Sound/blast.mp3" id="2_5rmt7"]
+[ext_resource type="Texture2D" uid="uid://dtlousyd0a428" path="res://Assets/Fish/BigFish/Background.png" id="2_dk3wy"]
+[ext_resource type="Script" uid="uid://djtec0xtr6i10" path="res://Fish/FishBehavior/PufferFishBehavior.gd" id="2_vlf5n"]
+[ext_resource type="PackedScene" uid="uid://062s1vnjm4x7" path="res://Fish/Spike.tscn" id="3_nmnhf"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_vlf5n"]
+[ext_resource type="Texture2D" uid="uid://dfmorolor7w3" path="res://Assets/Fish/BigFish/Light.png" id="4_nmnhf"]
+[ext_resource type="AudioStream" uid="uid://danhawnwxmts3" path="res://Assets/Sound/drumroll.mp3" id="7_nmnhf"]
+
+[sub_resource type="Resource" id="Resource_nmnhf"]
+script = ExtResource("2_vlf5n")
+spike_projectile = ExtResource("3_nmnhf")
+explosion_sound = ExtResource("2_5rmt7")
+metadata/_custom_type_script = "uid://djtec0xtr6i10"
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_b5kut"]
+radius = 30.0
+height = 74.0
+
+[node name="Puffer" type="StaticBody2D"]
+script = ExtResource("1_b5kut")
+fish_type = 10
+behavior = SubResource("Resource_nmnhf")
+size = 30.0
+raycasts_needed = 4
+study_speed = 0.5
+study_reward_factor = 2.0
+metadata/_custom_type_script = "uid://cvn0cn84nf1em"
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="EvilBigFish" type="Sprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(-15, 6)
+texture = ExtResource("2_dk3wy")
+
+[node name="Light" type="Sprite2D" parent="Body"]
+material = ExtResource("3_vlf5n")
+position = Vector2(-13, 9)
+texture = ExtResource("4_nmnhf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_b5kut")
+
+[node name="PrepareSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_nmnhf")
+volume_db = 10.0

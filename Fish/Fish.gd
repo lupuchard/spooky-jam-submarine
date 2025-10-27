@@ -27,6 +27,7 @@ var body: Node2D
 var light: Node2D
 var movement_sound: AudioStreamPlayer2D
 var idle_sound: AudioStreamPlayer2D
+var prepare_sound: AudioStreamPlayer2D
 
 var prev_position: Vector2
 
@@ -35,8 +36,10 @@ var contact_restore_cooldown: float = 0.0
 func _ready():
 	body = $Body
 	light = get_node_or_null("%Light")
-	movement_sound = find_child("MovementSound", false)
-	idle_sound = find_child("IdleSound", false)
+	movement_sound = get_node_or_null("MovementSound")
+	idle_sound = get_node_or_null("IdleSound")
+	prepare_sound = get_node_or_null("PrepareSound")
+	
 	idle_sound_cooldown = idle_sound_period
 	
 	facing_left = is_sprite_facing_left
@@ -108,3 +111,5 @@ func on_collide_with_player(player: Player) -> void:
 			contact_restore_cooldown = CONTACT_RESTORE_COOLDOWN
 			behavior._retreat()
 			light.visible = false
+			Audio.play(preload("res://Assets/Sound/surge.mp3"), self)
+			Audio.play(preload("res://Assets/Sound/taser.mp3"), self)

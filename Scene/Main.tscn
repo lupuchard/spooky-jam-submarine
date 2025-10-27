@@ -1,4 +1,4 @@
-[gd_scene load_steps=92 format=4 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=93 format=4 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -21,7 +21,7 @@
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
 [ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Player/DepthLabel.gd" id="14_gclda"]
 [ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Gui/UpgradeOption.tscn" id="14_mr7am"]
-[ext_resource type="PackedScene" uid="uid://m4dq2a5epgx5" path="res://Assets/BigFish.tscn" id="14_reyx0"]
+[ext_resource type="PackedScene" uid="uid://m4dq2a5epgx5" path="res://Fish/BigFish.tscn" id="14_reyx0"]
 [ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Gui/UpgradePanel.gd" id="14_sc4dx"]
 [ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
 [ext_resource type="Shader" uid="uid://v4ifcvwa7we5" path="res://Scene/Seaweed.gdshader" id="17_5xnk5"]
@@ -41,8 +41,9 @@
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
 [ext_resource type="PackedScene" uid="uid://tmj70t7q4vss" path="res://Gui/OptionSlider.tscn" id="30_g6i1l"]
 [ext_resource type="Script" uid="uid://2muqviseym23" path="res://Scene/Anomalies.gd" id="35_uuoxe"]
-[ext_resource type="Script" path="res://Scene/TipText.gd" id="41_i6ddj"]
+[ext_resource type="Script" uid="uid://cv3ncutd1vlxw" path="res://Scene/TipText.gd" id="41_i6ddj"]
 [ext_resource type="PackedScene" uid="uid://dddi5el4awssc" path="res://Fish/EvilFish.tscn" id="42_cjptb"]
+[ext_resource type="PackedScene" uid="uid://cp3ypyv3hf2c4" path="res://Fish/Puffer.tscn" id="44_xwk4e"]
 
 [sub_resource type="Environment" id="Environment_g6i1l"]
 background_mode = 3
@@ -512,7 +513,7 @@ unique_name_in_owner = true
 [node name="Angler" parent="World/Fish" instance=ExtResource("7_jw32o")]
 position = Vector2(-3353, 325)
 flip = true
-study_reward_factor = 1
+study_reward_factor = 1.0
 
 [node name="Guppo" parent="World/Fish" instance=ExtResource("9_gclda")]
 position = Vector2(-724, 257)
@@ -566,9 +567,11 @@ position = Vector2(-968, 2314)
 position = Vector2(-1407, 2397)
 contact_damage = 9.0
 path = NodePath("../../FishPaths/BigFishPath")
+study_reward_factor = 1.0
 
 [node name="Angler2" parent="World/Fish" instance=ExtResource("7_jw32o")]
 position = Vector2(281, 2253)
+study_reward_factor = 1.0
 
 [node name="EvilFish" parent="World/Fish" instance=ExtResource("42_cjptb")]
 position = Vector2(-803, 1915)
@@ -1015,3 +1018,6 @@ theme_type_variation = &"LabelBig"
 text = "Tip: Right click or press the right analog stick to toggle spotlight."
 horizontal_alignment = 1
 script = ExtResource("41_i6ddj")
+
+[node name="Puffer" parent="." instance=ExtResource("44_xwk4e")]
+position = Vector2(-1670, 1663)

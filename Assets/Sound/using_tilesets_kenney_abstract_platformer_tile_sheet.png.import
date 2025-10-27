@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dilp116wx2mp4"
-path="res://.godot/imported/ViperLight.png-ada6ea5c8037f39aa91f76af43e30653.ctex"
+uid="uid://y0sw5woepaic"
+path="res://.godot/imported/using_tilesets_kenney_abstract_platformer_tile_sheet.png-c53a2e59c22ab5a7ba64dd0584004668.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Fish/ViperLight.png"
-dest_files=["res://.godot/imported/ViperLight.png-ada6ea5c8037f39aa91f76af43e30653.ctex"]
+source_file="res://Assets/Sound/using_tilesets_kenney_abstract_platformer_tile_sheet.png"
+dest_files=["res://.godot/imported/using_tilesets_kenney_abstract_platformer_tile_sheet.png-c53a2e59c22ab5a7ba64dd0584004668.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://mb3keuy6xuk5"
-path="res://.godot/imported/Crab.png-5c8eaed4df0878da6fd7ad2116b1b1c6.ctex"
+uid="uid://wa1bmvvfijux"
+path="res://.godot/imported/spike.png-fb9908511d069deb9cc04a78c96eefc3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Fish/Crab.png"
-dest_files=["res://.godot/imported/Crab.png-5c8eaed4df0878da6fd7ad2116b1b1c6.ctex"]
+source_file="res://Assets/spike.png"
+dest_files=["res://.godot/imported/spike.png-fb9908511d069deb9cc04a78c96eefc3.ctex"]
 
 [params]
 

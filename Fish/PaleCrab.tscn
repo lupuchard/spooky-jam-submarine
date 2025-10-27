@@ -48,6 +48,7 @@ contact_damage = 4.0
 behavior = SubResource("Resource_t43tn")
 size = 5.0
 study_speed = 2.0
+study_reward_factor = 1.5
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
 [node name="Body" type="Node2D" parent="."]

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://50277lhtnovk"
-path="res://.godot/imported/light.png-2a7c25d2528b528b4775521a146eeb11.ctex"
+uid="uid://ctx2emgvwkcn"
+path="res://.godot/imported/using_tilesets_kenney_abstract_platformer_tile_sheet.webp-502b9693f79ee055795e1dd1742b68be.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/light.png"
-dest_files=["res://.godot/imported/light.png-2a7c25d2528b528b4775521a146eeb11.ctex"]
+source_file="res://Assets/Sound/using_tilesets_kenney_abstract_platformer_tile_sheet.webp"
+dest_files=["res://.godot/imported/using_tilesets_kenney_abstract_platformer_tile_sheet.webp-502b9693f79ee055795e1dd1742b68be.ctex"]
 
 [params]
 

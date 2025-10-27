@@ -3,9 +3,9 @@ extends ScrollContainer
 const BEASTIARY_ENTRY := preload("res://Gui/BeastiaryEntry.tscn")
 
 func _ready():
-	for i in range(0, FishStudy.FishType.NUM_FISH_TYPES):
+	for fish_type in FishStudy.BEASTIARY_ORDER:
 		var entry = BEASTIARY_ENTRY.instantiate()
-		entry.fish_type = i
+		entry.fish_type = fish_type
 		entry.update()
 		$BeastiaryEntryList.add_child(entry)
 

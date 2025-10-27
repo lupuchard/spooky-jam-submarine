@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://062s1vnjm4x7"]
+
+[ext_resource type="Texture2D" uid="uid://wa1bmvvfijux" path="res://Assets/spike.png" id="1_0gpuc"]
+[ext_resource type="Script" uid="uid://b14vdtymp6twy" path="res://Fish/Spike.gd" id="1_tmq8c"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ede7u"]
+radius = 3.0
+
+[node name="Spike" type="Area2D"]
+script = ExtResource("1_tmq8c")
+damage = 6.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = -1.5707964
+texture = ExtResource("1_0gpuc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ede7u")
