@@ -244,6 +244,11 @@ func _process(delta: float):
 					notify("+%s Research Points" % reward)
 					Audio.play(CLICK_SOUND)
 					gain_resource(Res.Research, reward)
+					
+					if studying is Fish and studying.fish_type == FishStudy.FishType.Squid:
+						%YouWinPanel.visible = true
+						%World.process_mode = Node.PROCESS_MODE_DISABLED
+						Audio.play(preload("res://Assets/Sound/glissando.mp3"))
 				elif studying.study_reward == Player.Res.Anomalies:
 					studying.studied = true
 					notify("+1 Anomaly")

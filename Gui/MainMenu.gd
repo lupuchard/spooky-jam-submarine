@@ -34,7 +34,7 @@ func _ready() -> void:
 		slot_row.delete_pressed.connect(on_slot_delete_pressed)
 	
 	%CreditsButton.pressed.connect(show_credits_menu)
-	%CreditsExitButton.pressed(show_save_slots_menu)
+	%CreditsExitButton.pressed.connect(show_save_slots_menu)
 	
 	%OptionsButton.pressed.connect(show_options_menu)
 	%OptionsExitButton.pressed.connect(show_save_slots_menu)

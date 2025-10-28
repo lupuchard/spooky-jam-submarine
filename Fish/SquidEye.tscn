@@ -21,7 +21,7 @@ height = 34.0
 script = ExtResource("1_5qhdh")
 fish_type = 11
 behavior = SubResource("Resource_j6c3t")
-study_speed = 0.1
+study_speed = 2.0
 study_reward_factor = 10.0
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
