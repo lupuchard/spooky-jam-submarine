@@ -6,18 +6,18 @@
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_kfhey"]
 [ext_resource type="Texture2D" uid="uid://dfmorolor7w3" path="res://Assets/Fish/BigFish/Light.png" id="4_2cqi1"]
 [ext_resource type="AudioStream" uid="uid://8yn0d1rukudb" path="res://Assets/Sound/screech.mp3" id="6_f1sga"]
-[ext_resource type="Script" uid="uid://bfnwsqatvd8js" path="res://Fish/AltStudyTarget.gd" id="7_jtn48"]
+[ext_resource type="AudioStream" uid="uid://15q87knxxpfg" path="res://Assets/Sound/screech2.mp3" id="7_jtn48"]
 
 [sub_resource type="Resource" id="Resource_2cqi1"]
 script = ExtResource("1_nh5wd")
 attack_sound = ExtResource("6_f1sga")
 metadata/_custom_type_script = "uid://bkqou0gwqcxlc"
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1sga"]
-height = 66.0
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_jtn48"]
 radius = 32.01562
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1sga"]
+height = 66.0
 
 [node name="EvilFish" type="StaticBody2D"]
 script = ExtResource("1_kfhey")
@@ -25,6 +25,7 @@ fish_type = 6
 is_sprite_facing_left = false
 flip = true
 contact_damage = 8.0
+idle_sound_period = 20.0
 behavior = SubResource("Resource_2cqi1")
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
@@ -39,15 +40,14 @@ material = ExtResource("3_kfhey")
 position = Vector2(-18, 9)
 texture = ExtResource("4_2cqi1")
 
-[node name="AltStudyTarget" type="StaticBody2D" parent="Body" node_paths=PackedStringArray("studyable")]
-script = ExtResource("7_jtn48")
-studyable = NodePath("../..")
-study_speed_modifier = 0.3
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Body/AltStudyTarget"]
-position = Vector2(-57, 0)
-shape = SubResource("CapsuleShape2D_f1sga")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = -1.5707964
 shape = SubResource("CircleShape2D_jtn48")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(-57, 0)
+shape = SubResource("CapsuleShape2D_f1sga")
+metadata/study_mod = 0.3
+
+[node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("7_jtn48")

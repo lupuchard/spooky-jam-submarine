@@ -3,7 +3,6 @@ extends Polygon2D
 func _ready():
 	seed(15)
 	random_detail()
-	#random_detail()
 	randomize()
 	
 	set_up_collision()

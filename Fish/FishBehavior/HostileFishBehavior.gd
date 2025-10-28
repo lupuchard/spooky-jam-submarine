@@ -2,7 +2,7 @@ extends FishBehaviorBase
 class_name HostileFishBehavior
 
 const ATTACK_COOLDOWN: float = 1.0
-const LURK_COOLDOWN: float = 4.0
+const LURK_COOLDOWN: float = 2.0
 const ACCELERATION: float = 10.0
 
 @export var sight_radius: float = 160.0
@@ -22,7 +22,7 @@ func _behave(delta: float) -> void:
 		last_seen = player.global_position
 		move_toward_last_seen(delta)
 		lurk_cooldown = LURK_COOLDOWN
-	elif attacking and is_too_far() and lurk_cooldown < 0.0:
+	elif attacking and lurk_cooldown < 0.0:
 		attacking = false
 		attack_cooldown = ATTACK_COOLDOWN
 		tween = fish.create_tween()
@@ -34,10 +34,9 @@ func _behave(delta: float) -> void:
 			fish.set_facing(fish.flip != fish.is_sprite_facing_left)
 		)
 	elif attacking:
-		cur_speed = lerp(cur_speed, 0.0, (ACCELERATION / 2) * delta)
-		fish.global_position = fish.global_position.move_toward(last_seen, cur_speed * delta)
+		cur_speed = lerp(cur_speed, max_speed / 2.0, (ACCELERATION / 10.0) * delta)
 		move_toward_last_seen(delta)
-		if last_seen.distance_squared_to(fish.global_position) < 1.0:
+		if last_seen.distance_squared_to(fish.global_position) > 1.0:
 			lurk_cooldown = LURK_COOLDOWN
 	elif attack_cooldown < 0.0 and can_see_player():
 		if tween != null:

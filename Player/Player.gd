@@ -64,9 +64,14 @@ const ANOMALY_COLLECT_SOUND = preload("res://Assets/Sound/anomaly_collect.mp3")
 const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
 const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 
+@onready var camera: Camera2D = $Camera2D
+@onready var spotlight: Node2D = $Spotlight
+@onready var spotlight1: PointLight2D = $Spotlight/Spotlight1
+@onready var spotlight2: PointLight2D = $Spotlight/Spotlight2
+@onready var body := $Body
+@onready var vehicle_ambience := $VehicleAmbience
+@onready var hull_creak := $HullCreak
 var vel := Vector2.ZERO
-var camera: Camera2D
-var spotlight: Node2D
 
 var stats: Array[float] = []
 var max_stats: Array[float] = []
@@ -102,9 +107,6 @@ var depth_damage_delay: float = 0.0
 var hull_creak_tween: Tween = null
 
 func _ready():
-	camera = $Camera2D
-	spotlight = $Spotlight
-	
 	max_stats.resize(Stat.NUM_STATS)
 	max_stats[Stat.DashPower] = DASH_COOLDOWN
 	
@@ -121,17 +123,17 @@ func _ready():
 	var hull_upgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
 	hull_upgrade.costs = [0, 20, 50, 100]
 	hull_upgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
-	hull_upgrade.values.append(PackedFloat64Array([12000.0, 2400.0, 3600.0, 5000.0])) # Max Depth
+	hull_upgrade.values.append(PackedFloat64Array([10000.0, 2000.0, 3000.0, 4000.0])) # Max Depth
 	upgrades[UpgradeType.Hull] = hull_upgrade
 	
 	var speed_upgrade := Upgrade.new("Speed", [Stat.Speed])
 	speed_upgrade.costs = [0, 20, 50, 100]
-	speed_upgrade.values = [[1.0, 1.2, 1.5, 2.0]]
+	speed_upgrade.values = [[1.0, 1.15, 1.35, 1.6]]
 	upgrades[UpgradeType.Speed] = speed_upgrade
 	
 	var battery_upgrade := Upgrade.new("Battery", [Stat.Battery])
 	battery_upgrade.costs = [0, 20, 50, 100]
-	battery_upgrade.values = [[100.0, 150.0, 200.0, 300.0]]
+	battery_upgrade.values = [[100.0, 150.0, 200.0, 250.0]]
 	upgrades[UpgradeType.Battery] = battery_upgrade
 	
 	var dash_upgrade := Upgrade.new("Dash Speed", [Stat.DashSpeed], Res.Anomalies)
@@ -190,13 +192,13 @@ func get_current_power_drain() -> int:
 	return total
 
 func check_light_upgrade() -> void:
-	if upgrade_levels[UpgradeType.Light] == 1 and $Spotlight/Spotlight1.visible:
-		$Spotlight/Spotlight1.visible = false
-		$Spotlight/Spotlight2.visible = true
+	if upgrade_levels[UpgradeType.Light] == 1 and spotlight1.visible:
+		spotlight1.visible = false
+		spotlight2.visible = true
 		generate_raycasts()
-	elif upgrade_levels[UpgradeType.Light] == 0 and !$Spotlight/Spotlight1.visible:
-		$Spotlight/Spotlight1.visible = true
-		$Spotlight/Spotlight2.visible = false
+	elif upgrade_levels[UpgradeType.Light] == 0 and !spotlight1.visible:
+		spotlight1.visible = true
+		spotlight2.visible = false
 		generate_raycasts()
 
 func _input(input: InputEvent) -> void:
@@ -208,7 +210,7 @@ func _input(input: InputEvent) -> void:
 	
 	if look_vector != Vector2.ZERO:
 		spotlight.rotation = Vector2.RIGHT.angle_to(look_vector)
-		$Body.scale.x = 1 if look_vector.x < 0 else -1
+		body.scale.x = 1 if look_vector.x < 0 else -1
 
 func _process(delta: float):
 	check_light_upgrade()
@@ -271,7 +273,7 @@ func _process(delta: float):
 	if stats[Stat.Battery] < 0:
 		die("You ran out of battery. And died.")
 	
-	$VehicleAmbience.volume_db = min(global_position.y / MAX_VEHICLE_AMBIENCE_DEPTH, 1.0) * 80.0 - 80.0
+	vehicle_ambience.volume_db = min(global_position.y / MAX_VEHICLE_AMBIENCE_DEPTH, 1.0) * 80.0 - 80.0
 
 func gain_resource(resource: Res, amount: int) -> void:
 	resources[resource] += amount
@@ -286,7 +288,7 @@ func is_light_on() -> bool:
 	return spotlight.visible
 
 func is_facing_left() -> bool:
-	return $Body.scale.x > 0
+	return body.scale.x > 0
 
 func notify(text: String):
 	var label := Label.new()
@@ -302,40 +304,41 @@ func notify(text: String):
 	)
 
 func check_raycasts():
-	var casted: Dictionary[Node2D, int] = {}
-	for child in $Spotlight.get_children():
+	var casted_studyables: Dictionary[Studyable, int] = {}
+	var casted_shapes: Dictionary[CollisionShape2D, int] = {}
+	for child in spotlight.get_children():
 		if child is RayCast2D and child.is_colliding():
 			var collider = child.get_collider()
-			if collider is Studyable or collider is AltStudyTarget:
-				casted.set(collider, casted.get(collider, 0) + 1)
+			if collider is Studyable:
+				var shape_id = child.get_collider_shape()
+				var shape = collider.shape_owner_get_owner(collider.shape_find_owner(shape_id))
+				casted_studyables.set(collider, casted_studyables.get(collider, 0) + 1)
+				casted_shapes.set(shape, casted_shapes.get(shape, 0) + 1)
 	
 	# Prioritize currently studying
-	if studying != null and !studying.studied and is_target_in_range(studying, casted.get(studying, 0)):
-		return
+	if studying != null and !studying.studied:
+		if is_target_in_range(studying, casted_studyables.get(studying, 0)):
+			return
 	
 	# Then prioritize unstudied
 	studying = null
-	for studyable in casted:
-		if studyable is AltStudyTarget:
-			continue
-		if is_target_in_range(studyable, casted[studyable]) and !studyable.studied:
+	for shape in casted_shapes:
+		var studyable = shape.get_parent()
+		if is_target_in_range(studyable, casted_shapes[shape]) and !studyable.studied:
 			studying = studyable
+			studying_mod = shape.get_meta("study_mod", 1.0)
 			return
 	
-	for studyable in casted:
-		if is_target_in_range(studyable, casted[studyable]):
-			if studyable is AltStudyTarget:
-				studying = studyable.studyable
-				studying_mod = studyable.study_speed_modifier
-			else:
-				studying = studyable
-				studying_mod = 1.0
+	for shape in casted_shapes:
+		var studyable = shape.get_parent()
+		if is_target_in_range(studyable, casted_shapes[shape]):
+			studying = studyable
+			studying_mod = shape.get_meta("study_mod", 1.0)
 			return
 
-func is_target_in_range(target: Node2D, raycasts: int) -> bool:
-	var studyable: Studyable = target.studyable if target is AltStudyTarget else target
+func is_target_in_range(studyable: Studyable, raycasts: int) -> bool:
 	if raycasts < studyable.raycasts_needed: return false
-	var distance_sqr = target.global_position.distance_squared_to(global_position)
+	var distance_sqr = studyable.global_position.distance_squared_to(global_position)
 	return distance_sqr < pow(raycast_length() - studyable.size, 2)
 
 func _physics_process(delta: float):
@@ -389,27 +392,27 @@ func _physics_process(delta: float):
 
 func start_hull_creak():
 	if hull_creak_tween == null:
-		$HullCreak.play()
+		hull_creak.play()
 	else:
 		hull_creak_tween.kill()
 		hull_creak_tween = create_tween()
-		hull_creak_tween.tween_property($HullCreak, "volume_db", 0, 3.0)
+		hull_creak_tween.tween_property(hull_creak, "volume_db", 0, 3.0)
 
 func end_hull_creak():
 	if hull_creak_tween != null:
 		hull_creak_tween.kill()
 	hull_creak_tween = create_tween()
-	hull_creak_tween.tween_property($HullCreak, "volume_db", -80, 3.0)
+	hull_creak_tween.tween_property(hull_creak, "volume_db", -80, 3.0)
 	hull_creak_tween.finished.connect(func():
-		$HullCreak.stop()
+		hull_creak.stop()
 		hull_creak_tween = null
 	)
 
 func die(death_text: String):
 	Bubbler.spawn_bubbles(global_position, 16)
 	process_mode = Node.PROCESS_MODE_DISABLED
-	$Body.visible = false
-	$Spotlight.visible = false
+	body.visible = false
+	spotlight.visible = false
 	%StudyIndicator.visible = false
 	%DeathPanel.visible = true
 	%DeathText.text = death_text
@@ -417,8 +420,8 @@ func die(death_text: String):
 	Audio.play(DEATH_SOUND_METAL, null, 0, 0.5)
 
 func recover():
-	$Body.visible = true
-	$Spotlight.visible = true
+	body.visible = true
+	spotlight.visible = true
 	%DeathPanel.visible = false
 	global_position = %StartPosition.global_position
 	process_mode = Node.PROCESS_MODE_INHERIT

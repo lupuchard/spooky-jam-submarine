@@ -23,23 +23,18 @@ var facing_left: bool
 var initial_position: Vector2
 var idle_sound_cooldown := 0.0
 
-var body: Node2D
-var light: Node2D
-var movement_sound: AudioStreamPlayer2D
-var idle_sound: AudioStreamPlayer2D
-var prepare_sound: AudioStreamPlayer2D
+@onready var body: Node2D = $Body
+@onready var light: Node2D = get_node_or_null("%Light")
+@onready var movement_sound: AudioStreamPlayer2D = get_node_or_null("MovementSound")
+@onready var idle_sound: AudioStreamPlayer2D = get_node_or_null("IdleSound")
+@onready var prepare_sound: AudioStreamPlayer2D = get_node_or_null("PrepareSound")
+@onready var unstudied_sound: AudioStreamPlayer2D = get_node_or_null("UnstudiedSound")
 
 var prev_position: Vector2
 
 var contact_restore_cooldown: float = 0.0
 
 func _ready():
-	body = $Body
-	light = get_node_or_null("%Light")
-	movement_sound = get_node_or_null("MovementSound")
-	idle_sound = get_node_or_null("IdleSound")
-	prepare_sound = get_node_or_null("PrepareSound")
-	
 	idle_sound_cooldown = idle_sound_period
 	
 	facing_left = is_sprite_facing_left
@@ -88,11 +83,17 @@ func _process(delta: float):
 	if contact_restore_cooldown < 0.0 and light != null and light.visible == false:
 		%Light.visible = true
 		behavior._return()
+	
+	if unstudied_sound:
+		if studied and unstudied_sound.playing:
+			unstudied_sound.stop()
+		elif !studied and !unstudied_sound.playing:
+			unstudied_sound.play()
 
 func set_facing(left: bool) -> void:
 	if left != facing_left:
 		facing_left = !facing_left
-		body.scale.x = -body.scale.x
+		scale.x = -scale.x
 
 func update_facing(dir: Vector2, flipped: bool = false) -> void:
 	if dir.x < -1.0:

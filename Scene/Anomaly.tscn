@@ -1,0 +1,52 @@
+[gd_scene load_steps=9 format=3 uid="uid://iioqn0155kfg"]
+
+[ext_resource type="Script" uid="uid://uxrbrayqm884" path="res://Scene/Anomaly.gd" id="1_arc6c"]
+[ext_resource type="AudioStream" uid="uid://tdy6he6nymtg" path="res://Assets/Sound/anomaly.mp3" id="2_8uc1j"]
+[ext_resource type="Shader" uid="uid://ij8gko3ajipc" path="res://Scene/Anomoly.gdshader" id="3_8ldjq"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_og1lj"]
+radius = 23.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0c33q"]
+shader = ExtResource("3_8ldjq")
+shader_parameter/radius = 1.0
+shader_parameter/speed = 1.0
+shader_parameter/effect_color = Color(0.251, 0, 0, 1)
+
+[sub_resource type="QuadMesh" id="QuadMesh_m0bfr"]
+size = Vector2(160, 160)
+
+[sub_resource type="Gradient" id="Gradient_45d3w"]
+offsets = PackedFloat32Array(0, 0.10945274, 1)
+colors = PackedColorArray(1, 1, 1, 1, 0.5, 0.5, 0.5, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_og1lj"]
+gradient = SubResource("Gradient_45d3w")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[node name="Anomaly" type="StaticBody2D" groups=["anomaly"]]
+collision_layer = 2
+collision_mask = 2
+script = ExtResource("1_arc6c")
+size = 5.0
+raycasts_needed = 4
+study_speed = 0.5
+study_reward = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_og1lj")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("2_8uc1j")
+volume_db = 20.0
+pitch_scale = 0.9
+autoplay = true
+max_distance = 512.0
+attenuation = 2.0
+
+[node name="Mesh" type="MeshInstance2D" parent="."]
+material = SubResource("ShaderMaterial_0c33q")
+mesh = SubResource("QuadMesh_m0bfr")
+texture = SubResource("GradientTexture2D_og1lj")

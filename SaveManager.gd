@@ -12,6 +12,8 @@ func _ready() -> void:
 		load_meta_from_file()
 	else:
 		slot_progress.resize(3)
+		for i in range(0, 3):
+			slot_progress[i] = -1.0
 
 func get_slot_progress(slot: int) -> float:
 	return slot_progress[slot]
@@ -60,7 +62,7 @@ func load_from_file() -> void:
 
 func delete_slot(slot: int):
 	DirAccess.remove_absolute(get_filename(slot))
-	slot_progress[slot] = 0.0
+	slot_progress[slot] = -1.0
 	save_meta_to_file()
 
 func save_state(player: Player, fish: Node2D):

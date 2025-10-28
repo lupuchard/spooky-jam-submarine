@@ -1,0 +1,32 @@
+[gd_scene load_steps=7 format=3 uid="uid://c2q00q3c2kntv"]
+
+[ext_resource type="Script" uid="uid://dqhl2ck6gaxsf" path="res://Fish/Tentacle.gd" id="1_677lv"]
+[ext_resource type="Texture2D" uid="uid://bj1fi2bekr7ho" path="res://Assets/Fish/Squid/Background.png" id="1_o3hxd"]
+[ext_resource type="Texture2D" uid="uid://7wh4qxu02cpp" path="res://Assets/Fish/Squid/Light.png" id="2_2aniq"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_ss32w"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_2aniq"]
+radius = 7.0
+height = 102.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_677lv"]
+size = Vector2(12, 54)
+
+[node name="Tentacle" type="Area2D"]
+script = ExtResource("1_677lv")
+
+[node name="Body" type="Sprite2D" parent="." groups=["fish_body"]]
+scale = Vector2(0.6875, 1)
+texture = ExtResource("1_o3hxd")
+
+[node name="Light" type="Sprite2D" parent="."]
+material = ExtResource("3_ss32w")
+texture = ExtResource("2_2aniq")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -200)
+shape = SubResource("CapsuleShape2D_2aniq")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(11, -207)
+shape = SubResource("RectangleShape2D_677lv")

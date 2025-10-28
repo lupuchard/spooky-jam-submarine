@@ -13,6 +13,7 @@ enum FishType {
 	Goldfish,
 	RubyCrab,
 	Puffer,
+	Squid,
 	NUM_FISH_TYPES
 }
 
@@ -72,12 +73,20 @@ func _ready():
 	names[FishType.Puffer] = "Big Puffer"
 	description_one[FishType.Puffer] = "TODO."
 	description_two[FishType.Puffer] = "TODO"
+	
+	names[FishType.Squid] = "Colossal Squid"
+	description_one[FishType.Squid] = "TODO."
+	description_two[FishType.Squid] = "TODO"
 
 func add_studied(fish: Fish) -> int:
 	if !fish.studied:
 		fish.studied = true
 		var new_times_studied = times_studied.get(fish.fish_type, 0) + 1
 		times_studied.set(fish.fish_type, new_times_studied)
+		
+		if fish.fish_type == FishType.Squid:
+			
+		
 		return get_study_reward(fish, new_times_studied)
 	return 0
 

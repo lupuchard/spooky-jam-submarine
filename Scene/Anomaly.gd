@@ -5,6 +5,8 @@ const RAYCASTS_NEEDED := 4
 const GRAVITY_RANGE := 512.0
 const GRAVITY_STRENGTH := 50.0
 
+@onready var collision = $CollisionShape2D
+
 var studied: bool = false:
 	set(value):
 		if studied != value:
@@ -26,7 +28,7 @@ func create_area_collider():
 	var area = Area2D.new()
 	area.collision_layer = 8 # Layer 4
 	area.collision_mask = 8 # Layer 4
-	area.add_child($CollisionShape2D.duplicate())
+	area.add_child(collision.duplicate())
 	add_child(area)
 	area.position = Vector2.ZERO
 	area.body_entered.connect(func(player):

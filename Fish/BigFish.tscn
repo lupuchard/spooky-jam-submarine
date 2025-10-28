@@ -9,14 +9,14 @@
 
 [sub_resource type="Resource" id="Resource_4cuoe"]
 script = ExtResource("2_p41n0")
-speed = 20.0
+speed = 40.0
 metadata/_custom_type_script = "uid://dnxh3jy2b2k3a"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4cuoe"]
 radius = 18.0
 height = 144.0
 
-[node name="BigFish" type="StaticBody2D"]
+[node name="Krait" type="StaticBody2D"]
 script = ExtResource("1_d77vq")
 fish_type = 5
 is_sprite_facing_left = false

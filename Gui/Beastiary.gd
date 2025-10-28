@@ -1,5 +1,7 @@
 extends ScrollContainer
 
+@onready var beastiary_entry_list = $BeastiaryEntryList
+
 const BEASTIARY_ENTRY := preload("res://Gui/BeastiaryEntry.tscn")
 
 func _ready():
@@ -7,8 +9,8 @@ func _ready():
 		var entry = BEASTIARY_ENTRY.instantiate()
 		entry.fish_type = fish_type
 		entry.update()
-		$BeastiaryEntryList.add_child(entry)
+		beastiary_entry_list.add_child(entry)
 
 func update():
-	for child in $BeastiaryEntryList.get_children():
+	for child in beastiary_entry_list.get_children():
 		child.update()

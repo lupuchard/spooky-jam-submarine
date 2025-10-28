@@ -13,10 +13,13 @@ func _ready() -> void:
 	
 	rotation = PI
 	z_index = -2
-	material = ShaderMaterial.new()
-	material.shader = preload("res://Scene/Seaweed.gdshader")
-	
 	update_height()
+	
+	material = ShaderMaterial.new()
+	if Engine.is_editor_hint():
+		material.shader = preload("res://Scene/SeaweedEditor.gdshader")
+	else:
+		material.shader = preload("res://Scene/Seaweed.gdshader")
 
 func update_height() -> void:
 	mesh.size = Vector2(16.0, height)

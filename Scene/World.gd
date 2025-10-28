@@ -4,13 +4,14 @@ class_name World
 const SPLASH_SOUND = preload("res://Assets/Sound/underwater_splash.mp3")
 const DEACTIVATION_DISTANCE := 2000.0
 
-var player: Player
+@onready var player: Player = %Player
 var fishes: Array[Node]
 var cur_fish_check_index = -1
 
 func _ready() -> void:
+	%CanvasModulate.visible = true
+	
 	process_mode = Node.PROCESS_MODE_DISABLED
-	player = %Player
 	Bubbler.world = self
 	
 	var fish_bodies = get_tree().get_nodes_in_group("fish_body")
@@ -48,7 +49,6 @@ func return_to_surface() -> void:
 	%UpgradePanel/TabContainer.current_tab = 0
 	%UpgradePanel/TabContainer.set_tab_hidden(1, player.resource_totals[Player.Res.Anomalies] == 0)
 	%UpgradePanel/TabContainer.get_tab_bar().call_deferred("grab_focus")
-	#player.visible = false
 	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
 	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
 	Save.save_state(player, %Fish)

@@ -13,6 +13,11 @@ const OPTION_DEFAULTS := {
 	"gamma": %GammaSlider
 }
 
+@onready var save_slots_menu = $SaveSlotsMenu
+@onready var options_menu = $OptionsMenu
+@onready var delete_confirm_menu = $DeleteConfirmMenu
+@onready var credits_menu = $CreditsMenu
+
 @onready var slot_rows := [%SaveSlotRow1, %SaveSlotRow2, %SaveSlotRow3]
 var slot_deleting: int
 
@@ -28,8 +33,12 @@ func _ready() -> void:
 		slot_row.slot_pressed.connect(on_slot_pressed)
 		slot_row.delete_pressed.connect(on_slot_delete_pressed)
 	
+	%CreditsButton.pressed.connect(show_credits_menu)
+	%CreditsExitButton.pressed(show_save_slots_menu)
+	
 	%OptionsButton.pressed.connect(show_options_menu)
 	%OptionsExitButton.pressed.connect(show_save_slots_menu)
+	
 	%CancelDeleteButton.pressed.connect(show_save_slots_menu)
 	%ConfirmDeleteButton.pressed.connect(func():
 		Save.delete_slot(slot_deleting)
@@ -95,26 +104,36 @@ func update_setting(setting: String, value: float) -> void:
 			%WorldEnvironment.environment.tonemap_exposure = pow((value * 2), 2)
 
 func show_save_slots_menu():
-	$SaveSlotsMenu.visible = true
-	$OptionsMenu.visible = false
-	$DeleteConfirmMenu.visible = false
+	save_slots_menu.visible = true
+	options_menu.visible = false
+	delete_confirm_menu.visible = false
+	credits_menu.visible = false
 	%OptionsButton.call_deferred("grab_focus")
 
 func show_delete_confirm_menu():
-	$SaveSlotsMenu.visible = false
-	$OptionsMenu.visible = false
-	$DeleteConfirmMenu.visible = true
+	save_slots_menu.visible = false
+	options_menu.visible = false
+	delete_confirm_menu.visible = true
+	credits_menu.visible = false
 	%CancelDeleteButton.call_deferred("grab_focus")
 	
 	var delete_text = "Are you sure you want to delete " + SaveSlotRow.get_slot_text(slot_deleting)
 	$DeleteConfirmMenu/Label.text = delete_text
 	
 func show_options_menu():
-	$SaveSlotsMenu.visible = false
-	$OptionsMenu.visible = true
-	$DeleteConfirmMenu.visible = false
+	save_slots_menu.visible = false
+	options_menu.visible = true
+	delete_confirm_menu.visible = false
+	credits_menu.visible = false
 	%OptionsExitButton.call_deferred("grab_focus")
 	
 	for slider_key in option_sliders:
 		var value = Save.options.get(slider_key, OPTION_DEFAULTS[slider_key])
 		option_sliders[slider_key].value = value
+
+func show_credits_menu():
+	save_slots_menu.visible = false
+	options_menu.visible = false
+	delete_confirm_menu.visible = false
+	credits_menu.visible = true
+	%CreditsExitButton.call_deferred("grab_focus")

@@ -1,23 +1,26 @@
 extends Node2D
 
+@onready var name_label := $NameLabel
+@onready var progress_label := $ProgressLabel
+@onready var color_rect := $ColorRect
+
 func set_name_text(text: String):
-	$NameLabel.text = text
+	name_label.text = text
 
 func update_to(fish: Studyable):
-	#global_position = fish.global_position
-	transform = fish.get_screen_transform()
+	global_position = fish.get_screen_transform().get_origin()
 	
 	if fish is Anomaly:
-		$NameLabel.text = AnomalyText.TEXT
+		name_label.text = AnomalyText.TEXT
 	elif fish.studied or Study.get_times_studied(fish.fish_type) > 0:
-		$NameLabel.text = Study.get_fish_name(fish.fish_type)
+		name_label.text = Study.get_fish_name(fish.fish_type)
 	else:
-		$NameLabel.text = "???"
+		name_label.text = "???"
 	
 	if fish.studied:
-		$ProgressLabel.visible = true
-		$ColorRect.visible = false
+		progress_label.visible = true
+		color_rect.visible = false
 	else:
-		$ProgressLabel.visible = false
-		$ColorRect.visible = true
-		$ColorRect.size.x = round(fish.study_progress * 48)
+		progress_label.visible = false
+		color_rect.visible = true
+		color_rect.size.x = round(fish.study_progress * 48)
