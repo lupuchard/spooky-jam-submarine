@@ -1,37 +1,73 @@
-[gd_scene load_steps=8 format=3 uid="uid://bsswh2ott33di"]
+[gd_scene load_steps=12 format=3 uid="uid://t8n82ht1w1g"]
 
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_7oxwa"]
-[ext_resource type="Script" uid="uid://wmj24v30fjei" path="res://Fish/FishBehavior/ShyFishBehavior.gd" id="2_1qtm5"]
-[ext_resource type="Texture2D" uid="uid://50c813vpt5o0" path="res://Assets/Fish/SmallFish/BlueBody.png" id="3_dibiv"]
+[ext_resource type="Texture2D" uid="uid://dpysmoi1oc8rw" path="res://Assets/Fish/Viper/body_small.png" id="2_1qtm5"]
+[ext_resource type="Script" uid="uid://bkqou0gwqcxlc" path="res://Fish/FishBehavior/HostileFishBehavior.gd" id="2_i1kvj"]
+[ext_resource type="Texture2D" uid="uid://ieqlcoy4xi4q" path="res://Assets/Fish/Viper/light_small.png" id="4_1kduu"]
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="4_dibiv"]
-[ext_resource type="Texture2D" uid="uid://bo2ekxymciat0" path="res://Assets/Fish/SmallFish/BlueLight.png" id="5_1kduu"]
+[ext_resource type="AudioStream" uid="uid://15q87knxxpfg" path="res://Assets/Sound/screech2.mp3" id="5_dibiv"]
+[ext_resource type="AudioStream" uid="uid://8yn0d1rukudb" path="res://Assets/Sound/screech.mp3" id="6_1kduu"]
 
-[sub_resource type="Resource" id="Resource_dibiv"]
-script = ExtResource("2_1qtm5")
-patience = 2
-metadata/_custom_type_script = "uid://wmj24v30fjei"
+[sub_resource type="Resource" id="Resource_b45nc"]
+script = ExtResource("2_i1kvj")
+sight_radius = 110.0
+max_speed = 70.0
+attack_sound = NodePath("AttackSound")
+metadata/_custom_type_script = "uid://bkqou0gwqcxlc"
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_dibiv"]
-radius = 6.0
-height = 20.0
+[sub_resource type="Gradient" id="Gradient_i1kvj"]
+interpolation_mode = 2
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_i1kvj"]
+gradient = SubResource("Gradient_i1kvj")
+width = 16
+height = 16
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_i1kvj"]
+radius = 8.0
+height = 36.0
 
 [node name="Viperfish" type="StaticBody2D"]
 script = ExtResource("1_7oxwa")
-fish_type = 4
-bob_amount = 1.0
-contact_damage = 2.0
-behavior = SubResource("Resource_dibiv")
-size = 2.0
-study_speed = 2.0
+fish_type = 3
+bob_amount = 3.0
+is_sprite_facing_left = false
+contact_damage = 3.0
+idle_sound_period = 40.0
+behavior = SubResource("Resource_b45nc")
+size = 5.0
+study_reward_factor = 1.5
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
-[node name="Body" type="Sprite2D" parent="." groups=["fish_body"]]
-texture = ExtResource("3_dibiv")
+[node name="Body" type="Node2D" parent="."]
 
-[node name="ViperLight" type="Sprite2D" parent="Body"]
+[node name="BodySmall" type="Sprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(-12, -1)
+texture = ExtResource("2_1qtm5")
+
+[node name="LightSmall" type="Sprite2D" parent="Body"]
 material = ExtResource("4_dibiv")
-texture = ExtResource("5_1kduu")
+position = Vector2(-12, -1)
+texture = ExtResource("4_1kduu")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-rotation = 1.5707964
-shape = SubResource("CapsuleShape2D_dibiv")
+[node name="PointLight2D" type="PointLight2D" parent="Body"]
+position = Vector2(9, -8)
+color = Color(1, 0, 0.16470589, 1)
+texture = SubResource("GradientTexture2D_i1kvj")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_i1kvj")
+
+[node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_dibiv")
+volume_db = -10.0
+pitch_scale = 3.0
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_1kduu")
+pitch_scale = 3.0

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dddi5el4awssc"]
+[gd_scene load_steps=13 format=3 uid="uid://dddi5el4awssc"]
 
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_kfhey"]
 [ext_resource type="Script" uid="uid://bkqou0gwqcxlc" path="res://Fish/FishBehavior/HostileFishBehavior.gd" id="1_nh5wd"]
@@ -10,8 +10,20 @@
 
 [sub_resource type="Resource" id="Resource_2cqi1"]
 script = ExtResource("1_nh5wd")
-attack_sound = ExtResource("6_f1sga")
+attack_sound = NodePath("AttackSound")
 metadata/_custom_type_script = "uid://bkqou0gwqcxlc"
+
+[sub_resource type="Gradient" id="Gradient_bw4jn"]
+interpolation_mode = 2
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jtn48"]
+gradient = SubResource("Gradient_bw4jn")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_agqjp"]
 radius = 14.000001
@@ -42,6 +54,11 @@ material = ExtResource("3_kfhey")
 position = Vector2(5, 0)
 texture = ExtResource("6_jtn48")
 
+[node name="PointLight2D" type="PointLight2D" parent="Body"]
+position = Vector2(-10, 15)
+color = Color(1, 0, 0.16470589, 1)
+texture = SubResource("GradientTexture2D_jtn48")
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-25, -2)
 rotation = -1.5707964
@@ -51,7 +68,12 @@ shape = SubResource("CapsuleShape2D_agqjp")
 position = Vector2(24, -6)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_f1sga")
-metadata/study_mod = 0.3
+metadata/study_mod = 0.5
 
 [node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_jtn48")
+volume_db = -5.0
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_f1sga")
+volume_db = 10.0

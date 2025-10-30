@@ -64,6 +64,9 @@ const ANOMALY_COLLECT_SOUND = preload("res://Assets/Sound/anomaly_collect.mp3")
 const DEATH_SOUND_METAL = preload("res://Assets/Sound/metal_wobble.mp3")
 const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 
+@export var flicker_texture: NoiseTexture2D
+var flicker_level = 0.1
+
 @onready var camera: Camera2D = $Camera2D
 @onready var spotlight: Node2D = $Spotlight
 @onready var spotlight1: PointLight2D = $Spotlight/Spotlight1
@@ -72,6 +75,7 @@ const TOGGLE_LIGHT_SOUND = preload("res://Assets/Sound/switch.wav")
 @onready var vehicle_ambience := $VehicleAmbience
 @onready var hull_creak := $HullCreak
 var vel := Vector2.ZERO
+var time_passed := 0.0
 
 var stats: Array[float] = []
 var max_stats: Array[float] = []
@@ -121,19 +125,19 @@ func _ready():
 	upgrade_levels.resize(UpgradeType.NUM_UPGRADES)
 	
 	var hull_upgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
-	hull_upgrade.costs = [0, 20, 50, 100]
+	hull_upgrade.costs = [0, 20, 50, 80]
 	hull_upgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
 	hull_upgrade.values.append(PackedFloat64Array([10000.0, 2000.0, 3000.0, 4000.0])) # Max Depth
 	upgrades[UpgradeType.Hull] = hull_upgrade
 	
 	var speed_upgrade := Upgrade.new("Speed", [Stat.Speed])
-	speed_upgrade.costs = [0, 20, 50, 100]
-	speed_upgrade.values = [[1.0, 1.16, 1.35, 1.6]]
+	speed_upgrade.costs = [0, 30, 60]
+	speed_upgrade.values = [[1.0, 1.16, 1.35]]
 	upgrades[UpgradeType.Speed] = speed_upgrade
 	
 	var battery_upgrade := Upgrade.new("Battery", [Stat.Battery])
-	battery_upgrade.costs = [0, 20, 50, 100]
-	battery_upgrade.values = [[100.0, 150.0, 200.0, 250.0]]
+	battery_upgrade.costs = [0, 20, 50, 80]
+	battery_upgrade.values = [[100.0, 150.0, 200.0, 300.0]]
 	upgrades[UpgradeType.Battery] = battery_upgrade
 	
 	var dash_upgrade := Upgrade.new("Dash Speed", [Stat.DashSpeed], Res.Anomalies)
@@ -174,8 +178,9 @@ func generate_raycasts() -> void:
 		if child is RayCast2D:
 			child.queue_free()
 	
-	var raycast_spacing = RAYCAST_ANGLE / (NUM_RAYCASTS + 1)
-	for i in range(0, NUM_RAYCASTS):
+	var num_raycasts = NUM_RAYCASTS if spotlight1.visible else NUM_RAYCASTS + 4
+	var raycast_spacing = RAYCAST_ANGLE / (num_raycasts + 1)
+	for i in range(0, num_raycasts):
 		var angle = raycast_spacing * (i + 1) - RAYCAST_ANGLE / 2
 		var raycast := RayCast2D.new()
 		raycast.target_position = Vector2.from_angle(angle) * raycast_length()
@@ -232,6 +237,12 @@ func _process(delta: float):
 	else:
 		studying = null
 	
+	time_passed += delta
+	var flicker = sqrt(abs(flicker_texture.noise.get_noise_1d(time_passed))) * 0.5
+	flicker = lerp(0.2, flicker, flicker_level)
+	spotlight1.energy = flicker
+	spotlight2.energy = flicker
+	
 	if studying != null:
 		%StudyIndicator.visible = true
 		%StudyIndicator.update_to(studying)
@@ -287,6 +298,7 @@ func gain_resource(resource: Res, amount: int) -> void:
 func restore_stat(stat: Stat, amount: float) -> bool:
 	if stats[stat] == max_stats[stat]: return false
 	stats[stat] = min(stats[stat] + amount, max_stats[stat])
+	notify("+%s %s" % [format_stat_value(stat, amount), get_stat_name(stat)])
 	return true
 
 func is_light_on() -> bool:
@@ -430,7 +442,7 @@ func recover():
 	%DeathPanel.visible = false
 	global_position = %StartPosition.global_position
 	process_mode = Node.PROCESS_MODE_INHERIT
-	Save.load_state(self, %Fish)
+	Save.load_state(self, %Fish, %Anomalies)
 
 func handle_fish_collision(fish: Fish, angle: float, speed: float):
 	if fish_contact_cooldown < 0.0:
@@ -447,3 +459,25 @@ func handle_damage(damage: float, angle: float, speed: float):
 		vel += Vector2.from_angle(angle) * min(knockback_strength, MAX_KNOCKBACK)
 		
 		fish_contact_cooldown = FISH_CONTACT_COOLDOWN
+
+static func get_stat_name(stat: Player.Stat) -> String:
+	match stat:
+		Player.Stat.Health: return "Health"
+		Player.Stat.MaxDepth: return "Max Depth"
+		Player.Stat.Battery: return "Battery"
+		Player.Stat.Speed: return "Speed"
+		Player.Stat.Light: return "Light Radius"
+		Player.Stat.StudySpeed: return "Scanning Speed"
+		Player.Stat.DashSpeed: return "Dash"
+	return "Unknown"
+
+static func format_stat_value(stat: Player.Stat, value: float) -> String:
+	match stat:
+		Player.Stat.Health:     return str(int(value))
+		Player.Stat.MaxDepth:   return World.format_depth(value, 0)
+		Player.Stat.Battery:    return str(int(value))
+		Player.Stat.Speed:      return str(int(value * 100)) + "%"
+		Player.Stat.Light:      return "+" + str(int((value - 1.0) * 100)) + "%"
+		Player.Stat.StudySpeed: return "+" + str(int((value * 5.0 - 1.0) * 100)) + "%"
+		Player.Stat.DashSpeed:  return "+" + str(int((value / 2.8 - 1.0) * 200)) + "%"
+	return "Unknown"

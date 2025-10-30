@@ -85,7 +85,7 @@ func _input(_input_event: InputEvent) -> void:
 func on_slot_pressed(slot: int) -> void:
 	Save.current_slot = slot
 	Save.load_from_file()
-	Save.load_state(%Player, %Fish)
+	Save.load_state(%Player, %Fish, %Anomalies)
 	visible = false
 	%World.resume_world()
 	%UpgradePanel.process_mode = PROCESS_MODE_INHERIT

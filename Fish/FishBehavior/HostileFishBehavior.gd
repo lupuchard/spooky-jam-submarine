@@ -8,7 +8,7 @@ const ACCELERATION: float = 10.0
 @export var sight_radius: float = 160.0
 @export var max_range: float = 500.0
 @export var max_speed: float = 100.0
-@export var attack_sound: AudioStream = null
+@export var attack_sound: NodePath
 
 var attack_cooldown: float = ATTACK_COOLDOWN
 var lurk_cooldown: float = 0.0
@@ -18,7 +18,7 @@ var last_seen: Vector2
 
 func _behave(delta: float) -> void:
 	if attacking and can_see_player():
-		cur_speed = lerp(cur_speed, max_speed, ACCELERATION * delta)
+		cur_speed = lerp(cur_speed, get_max_speed(), ACCELERATION * delta)
 		last_seen = player.global_position
 		move_toward_last_seen(delta)
 		lurk_cooldown = LURK_COOLDOWN
@@ -34,7 +34,7 @@ func _behave(delta: float) -> void:
 			fish.set_facing(fish.flip != fish.is_sprite_facing_left)
 		)
 	elif attacking:
-		cur_speed = lerp(cur_speed, max_speed / 2.0, (ACCELERATION / 10.0) * delta)
+		cur_speed = lerp(cur_speed, get_max_speed() / 2.0, (ACCELERATION / 10.0) * delta)
 		move_toward_last_seen(delta)
 		if last_seen.distance_squared_to(fish.global_position) > 1.0:
 			lurk_cooldown = LURK_COOLDOWN
@@ -47,7 +47,7 @@ func _behave(delta: float) -> void:
 		last_seen = player.global_position
 		
 		if attack_sound != null:
-			Audio.play(attack_sound, fish, 10.0)
+			fish.get_node(attack_sound).play()
 	
 	attack_cooldown -= delta
 	lurk_cooldown -= delta
@@ -62,6 +62,9 @@ func can_see_player() -> bool:
 		return false
 	var radius = sight_radius if player.is_light_on() else sight_radius / 2
 	return displacement.length_squared() < pow(radius, 2)
+
+func get_max_speed() -> float:
+	return max_speed / 2.0 if is_too_far() else max_speed
 
 func is_too_far() -> bool:
 	return fish.global_position.distance_squared_to(fish.initial_position) > pow(max_range, 2)

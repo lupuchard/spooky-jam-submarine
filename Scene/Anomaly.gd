@@ -21,8 +21,10 @@ func _physics_process(delta: float):
 	
 	var dist_sqr = player.global_position.distance_squared_to(global_position)
 	if dist_sqr < pow(GRAVITY_RANGE, 2):
-		var pull = (1.0 - (sqrt(dist_sqr) / GRAVITY_RANGE)) * GRAVITY_STRENGTH
+		var dist = sqrt(dist_sqr)
+		var pull = (1.0 - (dist / GRAVITY_RANGE)) * GRAVITY_STRENGTH
 		player.global_position = player.global_position.move_toward(global_position, delta * pull)
+		player.flicker_level = clamp((1.0 - dist / GRAVITY_RANGE) * 2.0, 0.1, 1.0)
 
 func create_area_collider():
 	var area = Area2D.new()
@@ -44,6 +46,7 @@ func update_studied():
 	if studied:
 		visible = false
 		process_mode = Node.PROCESS_MODE_DISABLED
+		%Player.flicker_level = 0.1
 	else:
 		visible = true
 		process_mode = Node.PROCESS_MODE_INHERIT

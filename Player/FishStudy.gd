@@ -5,8 +5,8 @@ enum FishType {
 	CaveAngler,
 	Guppo,
 	PaleCrab,
-	CrystalJelly,
 	Viperfish,
+	Lanternfish,
 	Krait,
 	EvilFish,
 	ElectricEel,
@@ -18,10 +18,11 @@ enum FishType {
 }
 
 const BEASTIARY_ORDER := [
-	FishType.Goldfish, FishType.Guppo, FishType.Viperfish,
+	FishType.Goldfish, FishType.Guppo, FishType.Lanternfish,
 	FishType.RubyCrab, FishType.PaleCrab,
 	FishType.CaveAngler, FishType.ElectricEel, FishType.Krait,
-	FishType.Puffer, FishType.EvilFish, FishType.CrystalJelly
+	FishType.Puffer, FishType.Viperfish, FishType.EvilFish,
+	FishType.Squid
 ]
 
 var names: Dictionary[FishType, String] = {}
@@ -36,27 +37,27 @@ func _ready():
 	
 	names[FishType.Guppo] = "Red Guppo"
 	description_one[FishType.Guppo] = "A striking fish with bright red scales that shine even in the dark."
-	description_two[FishType.Guppo] = "TODO"
+	description_two[FishType.Guppo] = "Like goldfish, red guppos are a member of the carp family."
 	
 	names[FishType.PaleCrab] = "Pale Crab"
 	description_one[FishType.PaleCrab] = "A relative of the ruby crab, the pale crab has become depigmented due to a lack of sunlight."
-	description_two[FishType.PaleCrab] = "TODO"
-	
-	names[FishType.CrystalJelly] = "Crystal Jelly"
-	description_one[FishType.CrystalJelly] = "A transparent, bioluminescent jellyfish."
-	description_two[FishType.CrystalJelly] = "This species is best known as the source of aequorin, a protein involved in bioluminescense."
+	description_two[FishType.PaleCrab] = "Scientists are interested in pale crabs due to their ability to regenerate lost limbs."
 	
 	names[FishType.Viperfish] = "Viperfish"
 	description_one[FishType.Viperfish] = "A bioluminescent fish with long, needle-like teeth and hinged lower jaws."
 	description_two[FishType.Viperfish] = "Viperfish attack with little provocation. Maintain your distance when studying."
 	
+	names[FishType.Lanternfish] = "Lanternfish"
+	description_one[FishType.Lanternfish] = "A mesopelagic, bioluminescent fish that feeds on zooplankton and small submarines."
+	description_two[FishType.Lanternfish] = "Lanternfish are among the most widely distributed, diverse and populous vertebrates."
+	
 	names[FishType.Krait] = "Giant Krait"
 	description_one[FishType.Krait] = "The giant sea krait is a species of venomous sea snake."
 	description_two[FishType.Krait] = "Unlike the common sea krait, the giant sea krait's stripes are bioluminescent in order to attract prey."
 	
-	names[FishType.EvilFish] = "Chompler"
-	description_one[FishType.EvilFish] = "Chompler."
-	description_two[FishType.EvilFish] = "TODO"
+	names[FishType.EvilFish] = "Viper Shark"
+	description_one[FishType.EvilFish] = "A dangerous deep sea shark with red bioluminescent fins."
+	description_two[FishType.EvilFish] = "Despite where they live, viper sharks have poor eyesight and can be evaded by simply turning off your spotlight."
 	
 	names[FishType.ElectricEel] = "Electric Moray"
 	description_one[FishType.ElectricEel] = "A cave-dwelling electric eel that like to hide in narrow crevices in the wall."
@@ -68,15 +69,15 @@ func _ready():
 	
 	names[FishType.RubyCrab] = "Ruby Crab"
 	description_one[FishType.RubyCrab] = "An unusually large red crab that prefers shallower waters."
-	description_two[FishType.RubyCrab] = "TODO"
+	description_two[FishType.RubyCrab] = "Despite its appearance, ruby crabs taste terrible."
 	
 	names[FishType.Puffer] = "Big Puffer"
-	description_one[FishType.Puffer] = "TODO."
-	description_two[FishType.Puffer] = "TODO"
+	description_one[FishType.Puffer] = "A cautious fish that defends itself by puffing up and releasing spikes."
+	description_two[FishType.Puffer] = "Like most pufferfish, this one is poisonous and should not be licked or smooched."
 	
 	names[FishType.Squid] = "Colossal Squid"
-	description_one[FishType.Squid] = "TODO."
-	description_two[FishType.Squid] = "TODO"
+	description_one[FishType.Squid] = "I don't think the player will see this."
+	description_two[FishType.Squid] = "Or this."
 
 func add_studied(fish: Fish) -> int:
 	if !fish.studied:

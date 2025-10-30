@@ -99,9 +99,9 @@ func set_facing(left: bool) -> void:
 		scale.x = 1.0 if is_sprite_facing_left else -1.0
 
 func update_facing(dir: Vector2, flipped: bool = false) -> void:
-	if dir.x < -1.0:
+	if dir.x < -0.1:
 		set_facing(!flipped)
-	elif dir.x > 1.0:
+	elif dir.x > 0.1:
 		set_facing(flipped)
 
 func on_collide_with_player(player: Player) -> void:

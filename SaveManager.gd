@@ -65,10 +65,11 @@ func delete_slot(slot: int):
 	slot_progress[slot] = -1.0
 	save_meta_to_file()
 
-func save_state(player: Player, fish: Node2D):
+func save_state(player: Player, fish: Node2D, anomalies: Node2D):
 	saved_state = {
 		"player": save_player(player),
 		"fish": save_fish(fish),
+		"anomalies": save_anomalies(anomalies),
 		"fish_study": save_fish_study()
 	}
 	
@@ -78,9 +79,10 @@ func save_state(player: Player, fish: Node2D):
 	if max_total_research_points == -1:
 		calc_total_research_points(fish)
 
-func load_state(player: Player, fish: Node2D) -> void:
+func load_state(player: Player, fish: Node2D, anomalies: Node2D) -> void:
 	load_player(saved_state["player"], player)
 	load_fish(saved_state["fish"], fish)
+	load_anomalies(saved_state["anomalies"], anomalies)
 	load_fish_study(saved_state["fish_study"])
 
 func save_player(player: Player) -> Dictionary:
@@ -119,6 +121,22 @@ func load_fish(data: Array, fish_node: Node2D) -> void:
 		fish.facing_left = fish_data["facing_left"]
 		fish.position = str_to_var(fish_data["position"])
 
+func save_anomalies(anomaly_node: Node2D) -> Array[Dictionary]:
+	var anomaly_data: Array[Dictionary] = []
+	for anomaly: Anomaly in anomaly_node.get_children():
+		anomaly_data.append({
+			"name": anomaly.name,
+			"studied": anomaly.studied,
+			"study_progress": anomaly.study_progress
+		})
+	return anomaly_data
+
+func load_anomalies(data: Array, anomaly_node: Node2D) -> void:
+	for anomaly_data in data:
+		var anomaly = anomaly_node.find_child(anomaly_data["name"])
+		anomaly.studied = anomaly_data["studied"]
+		anomaly.study_progress = anomaly_data["study_progress"]
+
 func save_fish_study() -> Dictionary:
 	return {
 		"times_studied": Study.times_studied.duplicate()
@@ -135,3 +153,4 @@ func calc_total_research_points(fish_node: Node2D):
 	for fish: Fish in fish_node.get_children():
 		times_studied.set(fish.fish_type, times_studied.get(fish.fish_type, 0) + 1)
 		max_total_research_points += FishStudy.get_study_reward(fish, times_studied[fish.fish_type])
+	print(max_total_research_points)

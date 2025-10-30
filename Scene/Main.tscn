@@ -1,4 +1,4 @@
-[gd_scene load_steps=136 format=3 uid="uid://p88qg8wd8xis"]
+[gd_scene load_steps=139 format=3 uid="uid://p88qg8wd8xis"]
 
 [ext_resource type="Script" uid="uid://elq61q0rfu1j" path="res://Scene/World.gd" id="1_50glp"]
 [ext_resource type="Script" uid="uid://bxwbe5kroo17u" path="res://Player/Player.gd" id="1_rgh2o"]
@@ -15,13 +15,12 @@
 [ext_resource type="PackedScene" uid="uid://dwhpbo8g4x0xx" path="res://Fish/Guppo.tscn" id="9_gclda"]
 [ext_resource type="PackedScene" uid="uid://cj510s8ffvovy" path="res://Fish/PaleCrab.tscn" id="11_4w0o7"]
 [ext_resource type="Script" uid="uid://b7gd62bfuku1w" path="res://Scene/Seaweed.gd" id="11_6ngyt"]
-[ext_resource type="PackedScene" uid="uid://h0al0k7i7wee" path="res://Fish/Jelly.tscn" id="11_hmjy8"]
 [ext_resource type="Shader" uid="uid://dj8yab0gsg3g5" path="res://Scene/SeaweedEditor.gdshader" id="11_xwk4e"]
-[ext_resource type="PackedScene" uid="uid://bsswh2ott33di" path="res://Fish/Viperfish.tscn" id="12_e6irg"]
+[ext_resource type="PackedScene" uid="uid://bsswh2ott33di" path="res://Fish/Lanternfish.tscn" id="12_e6irg"]
 [ext_resource type="Shader" uid="uid://vg6relhwky4r" path="res://Scene/Water.gdshader" id="13_i0sg4"]
 [ext_resource type="Script" uid="uid://c1junlymprxj3" path="res://Player/DepthLabel.gd" id="14_gclda"]
 [ext_resource type="PackedScene" uid="uid://cimhux024qh56" path="res://Gui/UpgradeOption.tscn" id="14_mr7am"]
-[ext_resource type="PackedScene" uid="uid://m4dq2a5epgx5" path="res://Fish/BigFish.tscn" id="14_reyx0"]
+[ext_resource type="PackedScene" uid="uid://m4dq2a5epgx5" path="res://Fish/Krait.tscn" id="14_reyx0"]
 [ext_resource type="Script" uid="uid://c02prlppuceia" path="res://Gui/UpgradePanel.gd" id="14_sc4dx"]
 [ext_resource type="AudioStream" uid="uid://b0pfvin7vsrnw" path="res://Assets/Sound/spooky_ambience_1.mp3" id="15_iab34"]
 [ext_resource type="Texture2D" uid="uid://dprnw3jwwrkdx" path="res://Assets/seaweed.png" id="17_reyx0"]
@@ -36,6 +35,7 @@
 [ext_resource type="Script" uid="uid://osbbycaixnfu" path="res://Scene/Ripple.gd" id="24_45d3w"]
 [ext_resource type="PackedScene" uid="uid://iioqn0155kfg" path="res://Scene/Anomaly.tscn" id="24_n044j"]
 [ext_resource type="PackedScene" uid="uid://cricxku75pjhg" path="res://Fish/SquidEye.tscn" id="25_cd6bo"]
+[ext_resource type="PackedScene" uid="uid://t8n82ht1w1g" path="res://Fish/Viperfish.tscn" id="25_clf5q"]
 [ext_resource type="PackedScene" uid="uid://c2q00q3c2kntv" path="res://Fish/Tentacle.tscn" id="25_jupvq"]
 [ext_resource type="PackedScene" uid="uid://lfaytddnu6xl" path="res://Gui/SaveSlotRow.tscn" id="26_g6i1l"]
 [ext_resource type="Script" uid="uid://b0v75jlp5h57g" path="res://Gui/MainMenu.gd" id="27_sssj8"]
@@ -49,6 +49,16 @@
 
 [sub_resource type="Environment" id="Environment_g6i1l"]
 background_mode = 3
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cd6bo"]
+noise_type = 2
+frequency = 0.1
+fractal_type = 3
+fractal_lacunarity = 4.13
+fractal_gain = -0.595
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_clf5q"]
+noise = SubResource("FastNoiseLite_cd6bo")
 
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_jw32o"]
 light_mode = 1
@@ -104,9 +114,9 @@ point_count = 95
 
 [sub_resource type="Curve2D" id="Curve2D_clf5q"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, -536, 111, 58.98752, -0.62092125, -58.98752, 0.62092125, -716, 137, 87, -10, -87, 10, -982, 140, 69.421486, -16.528925, -69.421486, 16.528925, -1427, 234, 53.719006, -11.570248, -53.719006, 11.570248, -1574, 314, 10.263161, 3.592106, -10.263161, -3.592106, -1767, 305, 69.78949, 9.750003, -69.78949, -9.750003, -1906, 257, 0, 0, 0, 0, -1999.2716, 254.89319, 0, 0, 0, 0, -2011, 297, 0, 0, 0, 0, -2025, 253, 0, 0, 0, 0, -2078, 253, 0, 0, 0, 0, -2088, 285, 0, 0, 0, 0, -2098.2454, 253.58698, 38.720104, 4.1985655, -38.720104, -4.1985655, -2693, 254, 70.24793, -4.9586773, -70.24793, 4.9586773, -2989, 175, 0, 0, 0, 0, -2997, 177, 0, 0, 0, 0, -3005, 223, 0, 0, 0, 0, -3014.629, 178.27649, 0, 0, 0, 0, -3019.4685, 201.94756, 0, 0, 0, 0, -3035, 271, 0, 0, 0, 0, -3058, 192, -3.305785, -78.51239, 3.305785, 78.51239, -3189, 315, -4.240976, -30.959122, 4.240976, 30.959122, -3186, 378, -28.039507, -13.063861, 28.039507, 13.063861, -3085, 508, -115.70248, 0, 115.70248, 0, -2867, 524, -85.12396, 11.570248, 85.12396, -11.570248, -2664, 405, -86.776855, -9.090909, 86.776855, 9.090909, -2440, 396, 0, 0, 0, 0, -2258, 479, -23.132591, -5.397605, 23.132591, 5.397605, -2211, 510, -51.239666, -3.305785, 51.239666, 3.305785, -2128, 513, 0, 0, 0, 0, -1994.1058, 516.53406, 0, 0, 0, 0, -1985, 482, 0, 0, 0, 0, -1975.9852, 516.1485, -17.379084, -11.582105, 17.379084, 11.582105, -1935, 519, 48.315308, -132.06184, -48.315308, 132.06184, -1884, 991, 91.3, -2.2, -91.3, 2.2, -2178, 1499, 18.7, 67.1, -18.7, -67.1, -2373, 1315, 91.3, 88, -91.3, -88, -2476, 788, 91.3, -34.100002, -91.3, 34.100002, -2884, 782, 0, 0, 0, 0, -3061, 878, 0, 0, 0, 0, -3082, 1014, 0, 0, 0, 0, -3099.27, 940.4207, 0, 0, 0, 0, -3114, 1047, 0, 0, 0, 0, -3142.095, 931.4049, 45.100002, -64.9, -45.100002, 64.9, -3191, 981, -23.1, -89.1, 23.1, 89.1, -3248, 1205, -47.3, -55, 47.3, 55, -3062, 1478, 0, 0, 0, 0, -3008, 1792, 0, 0, 0, 0, -3135, 1792, 0, 0, 0, 0, -3135, 2112, 0, 0, 0, 0, -2752, 2111, 0, 0, 0, 0, -2752, 1792, 0, 0, 0, 0, -2879, 1792, -34.710743, 49.586773, 34.710743, -49.586773, -2858, 1506, -87.6033, -18.181818, 87.6033, 18.181818, -2601, 1423, -95.86776, -21.487602, 95.86776, 21.487602, -2346, 1604, -42.148758, 19.83471, 42.148758, -19.83471, -2089, 1591, -55.3719, -10.743801, 55.3719, 10.743801, -1948, 1484, -103.30578, -79.33884, 103.30578, 79.33884, -1850, 1809, -80.3, -22, 80.3, 22, -1483, 2009, -59.4, -66, 59.4, 66, -1053, 2133, 18.7, -53.9, -18.7, 53.9, -1058, 2451, 52.800003, -39.600002, -52.800003, 39.600002, -1120, 2656, 74.8, -34.100002, -74.8, 34.100002, -1428, 2695, 8.8, -91.3, -8.8, 91.3, -1652, 2957, 0, 0, 0, 0, -1527, 3264, 0, 0, 0, 0, -1075, 3264, 0, 0, 0, 0, -1100, 3958, 0, 0, 0, 0, -3736, 3946, 0, 0, 0, 0, -3751, -170, 0, 0, 0, 0, -500, -163, 5.1315804, -43.851685, -5.1315804, 43.851685, -464, 60, 0, 0, 0, 0, -525, 110)
+"points": PackedVector2Array(0, 0, 0, 0, -536, 111, 58.98752, -0.62092125, -58.98752, 0.62092125, -716, 137, 87, -10, -87, 10, -982, 140, 69.421486, -16.528925, -69.421486, 16.528925, -1427, 234, 53.719006, -11.570248, -53.719006, 11.570248, -1574, 314, 10.263161, 3.592106, -10.263161, -3.592106, -1767, 305, 69.78949, 9.750003, -69.78949, -9.750003, -1906, 257, 0, 0, 0, 0, -1999.2716, 254.89319, 0, 0, 0, 0, -2011, 297, 0, 0, 0, 0, -2025, 253, 0, 0, 0, 0, -2078, 253, 0, 0, 0, 0, -2088, 285, 0, 0, 0, 0, -2098.2454, 253.58698, 38.720104, 4.1985655, -38.720104, -4.1985655, -2693, 254, 70.24793, -4.9586773, -70.24793, 4.9586773, -2989, 175, 0, 0, 0, 0, -2997, 177, 0, 0, 0, 0, -3005, 223, 0, 0, 0, 0, -3014.629, 178.27649, 0, 0, 0, 0, -3019.4685, 201.94756, 0, 0, 0, 0, -3035, 271, 0, 0, 0, 0, -3058, 192, -3.305785, -78.51239, 3.305785, 78.51239, -3189, 315, -4.240976, -30.959122, 4.240976, 30.959122, -3186, 378, -28.039507, -13.063861, 28.039507, 13.063861, -3085, 508, -115.70248, 0, 115.70248, 0, -2867, 524, -85.12396, 11.570248, 85.12396, -11.570248, -2664, 405, -86.776855, -9.090909, 86.776855, 9.090909, -2440, 396, 0, 0, 0, 0, -2258, 479, -23.132591, -5.397605, 23.132591, 5.397605, -2211, 510, -51.239666, -3.305785, 51.239666, 3.305785, -2128, 513, 0, 0, 0, 0, -1994.1058, 516.53406, 0, 0, 0, 0, -1985, 482, 0, 0, 0, 0, -1975.9852, 516.1485, -17.379084, -11.582105, 17.379084, 11.582105, -1935, 519, 11.269721, -23.290758, -11.269721, 23.290758, -1887, 671, -9.015778, -36.814423, 9.015778, 36.814423, -1986, 758, -32.306534, -16.528925, 32.306534, 16.528925, -1870, 774, 48.315308, -132.06184, -48.315308, 132.06184, -1884, 991, 91.3, -2.2, -91.3, 2.2, -2178, 1499, 18.7, 67.1, -18.7, -67.1, -2373, 1315, 91.3, 88, -91.3, -88, -2476, 788, 91.3, -34.100002, -91.3, 34.100002, -2884, 782, 0, 0, 0, 0, -3061, 878, 0, 0, 0, 0, -3082, 1014, 0, 0, 0, 0, -3099.27, 940.4207, 0, 0, 0, 0, -3114, 1047, 0, 0, 0, 0, -3142.095, 931.4049, 45.100002, -64.9, -45.100002, 64.9, -3191, 981, -23.1, -89.1, 23.1, 89.1, -3248, 1205, -47.3, -55, 47.3, 55, -3062, 1478, 0, 0, 0, 0, -3008, 1792, 0, 0, 0, 0, -3135, 1792, 0, 0, 0, 0, -3135, 2112, 0, 0, 0, 0, -2752, 2111, 0, 0, 0, 0, -2752, 1792, 0, 0, 0, 0, -2879, 1792, -34.710743, 49.586773, 34.710743, -49.586773, -2858, 1506, -87.6033, -18.181818, 87.6033, 18.181818, -2601, 1423, -95.86776, -21.487602, 95.86776, 21.487602, -2346, 1604, -42.148758, 19.83471, 42.148758, -19.83471, -2089, 1591, -55.3719, -10.743801, 55.3719, 10.743801, -1948, 1484, -103.30578, -79.33884, 103.30578, 79.33884, -1850, 1809, -80.3, -22, 80.3, 22, -1483, 2009, -59.4, -66, 59.4, 66, -1053, 2133, 18.7, -53.9, -18.7, 53.9, -1058, 2451, 52.800003, -39.600002, -52.800003, 39.600002, -1120, 2656, 74.8, -34.100002, -74.8, 34.100002, -1428, 2695, 8.8, -91.3, -8.8, 91.3, -1652, 2957, 0, 0, 0, 0, -1527, 3264, 0, 0, 0, 0, -1075, 3264, 0, 0, 0, 0, -1100, 3958, 0, 0, 0, 0, -3736, 3946, 0, 0, 0, 0, -3751, -170, 0, 0, 0, 0, -500, -163, 5.1315804, -43.851685, -5.1315804, 43.851685, -464, 60, 0, 0, 0, 0, -525, 110)
 }
-point_count = 73
+point_count = 76
 
 [sub_resource type="Curve2D" id="Curve2D_lllnr"]
 _data = {
@@ -119,6 +129,12 @@ _data = {
 "points": PackedVector2Array(0, 0, 0, 0, -427, 970, -42.900013, -16.934216, 42.900013, 16.934216, -276, 969, -3.951317, -78.46187, 3.951317, 78.46187, -130, 1161, 43.80165, -35.53719, -43.80165, 35.53719, -338, 1258, -3.7255275, -37.876198, 3.7255275, 37.876198, -389, 1418, 7.2213144, -78.84458, -7.2213144, 78.84458, -328, 1586, 62.01343, -8.862763, -62.01343, 8.862763, -553, 1851, 54.64107, 5.588291, -54.64107, -5.588291, -720, 1785, 0, 0, 0, 0, -751.76324, 1785.0952, 0, 0, 0, 0, -779, 1901, 0, 0, 0, 0, -793, 1853, 0, 0, 0, 0, -821, 1993, 0, 0, 0, 0, -870.8517, 1845.2537, 87.15251, -2.2539444, -87.15251, 2.2539444, -1012, 1899, 22.539442, 47.33283, -22.539442, -47.33283, -1265, 1684, 6.6550007, 70.54301, -6.6550007, -70.54301, -1270, 1152, -21.487602, 69.421486, 21.487602, -69.421486, -1341, 1000, -61.983467, -28.92562, 61.983467, 28.92562, -996, 1001, -16.528925, -34.71074, 16.528925, 34.71074, -902, 1058, -28.099173, -56.198345, 28.099173, 56.198345, -897, 1244, -52.85233, 0.118535995, 52.85233, -0.118535995, -807, 1344, -47.68051, 1.4680223, 47.68051, -1.4680223, -613, 1344, -7.438016, 60.330574, 7.438016, -60.330574, -514, 1170, -0.82644624, 47.107437, 0.82644624, -47.107437, -551, 1054, 0, 0, 0, 0, -442, 974)
 }
 point_count = 25
+
+[sub_resource type="Curve2D" id="Curve2D_6b3h5"]
+_data = {
+"points": PackedVector2Array(-73.70815, 6.531102, 73.70815, -6.531102, -717, 1051, 9.923882, -65.380424, -9.923882, 65.380424, -600, 1170, 91.435425, 2.3325365, -91.435425, -2.3325365, -713, 1274, 5.1315804, 57.846905, -5.1315804, -57.846905, -862, 1174, -48.516758, 13.995218, 48.516758, -13.995218, -760, 1063)
+}
+point_count = 5
 
 [sub_resource type="Curve2D" id="Curve2D_cd6bo"]
 _data = {
@@ -475,7 +491,7 @@ unique_name_in_owner = true
 script = ExtResource("1_50glp")
 
 [node name="BlueBackground" type="ColorRect" parent="World"]
-z_index = -3
+z_index = -4
 custom_minimum_size = Vector2(2000, 2000)
 anchors_preset = 5
 anchor_left = 0.5
@@ -490,10 +506,11 @@ color = Color(0, 0.39215687, 1, 1)
 
 [node name="Player" type="CharacterBody2D" parent="World"]
 unique_name_in_owner = true
-position = Vector2(-370, 233)
+position = Vector2(-407, 249)
 collision_layer = 9
 collision_mask = 9
 script = ExtResource("1_rgh2o")
+flicker_texture = SubResource("NoiseTexture2D_clf5q")
 
 [node name="Body" type="Node2D" parent="World/Player"]
 
@@ -557,9 +574,10 @@ script = ExtResource("28_clf5q")
 
 [node name="BackgroundRightWall" type="Path2D" parent="World/Walls"]
 modulate = Color(0.69, 0.69, 0.69, 1)
+z_index = -3
 curve = SubResource("Curve2D_86elt")
 script = ExtResource("28_clf5q")
-color = Color(0.62, 0.5518, 0.4836, 0.32941177)
+color = Color(0.61960787, 0.5529412, 0.48235294, 0.3529412)
 background = true
 
 [node name="LeftWall" type="Path2D" parent="World/Walls"]
@@ -569,16 +587,24 @@ script = ExtResource("28_clf5q")
 
 [node name="BackgroundLeftWall" type="Path2D" parent="World/Walls"]
 modulate = Color(0.69, 0.69, 0.69, 1)
-z_index = -1
+z_index = -3
 curve = SubResource("Curve2D_lllnr")
 script = ExtResource("28_clf5q")
-color = Color(0.62, 0.5518, 0.4836, 0.32941177)
+color = Color(0.61960787, 0.5529412, 0.48235294, 0.3529412)
 background = true
 
 [node name="InnerWall1" type="Path2D" parent="World/Walls"]
 z_index = 1
 curve = SubResource("Curve2D_r8yv8")
 script = ExtResource("28_clf5q")
+
+[node name="BackgroundInnerWall1" type="Path2D" parent="World/Walls"]
+modulate = Color(0.69, 0.69, 0.69, 1)
+z_index = -3
+curve = SubResource("Curve2D_6b3h5")
+script = ExtResource("28_clf5q")
+color = Color(0.61960787, 0.5529412, 0.48235294, 0.3529412)
+background = true
 
 [node name="InnerWall2" type="Path2D" parent="World/Walls"]
 z_index = 1
@@ -937,50 +963,41 @@ position = Vector2(-2119, 494)
 position = Vector2(-3077, 343)
 flip = true
 
-[node name="Jelly" parent="World/Fish" instance=ExtResource("11_hmjy8")]
-position = Vector2(-1582, 640)
+[node name="Lanternfish" parent="World/Fish" instance=ExtResource("12_e6irg")]
+position = Vector2(-356, 2218)
 
-[node name="Jelly2" parent="World/Fish" instance=ExtResource("11_hmjy8")]
-position = Vector2(-1723, 871)
-
-[node name="Jelly3" parent="World/Fish" instance=ExtResource("11_hmjy8")]
-position = Vector2(-1520, 1123)
-
-[node name="Jelly5" parent="World/Fish" instance=ExtResource("11_hmjy8")]
-position = Vector2(-2809, 831)
-
-[node name="Viperfish" parent="World/Fish" instance=ExtResource("12_e6irg")]
-position = Vector2(-336, 2113)
-
-[node name="Viperfish5" parent="World/Fish" instance=ExtResource("12_e6irg")]
+[node name="Lanternfish5" parent="World/Fish" instance=ExtResource("12_e6irg")]
 position = Vector2(310, 2399)
 
-[node name="Viperfish2" parent="World/Fish" instance=ExtResource("12_e6irg")]
-position = Vector2(-341, 2165)
+[node name="Lanternfish2" parent="World/Fish" instance=ExtResource("12_e6irg")]
+position = Vector2(-369, 2240)
 
-[node name="Viperfish3" parent="World/Fish" instance=ExtResource("12_e6irg")]
-position = Vector2(-290, 2106)
+[node name="Lanternfish3" parent="World/Fish" instance=ExtResource("12_e6irg")]
+position = Vector2(-306, 2193)
 
-[node name="Viperfish4" parent="World/Fish" instance=ExtResource("12_e6irg")]
-position = Vector2(-310, 2139)
+[node name="Lanternfish4" parent="World/Fish" instance=ExtResource("12_e6irg")]
+position = Vector2(-327, 2231)
+
+[node name="Lanternfish6" parent="World/Fish" instance=ExtResource("12_e6irg")]
+position = Vector2(-906, 2502)
+
+[node name="Lanternfish7" parent="World/Fish" instance=ExtResource("12_e6irg")]
+position = Vector2(-982, 2523)
 
 [node name="Krait" parent="World/Fish" node_paths=PackedStringArray("path") instance=ExtResource("14_reyx0")]
 position = Vector2(-1465, 1841)
 contact_damage = 9.0
 path = NodePath("../../FishPaths/BigFishPath")
-study_reward_factor = 1.0
 
 [node name="Krait2" parent="World/Fish" node_paths=PackedStringArray("path") instance=ExtResource("14_reyx0")]
 position = Vector2(-581, 2025)
 contact_damage = 9.0
 path = NodePath("../../FishPaths/BigFishPath2")
-study_reward_factor = 1.0
 
 [node name="Krait3" parent="World/Fish" node_paths=PackedStringArray("path") instance=ExtResource("14_reyx0")]
 position = Vector2(-1092, 2742)
 contact_damage = 9.0
 path = NodePath("../../FishPaths/BigFishPath3")
-study_reward_factor = 1.0
 
 [node name="Angler2" parent="World/Fish" instance=ExtResource("7_jw32o")]
 position = Vector2(-290, 1341)
@@ -989,7 +1006,6 @@ study_reward_factor = 1.0
 
 [node name="Angler3" parent="World/Fish" instance=ExtResource("7_jw32o")]
 position = Vector2(745, 2372)
-flip = true
 study_reward_factor = 1.0
 
 [node name="ElectricEel" parent="World/Fish" instance=ExtResource("20_n044j")]
@@ -1028,7 +1044,7 @@ position = Vector2(685, 1960)
 
 [node name="SquidEye" parent="World/Fish" instance=ExtResource("25_cd6bo")]
 z_index = -1
-position = Vector2(-1244, 3251)
+position = Vector2(-3379, 3297)
 
 [node name="Tentacle" parent="World/Fish/SquidEye" instance=ExtResource("25_jupvq")]
 position = Vector2(-38, 213)
@@ -1041,6 +1057,16 @@ position = Vector2(107, 214)
 
 [node name="Tentacle2" parent="World/Fish/SquidEye" instance=ExtResource("25_jupvq")]
 position = Vector2(28, 219)
+
+[node name="Viperfish" parent="World/Fish" instance=ExtResource("25_clf5q")]
+position = Vector2(-1917, 740)
+
+[node name="Viperfish2" parent="World/Fish" instance=ExtResource("25_clf5q")]
+position = Vector2(-3161, 1044)
+
+[node name="Viperfish3" parent="World/Fish" instance=ExtResource("25_clf5q")]
+position = Vector2(-906, 1909)
+flip = true
 
 [node name="FishPaths" type="Node2D" parent="World"]
 
@@ -1063,6 +1089,7 @@ rotation = -1.5855815
 curve = SubResource("Curve2D_xwk4e")
 
 [node name="Anomalies" type="Node2D" parent="World"]
+unique_name_in_owner = true
 
 [node name="Anomaly" parent="World/Anomalies" instance=ExtResource("24_n044j")]
 position = Vector2(803, 1628)
@@ -1466,8 +1493,8 @@ layout_mode = 2
 layout_mode = 2
 theme_type_variation = &"LabelBig"
 text = "CREDITS
-Programming: Luke
-Art: Peril
+Programming: Luke Puchner-Hardman
+Art: Finn Stardust
 
 Fonts:
     Abaddon (caffinate.itch.io/abaddon)

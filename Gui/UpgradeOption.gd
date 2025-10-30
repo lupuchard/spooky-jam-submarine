@@ -9,28 +9,6 @@ func _ready():
 	%Button.pressed.connect(on_button_press)
 	update()
 
-func get_stat_name(stat: Player.Stat) -> String:
-	match stat:
-		Player.Stat.Health: return "Health"
-		Player.Stat.MaxDepth: return "Max Depth"
-		Player.Stat.Battery: return "Battery"
-		Player.Stat.Speed: return "Speed"
-		Player.Stat.Light: return "Light Radius"
-		Player.Stat.StudySpeed: return "Scanning Speed"
-		Player.Stat.DashSpeed: return "Dash"
-	return "Unknown"
-
-func format_stat_value(stat: Player.Stat, value: float) -> String:
-	match stat:
-		Player.Stat.Health:     return str(int(value))
-		Player.Stat.MaxDepth:   return World.format_depth(value, 0)
-		Player.Stat.Battery:    return str(int(value))
-		Player.Stat.Speed:      return str(int(value * 100)) + "%"
-		Player.Stat.Light:      return "+" + str(int((value - 1.0) * 100)) + "%"
-		Player.Stat.StudySpeed: return "+" + str(int((value * 5.0 - 1.0) * 100)) + "%"
-		Player.Stat.DashSpeed:  return "+" + str(int((value / 2.8 - 1.0) * 200)) + "%"
-	return "Unknown"
-
 func update() -> void:
 	var upgrade = player.upgrades[upgrade_type]
 	var level = player.upgrade_levels[upgrade_type]
@@ -48,9 +26,9 @@ func update() -> void:
 		for i in range(0, upgrade.stats.size()):
 			var stat = upgrade.stats[i]
 			stat_text.append("%s %s→%s" % [
-				get_stat_name(stat), 
-				format_stat_value(stat, upgrade.values[i][level]), 
-				format_stat_value(stat, upgrade.values[i][level + 1])
+				Player.get_stat_name(stat), 
+				Player.format_stat_value(stat, upgrade.values[i][level]), 
+				Player.format_stat_value(stat, upgrade.values[i][level + 1])
 			])
 		%Button.text = "Upgrade " + ", ".join(stat_text)
 	

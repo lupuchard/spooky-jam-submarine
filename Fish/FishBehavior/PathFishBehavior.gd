@@ -11,6 +11,6 @@ func _behave(delta: float):
 		path_position -= curve.get_baked_length()
 	
 	var position = fish.path.global_transform * curve.sample_baked(path_position)
-	fish.update_facing(position - fish.global_position)
+	fish.update_facing((position - fish.global_position) * 10.0)
 	fish.global_position = position
 	

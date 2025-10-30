@@ -2,7 +2,7 @@ extends Area2D
 
 @export var speed: float = 100.0
 @export var damage: float = 3.0
-@export var lifespan: float = 10.0
+@export var lifespan: float = 5.0
 
 func _ready():
 	collision_layer = 1

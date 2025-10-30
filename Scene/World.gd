@@ -22,7 +22,7 @@ func _ready() -> void:
 	%UpgradePanel/CloseButton.pressed.connect(exit_surface)
 	
 	await get_tree().process_frame
-	Save.save_state(player, %Fish)
+	Save.save_state(player, %Fish, %Anomalies)
 
 func _process(_delta: float) -> void:
 	if player.global_position.y < 0:
@@ -51,7 +51,7 @@ func return_to_surface() -> void:
 	%UpgradePanel/TabContainer.get_tab_bar().call_deferred("grab_focus")
 	player.stats[Player.Stat.Health] = player.max_stats[Player.Stat.Health]
 	player.stats[Player.Stat.Battery] = player.max_stats[Player.Stat.Battery]
-	Save.save_state(player, %Fish)
+	Save.save_state(player, %Fish, %Anomalies)
 	Save.save_to_file()
 
 func exit_surface() -> void:
@@ -60,7 +60,7 @@ func exit_surface() -> void:
 	player.vel.y = 3
 	player.global_position.y = 1
 	Audio.play(SPLASH_SOUND, player)
-	Save.save_state(player, %Fish)
+	Save.save_state(player, %Fish, %Anomalies)
 	Save.save_to_file()
 
 func pause_world():

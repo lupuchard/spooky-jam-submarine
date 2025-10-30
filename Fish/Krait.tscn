@@ -5,7 +5,7 @@
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_fvkn0"]
 [ext_resource type="Texture2D" uid="uid://dx58ew066mbhw" path="res://Assets/Fish/Krate/Krate.png" id="3_vcf6g"]
 [ext_resource type="Texture2D" uid="uid://cmaqmaqtxrqrd" path="res://Assets/Fish/Krate/Light.png" id="5_3u76k"]
-[ext_resource type="AudioStream" uid="uid://dvenq6h5gv75m" path="res://Assets/Sound/slimy.mp3" id="6_4cuoe"]
+[ext_resource type="AudioStream" uid="uid://bg5eiwr8hbovh" path="res://Assets/Sound/hiss.mp3" id="6_kwj0f"]
 
 [sub_resource type="Resource" id="Resource_4cuoe"]
 script = ExtResource("2_p41n0")
@@ -14,19 +14,20 @@ metadata/_custom_type_script = "uid://dnxh3jy2b2k3a"
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4cuoe"]
 radius = 18.0
-height = 144.0
+height = 78.0
 
 [node name="Krait" type="StaticBody2D"]
 script = ExtResource("1_d77vq")
 fish_type = 5
-is_sprite_facing_left = false
+idle_sound_period = 20.0
 behavior = SubResource("Resource_4cuoe")
 raycasts_needed = 4
 study_speed = 0.5
-study_reward_factor = 3
+study_reward_factor = 2.0
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
 [node name="Body" type="Node2D" parent="."]
+position = Vector2(34, 2)
 
 [node name="Body" type="Sprite2D" parent="Body" groups=["fish_body"]]
 position = Vector2(3, -1)
@@ -37,12 +38,18 @@ material = ExtResource("3_fvkn0")
 texture = ExtResource("5_3u76k")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-1, 2)
 rotation = -1.5707964
 shape = SubResource("CapsuleShape2D_4cuoe")
 
-[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("6_4cuoe")
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
+position = Vector2(76, 1)
+rotation = -1.5707964
+shape = SubResource("CapsuleShape2D_4cuoe")
+metadata/study_mod = 0.5
+
+[node name="IdleSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_kwj0f")
 volume_db = -10.0
 pitch_scale = 0.8
-autoplay = true
 attenuation = 2.0
