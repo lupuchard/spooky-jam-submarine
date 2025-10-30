@@ -127,7 +127,7 @@ func _ready():
 	var hull_upgrade := Upgrade.new("Hull", [Stat.Health, Stat.MaxDepth])
 	hull_upgrade.costs = [0, 20, 50, 80]
 	hull_upgrade.values.append(PackedFloat64Array([10.0, 15.0, 20.0, 30.0])) # Health
-	hull_upgrade.values.append(PackedFloat64Array([10000.0, 2000.0, 3000.0, 4000.0])) # Max Depth
+	hull_upgrade.values.append(PackedFloat64Array([1000.0, 2000.0, 3000.0, 4000.0])) # Max Depth
 	upgrades[UpgradeType.Hull] = hull_upgrade
 	
 	var speed_upgrade := Upgrade.new("Speed", [Stat.Speed])

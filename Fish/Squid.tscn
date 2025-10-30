@@ -1,0 +1,116 @@
+[gd_scene load_steps=17 format=3 uid="uid://0r6bklr4oem0"]
+
+[ext_resource type="Script" uid="uid://ca8xinrw31bjm" path="res://Fish/Squid.gd" id="1_3nm4y"]
+[ext_resource type="Texture2D" uid="uid://cbmuum05nftvc" path="res://Assets/Fish/Squid/Head.png" id="2_b1h7b"]
+[ext_resource type="Texture2D" uid="uid://6rkr16fsb6jf" path="res://Assets/Fish/Squid/TentaclesBack.png" id="2_u7tde"]
+[ext_resource type="Script" uid="uid://0noewew85hyl" path="res://Fish/Swing.gd" id="3_3nm4y"]
+[ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_bsjk5"]
+[ext_resource type="Texture2D" uid="uid://dyla6npe7jvts" path="res://Assets/Fish/Squid/Pupil.png" id="3_bxh7v"]
+[ext_resource type="Texture2D" uid="uid://cbt34ww8tqjdd" path="res://Assets/Fish/Squid/TentaclesFront.png" id="3_pvegy"]
+[ext_resource type="Texture2D" uid="uid://duhanxg8mc6yo" path="res://Assets/Fish/Squid/Eye.png" id="4_u7tde"]
+[ext_resource type="Script" uid="uid://c0ivf8uuykoho" path="res://Fish/Pupil.gd" id="8_h7fj7"]
+[ext_resource type="Texture2D" uid="uid://bj1fi2bekr7ho" path="res://Assets/Fish/Squid/Background.png" id="10_h7fj7"]
+[ext_resource type="Script" uid="uid://b4jsfjnutuo3d" path="res://Fish/SquidArm.gd" id="10_rcv5j"]
+[ext_resource type="AudioStream" uid="uid://qkhtxf42yf4k" path="res://Assets/Sound/boss.mp3" id="12_8fday"]
+
+[sub_resource type="Gradient" id="Gradient_8fday"]
+interpolation_mode = 2
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_6yyvl"]
+gradient = SubResource("Gradient_8fday")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_pvegy"]
+radius = 60.299255
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rcv5j"]
+height = 390.0
+
+[node name="Squid" type="StaticBody2D"]
+script = ExtResource("1_3nm4y")
+fish_type = 11
+bob_amount = 10.0
+size = 15.0
+study_speed = 0.1
+study_reward_factor = 10.0
+metadata/_custom_type_script = "uid://cvn0cn84nf1em"
+
+[node name="Body" type="Node2D" parent="."]
+
+[node name="TentaclesBack" type="Sprite2D" parent="Body"]
+position = Vector2(-33, 47)
+rotation = 0.28489378
+texture = ExtResource("2_u7tde")
+script = ExtResource("3_3nm4y")
+ANGLE_MIN = -15.0
+ANGLE_MAX = 15.0
+PERIOD = 5.5
+
+[node name="TentaclesFront" type="Sprite2D" parent="Body"]
+z_index = 1
+position = Vector2(-34, 28)
+rotation = 0.14455836
+texture = ExtResource("3_pvegy")
+script = ExtResource("3_3nm4y")
+ANGLE_MIN = -10.0
+ANGLE_MAX = 10.0
+PERIOD = 4.0
+
+[node name="Head" type="Sprite2D" parent="Body"]
+position = Vector2(-34, 27)
+texture = ExtResource("2_b1h7b")
+
+[node name="Eye" type="Sprite2D" parent="Body/Head"]
+material = ExtResource("3_bsjk5")
+position = Vector2(34, -27)
+texture = ExtResource("4_u7tde")
+
+[node name="PupilOrigin" type="Node2D" parent="Body/Head/Eye"]
+unique_name_in_owner = true
+script = ExtResource("8_h7fj7")
+
+[node name="Pupil" type="Sprite2D" parent="Body/Head/Eye/PupilOrigin"]
+material = ExtResource("3_bsjk5")
+position = Vector2(13, 0)
+texture = ExtResource("3_bxh7v")
+
+[node name="PointLight2D" type="PointLight2D" parent="Body/Head/Eye"]
+color = Color(1, 1, 0.16470589, 1)
+texture = SubResource("GradientTexture2D_6yyvl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_pvegy")
+
+[node name="Striker" type="Node2D" parent="."]
+position = Vector2(160, 1)
+
+[node name="Indicator" type="Line2D" parent="Striker"]
+visible = false
+material = ExtResource("3_bsjk5")
+position = Vector2(4.0000005, 0)
+rotation = 0.0026211985
+points = PackedVector2Array(0, -330, 0, 330)
+width = 2.0
+default_color = Color(1, 1, 0, 1)
+
+[node name="Arm" type="Area2D" parent="Striker"]
+position = Vector2(3, 25)
+script = ExtResource("10_rcv5j")
+
+[node name="Sprite2D" type="Sprite2D" parent="Striker/Arm"]
+texture = ExtResource("10_h7fj7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Striker/Arm"]
+position = Vector2(1, -1)
+shape = SubResource("CapsuleShape2D_rcv5j")
+
+[node name="UnstudiedSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("12_8fday")
+volume_db = 5.0
+autoplay = true
+max_distance = 600.0
