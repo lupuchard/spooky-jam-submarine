@@ -1,7 +1,7 @@
 extends FishBehaviorBase
 class_name FloorFishBehavior
 
-const GRAVITY = Vector2(0, 2.0)
+const GRAVITY = Vector2(0, 5.0)
 @export var walk_speed := 5.0
 @export var idle_proportion := 0.5
 @export var state_length := 5.0
@@ -29,4 +29,6 @@ func _behave(delta: float) -> void:
 	
 	if !is_idle:
 		fish.move_and_collide(dir * delta * walk_speed)
-	fish.move_and_collide(GRAVITY * delta)
+	var _collision := fish.move_and_collide(GRAVITY * delta)
+	#if collision != null:
+		#fish.rotation = clamp(collision.get_normal().angle(), -PI / 8, PI / 8)

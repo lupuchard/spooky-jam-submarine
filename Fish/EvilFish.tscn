@@ -2,10 +2,10 @@
 
 [ext_resource type="Script" uid="uid://cvn0cn84nf1em" path="res://Fish/Fish.gd" id="1_kfhey"]
 [ext_resource type="Script" uid="uid://bkqou0gwqcxlc" path="res://Fish/FishBehavior/HostileFishBehavior.gd" id="1_nh5wd"]
-[ext_resource type="Texture2D" uid="uid://cpwb84oh8ovm7" path="res://Assets/Fish/BigFish/EvilBigFish.png" id="2_ui75l"]
 [ext_resource type="Material" uid="uid://wmfpwdegbfnq" path="res://Scene/IgnoreLight.tres" id="3_kfhey"]
-[ext_resource type="Texture2D" uid="uid://dfmorolor7w3" path="res://Assets/Fish/BigFish/Light.png" id="4_2cqi1"]
+[ext_resource type="Texture2D" uid="uid://bhk5hg2wx5jw5" path="res://Assets/Fish/Viper/body_large.png" id="4_jtn48"]
 [ext_resource type="AudioStream" uid="uid://8yn0d1rukudb" path="res://Assets/Sound/screech.mp3" id="6_f1sga"]
+[ext_resource type="Texture2D" uid="uid://bilqbwdf8s4tv" path="res://Assets/Fish/Viper/light_large.png" id="6_jtn48"]
 [ext_resource type="AudioStream" uid="uid://15q87knxxpfg" path="res://Assets/Sound/screech2.mp3" id="7_jtn48"]
 
 [sub_resource type="Resource" id="Resource_2cqi1"]
@@ -13,39 +13,43 @@ script = ExtResource("1_nh5wd")
 attack_sound = ExtResource("6_f1sga")
 metadata/_custom_type_script = "uid://bkqou0gwqcxlc"
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_jtn48"]
-radius = 32.01562
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_agqjp"]
+radius = 14.000001
+height = 62.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_f1sga"]
-height = 66.0
+height = 36.0
 
-[node name="EvilFish" type="StaticBody2D"]
+[node name="Viper" type="StaticBody2D"]
 script = ExtResource("1_kfhey")
 fish_type = 6
-is_sprite_facing_left = false
 flip = true
 contact_damage = 8.0
 idle_sound_period = 20.0
 behavior = SubResource("Resource_2cqi1")
+size = 15.0
+study_reward_factor = 3.0
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
 [node name="Body" type="Node2D" parent="."]
 
-[node name="EvilBigFish" type="Sprite2D" parent="Body" groups=["fish_body"]]
-position = Vector2(-20, 6)
-texture = ExtResource("2_ui75l")
+[node name="ViperBody" type="Sprite2D" parent="Body" groups=["fish_body"]]
+position = Vector2(5, 0)
+texture = ExtResource("4_jtn48")
 
 [node name="Light" type="Sprite2D" parent="Body"]
 material = ExtResource("3_kfhey")
-position = Vector2(-18, 9)
-texture = ExtResource("4_2cqi1")
+position = Vector2(5, 0)
+texture = ExtResource("6_jtn48")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-25, -2)
 rotation = -1.5707964
-shape = SubResource("CircleShape2D_jtn48")
+shape = SubResource("CapsuleShape2D_agqjp")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="."]
-position = Vector2(-57, 0)
+position = Vector2(24, -6)
+rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_f1sga")
 metadata/study_mod = 0.3
 

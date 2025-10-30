@@ -46,6 +46,7 @@ raycasts_needed = 3
 metadata/_custom_type_script = "uid://cvn0cn84nf1em"
 
 [node name="Body" type="Node2D" parent="."]
+position = Vector2(13, 4)
 
 [node name="Body" type="AnimatedSprite2D" parent="Body" groups=["fish_body"]]
 position = Vector2(27, -1)
@@ -57,5 +58,6 @@ material = ExtResource("3_cwfsi")
 sprite_frames = SubResource("SpriteFrames_ilb20")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(13, 4)
 rotation = 1.5707964
 shape = SubResource("CapsuleShape2D_g4y65")

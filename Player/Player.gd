@@ -128,7 +128,7 @@ func _ready():
 	
 	var speed_upgrade := Upgrade.new("Speed", [Stat.Speed])
 	speed_upgrade.costs = [0, 20, 50, 100]
-	speed_upgrade.values = [[1.0, 1.15, 1.35, 1.6]]
+	speed_upgrade.values = [[1.0, 1.16, 1.35, 1.6]]
 	upgrades[UpgradeType.Speed] = speed_upgrade
 	
 	var battery_upgrade := Upgrade.new("Battery", [Stat.Battery])

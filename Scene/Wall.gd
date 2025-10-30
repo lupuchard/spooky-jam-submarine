@@ -1,12 +1,16 @@
 extends Polygon2D
+class_name Wall
+
+@export var background: bool = false
 
 func _ready():
-	seed(15)
-	random_detail()
-	randomize()
+	#seed(15)
+	#random_detail()
+	#randomize()
 	
-	set_up_collision()
-	set_up_occluder()
+	if !background:
+		set_up_collision()
+		set_up_occluder()
 
 func random_detail():
 	var new_polygon = PackedVector2Array()
@@ -14,7 +18,7 @@ func random_detail():
 		new_polygon.append(polygon[i])
 		var new_point = (polygon[i] + polygon[i + 1]) * 0.5
 		var perp_direction = (polygon[i] - polygon[i + 1]).rotated(PI / 2.0)
-		new_polygon.append(new_point + perp_direction * randf_range(-0.05, 0.05))
+		new_polygon.append(new_point + perp_direction * randf_range(-5.0, 5.0))
 	polygon = new_polygon
 
 func set_up_collision():

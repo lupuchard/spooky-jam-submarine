@@ -91,9 +91,12 @@ func _process(delta: float):
 			unstudied_sound.play()
 
 func set_facing(left: bool) -> void:
-	if left != facing_left:
-		facing_left = !facing_left
-		scale.x = -scale.x
+	if !left:
+		facing_left = false
+		scale.x = -1.0 if is_sprite_facing_left else 1.0
+	else:
+		facing_left = true
+		scale.x = 1.0 if is_sprite_facing_left else -1.0
 
 func update_facing(dir: Vector2, flipped: bool = false) -> void:
 	if dir.x < -1.0:

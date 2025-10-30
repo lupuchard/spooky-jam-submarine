@@ -58,8 +58,8 @@ func _ready():
 	description_one[FishType.EvilFish] = "Chompler."
 	description_two[FishType.EvilFish] = "TODO"
 	
-	names[FishType.ElectricEel] = "Electric Eel"
-	description_one[FishType.ElectricEel] = "A cave-dwelling electric eel that like to hide in narrow crevices in the wall, much like a Moray."
+	names[FishType.ElectricEel] = "Electric Moray"
+	description_one[FishType.ElectricEel] = "A cave-dwelling electric eel that like to hide in narrow crevices in the wall."
 	description_two[FishType.ElectricEel] = "While famous for their ability to electrocute prey, your submarine will actually absorb the energy to recharge your battery."
 	
 	names[FishType.Goldfish] = "Goldfish"
